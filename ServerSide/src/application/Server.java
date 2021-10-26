@@ -20,16 +20,19 @@ public class Server {
 			Socket cliente = server.accept();
 			System.out.println("Cliente conectado do IP " + cliente.getInetAddress().getHostAddress());
 			// Configurando o webdriver
-			System.setProperty("webdriver.chrome.driver", "res/chromedriver.exe");
+			//Para windows windows
+			//System.setProperty("webdriver.chrome.driver", "res/chromedriver.exe");
+			//Para Linux
+			System.setProperty("webdriver.chrome.driver", "res/chromedriver95");
 			// Instanciando e abrindo o browser
 			WebDriver browser = new ChromeDriver();
-			// Maximizando a página para padronizar os elementos expostos e não perder
-			// nenhum deles por conta de uma apresentação dinâmica da página
+			// Maximizando a pï¿½gina para padronizar os elementos expostos e nï¿½o perder
+			// nenhum deles por conta de uma apresentaï¿½ï¿½o dinï¿½mica da pï¿½gina
 			browser.manage().window().maximize();
 			// Estabelecendo o tempo de espera
 			browser.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-			// Entrando na página de relatório
+			// Entrando na pï¿½gina de relatï¿½rio
 			browser.get("https://waitlist.tagme.com.br/admin/reports");
 
 			// Logando
@@ -37,19 +40,19 @@ public class Server {
 			browser.findElement(By.name("pass")).sendKeys("387576");
 			browser.findElement(By.className("btn-primary")).click();
 
-			//Escolhendo o reltaório e apertando os botões para baixar
+			//Escolhendo o reltaï¿½rio e apertando os botï¿½es para baixar
 			browser.findElement(By.id("dropdownMenu1")).click();
 			browser.findElement(By.linkText("Lista Geral de Reservas")).click();
 			browser.findElement(By.className("btn-group")).click();
 			browser.findElement(By.xpath("/html/body/div[1]/app-admin/div/div[2]/div/div[1]/div[2]/div[3]/div/button[2]")).click();
 			browser.findElement(By.xpath("/html/body/div[1]/app-admin/div/div[2]/div/div[1]/div[2]/div[3]/div/ul/li[3]/a")).click();
-			Scanner entrada = new Scanner(cliente.getInputStream());
+			/*Scanner entrada = new Scanner(cliente.getInputStream());
 			while (entrada.hasNextLine()) {
 				System.out.println(entrada.nextLine());
 			}
-
-			entrada.close();
-			server.close();
+*/
+			//entrada.close();
+			//server.close();
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
