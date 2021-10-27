@@ -1,0 +1,44 @@
+package util;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class SeleniumUtils {
+
+	public static void DownloadFromWiatlist() {
+		// Configurando o webdriver
+		// Para windows windows
+		// System.setProperty("webdriver.chrome.driver", "res/chromedriver.exe");
+		// Para Linux
+		System.setProperty("webdriver.chrome.driver", "res/chromedriver95");
+		// Instanciando e abrindo o browser
+		WebDriver browser = new ChromeDriver();
+		// Maximizando a p�gina para padronizar os elementos expostos e n�o perder
+		// nenhum deles por conta de uma apresenta��o din�mica da p�gina
+		browser.manage().window().maximize();
+		// Estabelecendo o tempo de espera
+		browser.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+		// Entrando na p�gina de relat�rio
+		browser.get("https://waitlist.tagme.com.br/admin/reports");
+
+		// Logando
+		browser.findElement(By.name("email")).sendKeys("reserva.terrazza");
+		browser.findElement(By.name("pass")).sendKeys("387576");
+		browser.findElement(By.className("btn-primary")).click();
+
+		// Escolhendo o relta�rio e apertando os bot�es para baixar
+		browser.findElement(By.id("dropdownMenu1")).click();
+		browser.findElement(By.linkText("Lista Geral de Reservas")).click();
+		browser.findElement(By.className("btn-group")).click();
+		browser.findElement(By.xpath("/html/body/div[1]/app-admin/div/div[2]/div/div[1]/div[2]/div[3]/div/button[2]"))
+				.click();
+		browser.findElement(By.xpath("/html/body/div[1]/app-admin/div/div[2]/div/div[1]/div[2]/div[3]/div/ul/li[3]/a"))
+				.click();
+		browser.close();
+	}
+
+}

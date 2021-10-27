@@ -10,49 +10,26 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import util.SeleniumUtils;
+
 public class Server {
 
 	public static void main(String[] args) {
 		try {
+			//Instanciando o socket para receber a conexão
 			ServerSocket server = new ServerSocket(3322);
 			System.out.println("Servidor iniciado na porta 3322");
-
+			
+			//Iniciando um loop para aceitar uma nova conexão toda vez que a conexão anterior for fechada
+			int continuar = 1;
+			do {
 			Socket cliente = server.accept();
 			System.out.println("Cliente conectado do IP " + cliente.getInetAddress().getHostAddress());
-			// Configurando o webdriver
-			//Para windows windows
-			//System.setProperty("webdriver.chrome.driver", "res/chromedriver.exe");
-			//Para Linux
-			System.setProperty("webdriver.chrome.driver", "res/chromedriver95");
-			// Instanciando e abrindo o browser
-			WebDriver browser = new ChromeDriver();
-			// Maximizando a p�gina para padronizar os elementos expostos e n�o perder
-			// nenhum deles por conta de uma apresenta��o din�mica da p�gina
-			browser.manage().window().maximize();
-			// Estabelecendo o tempo de espera
-			browser.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
-			// Entrando na p�gina de relat�rio
-			browser.get("https://waitlist.tagme.com.br/admin/reports");
-
-			// Logando
-			browser.findElement(By.name("email")).sendKeys("reserva.terrazza");
-			browser.findElement(By.name("pass")).sendKeys("387576");
-			browser.findElement(By.className("btn-primary")).click();
-
-			//Escolhendo o relta�rio e apertando os bot�es para baixar
-			browser.findElement(By.id("dropdownMenu1")).click();
-			browser.findElement(By.linkText("Lista Geral de Reservas")).click();
-			browser.findElement(By.className("btn-group")).click();
-			browser.findElement(By.xpath("/html/body/div[1]/app-admin/div/div[2]/div/div[1]/div[2]/div[3]/div/button[2]")).click();
-			browser.findElement(By.xpath("/html/body/div[1]/app-admin/div/div[2]/div/div[1]/div[2]/div[3]/div/ul/li[3]/a")).click();
-			/*Scanner entrada = new Scanner(cliente.getInputStream());
-			while (entrada.hasNextLine()) {
-				System.out.println(entrada.nextLine());
-			}
-*/
-			//entrada.close();
-			//server.close();
+			//Chamando o método estático da classe que faz os downloads via Selenium
+			SeleniumUtils.DownloadFromWiatlist();
+			//Fechando conexão
+			cliente.close();
+			} while (continuar == 1);
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
