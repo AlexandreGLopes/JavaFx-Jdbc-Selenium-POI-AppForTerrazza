@@ -20,13 +20,16 @@ public class Server {
 			ServerSocket server = new ServerSocket(3322);
 			System.out.println("Servidor iniciado na porta 3322");
 			
+			WebDriver browser2 = SeleniumUtils.openToWIx();
+			
 			//Iniciando um loop para aceitar uma nova conexão toda vez que a conexão anterior for fechada
 			int continuar = 1;
 			do {
 			Socket cliente = server.accept();
 			System.out.println("Cliente conectado do IP " + cliente.getInetAddress().getHostAddress());
 			//Chamando o método estático da classe que faz os downloads via Selenium
-			SeleniumUtils.DownloadFromWiatlist();
+			//SeleniumUtils.DownloadFromWaitlist();
+			SeleniumUtils.useWix(browser2);
 			//Fechando conexão
 			cliente.close();
 			} while (continuar == 1);
