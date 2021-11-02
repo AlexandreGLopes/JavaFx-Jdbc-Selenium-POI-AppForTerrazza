@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WindowType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -28,6 +29,10 @@ public class SeleniumUtils {
 	public static void DownloadFromWaitlist() {
 		//Configurando o WebDriver
 		WebDriver browser = setPropertyByOs();
+		
+		//Descomentar abaixo no caso de precisar usar o método de abrir em uma nova tela
+		//browser.switchTo().newWindow(WindowType.WINDOW);
+		
 		// Maximizando a p�gina para padronizar os elementos expostos e n�o perder
 		// nenhum deles por conta de uma apresenta��o din�mica da p�gina
 		browser.manage().window().maximize();
