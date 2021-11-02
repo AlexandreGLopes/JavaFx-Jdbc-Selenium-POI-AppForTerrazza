@@ -9,8 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import application.Main;
+import gui.util.Alerts;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
 
 public class MainViewController implements Initializable {
@@ -36,7 +39,7 @@ public class MainViewController implements Initializable {
             pr.flush();
             
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        	Alerts.showAlert("Erro", null, "Não foi possível conectar ao servidor:\n" + ex.getMessage(), AlertType.ERROR);
         }
 	}
 	
@@ -49,7 +52,7 @@ public class MainViewController implements Initializable {
             pr.flush();
             
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        	Alerts.showAlert("Erro", null, "Não foi possível conectar ao servidor:\n" + ex.getMessage(), AlertType.ERROR);
         }
 	}
 
