@@ -16,10 +16,17 @@ public class SeleniumUtils {
 	//modificar o chromedriver específico. Assim também só temos que modificar em um lugar
 	public static WebDriver setPropertyByOs() {
 		// Configurando o webdriver
-		// Para windows windows
-		// System.setProperty("webdriver.chrome.driver", "res/chromedriver.exe");
-		// Para Linux
-		System.setProperty("webdriver.chrome.driver", "res/chromedriver95");
+		// Montando a String parâmetro do WebDriver de acordo com o sistema operacional utilizado
+		// Chamando a classe estática que reconhece o sistema operacional e define qual o arquivo de driver a ser usado 
+		String os = OSValidator.defineChromedriver();
+		//Try cacth para definir o webdriver porque pode ser que dê erro se estiver sendo utilizado em um sistema para o qual não estamos destinando esta aplicação
+		//Mas parece não estar funcionando o catch: ARRUMAR
+		try {
+			System.setProperty("webdriver.chrome.driver", "rs/" + os);
+		} catch (IllegalStateException e) {
+			System.out.println(os + "\n" + e);
+		}
+		
 		// Instanciando e abrindo o browser
 		WebDriver browser = new ChromeDriver();
 		return browser;
