@@ -22,7 +22,7 @@ public class SeleniumUtils {
 		//Try cacth para definir o webdriver porque pode ser que dê erro se estiver sendo utilizado em um sistema para o qual não estamos destinando esta aplicação
 		//Mas parece não estar funcionando o catch: ARRUMAR
 		try {
-			System.setProperty("webdriver.chrome.driver", "rs/" + os);
+			System.setProperty("webdriver.chrome.driver", "res/" + os);
 		} catch (IllegalStateException e) {
 			System.out.println(os + "\n" + e);
 		}
