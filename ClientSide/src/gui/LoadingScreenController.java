@@ -62,14 +62,6 @@ public class LoadingScreenController implements Initializable {
 	}
 	
 	@FXML
-	private void makeFadeInTransition() {
-		FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), loadingGif);
-		fadeTransition.setFromValue(0.0);
-		fadeTransition.setToValue(1.0);
-		fadeTransition.play();
-	}
-
-	@FXML
 	private void onRefreshButtonAction(ActionEvent event) {
 		if (option == null) {
 			throw new IllegalStateException("Entity was null");
@@ -77,8 +69,11 @@ public class LoadingScreenController implements Initializable {
 		refreshButton.setVisible(false);
 		refreshButton.setDisable(true);
 		txtLabel.setVisible(false);
-		makeFadeInTransition();
-		sendOptionToServer(event);
+		FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), loadingGif);
+		fadeTransition.setFromValue(0.0);
+		fadeTransition.setToValue(1.0);
+		fadeTransition.play();
+		fadeTransition.setOnFinished((e) -> {sendOptionToServer(event);});
 	}
 	
 	@FXML
