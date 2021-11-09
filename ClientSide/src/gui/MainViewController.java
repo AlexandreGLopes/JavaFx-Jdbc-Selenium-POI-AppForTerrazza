@@ -1,35 +1,25 @@
 package gui;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import application.Main;
 import gui.util.Alerts;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
+import gui.util.Utils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import javafx.stage.StageStyle;
 
 public class MainViewController implements Initializable {
 
@@ -50,34 +40,21 @@ public class MainViewController implements Initializable {
 	private VBox rootVBox;
 
 	@FXML
-	public void onMenuItemRefreshFromWaitlistAction() {
-		try {
-			makeFadeOut();
-			cliente = new Socket("localhost", 3322);
-			System.out.println(cliente.getPort());
-			pr = new PrintWriter(cliente.getOutputStream());
-			pr.println("a");
-			pr.flush();
-
-		} catch (IOException ex) {
-			Alerts.showAlert("Erro", null, "Não foi possível conectar ao servidor:\n" + ex.getMessage(),
-					AlertType.ERROR);
-		}
+	public void onMenuItemRefreshFromWaitlistAction(ActionEvent event) {
+		String option = "a";
+		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
+		// Utils
+		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
+		createLoadingPane(option, "/gui/LoadingScreen.fxml", currentStage);
 	}
 
 	@FXML
 	public void onMenuItemRefreshFromWixAction() {
-		try {
-			makeFadeOut();
-			cliente = new Socket("localhost", 3322);
-			pr = new PrintWriter(cliente.getOutputStream());
-			pr.println("b");
-			pr.flush();
-
-		} catch (IOException ex) {
-			Alerts.showAlert("Erro", null, "Não foi possível conectar ao servidor:\n" + ex.getMessage(),
-					AlertType.ERROR);
-		}
+		String option = "b";
+		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
+		// Utils
+		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
+		createLoadingPane(option, "/gui/LoadingScreen.fxml", currentStage);
 	}
 
 	@Override
@@ -86,43 +63,35 @@ public class MainViewController implements Initializable {
 
 	}
 
-	private void makeFadeOut() {
-		FadeTransition fadeTransition = new FadeTransition();
-		fadeTransition.setDuration(Duration.seconds(1));
-		fadeTransition.setNode(rootVBox);
-		fadeTransition.setFromValue(1);
-		fadeTransition.setToValue(0);
-
-		fadeTransition.setOnFinished(event -> loadLoadingScene());
-		fadeTransition.play();
-	}
-
-	private synchronized void loadLoadingScene() {
+	private void createLoadingPane(String option, String absoluteName, Stage parentStage) {
 		try {
-			/*
-			 * Parent loadingScene; loadingScene = (VBox)
-			 * FXMLLoader.load(getClass().getResource("/gui/LoadingScreen.fxml"));
-			 * 
-			 * Scene newScene = new Scene(loadingScene);
-			 * 
-			 * Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-			 * 
-			 * currentStage.setScene(newScene);
-			 */
+			// Carregar o fxml
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+			// pane vai receber o que carregou do loader
+			Pane pane = loader.load();
+			// Vamos injetar o departamento client no controlador da tela de loading
+			// Pegando referencia para o controlador
+			LoadingScreenController controller = loader.getController();
+			controller.setOption(option);
 
-			// Frankenstein que costurei misturando varias formas que vi para poder pegar o
-			// controller e passar o socket client e injetá-lo no controllador da loading
-			// screen
-			FXMLLoader loadingScene = new FXMLLoader(getClass().getResource("/gui/LoadingScreen.fxml"));
-			VBox newVBox = loadingScene.load();
-			Scene newScene = new Scene(newVBox);
-			Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-			currentStage.setScene(newScene);
-			System.out.println(cliente.getPort());
-			LoadingScreenController controller = (LoadingScreenController)loadingScene.getController();
-			controller.setCliente(cliente);
+			// Instanciar um novo stage (um palco na frente do outro)
+			Stage dialogStage = new Stage();
+			//Retirando a barra de título do painel de loading
+			dialogStage.initStyle(StageStyle.UNDECORATED);
+			// Além do stage precisamos de uma Scene
+			dialogStage.setScene(new Scene(pane));
+			// Não poderá ser redimensionada
+			dialogStage.setResizable(false);
+			// Passando o Stage "pai" dessa janela, que passamos como segundo parâmetro
+			// neste método
+			dialogStage.initOwner(parentStage);
+			// Ela será modal, enquanto você não fechar ela não poderá acessar a janela
+			// anterior
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.showAndWait();
 
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
