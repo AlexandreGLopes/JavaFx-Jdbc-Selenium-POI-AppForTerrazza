@@ -41,7 +41,6 @@ public class Server {
 			switch (option) {
 			case "a" :
 				SeleniumUtils.DownloadFromWaitlist();
-				System.out.println("chegou aqui");
 				PrintWriter pr = new PrintWriter(cliente.getOutputStream());
 	            pr.println("a");
 	            pr.flush();

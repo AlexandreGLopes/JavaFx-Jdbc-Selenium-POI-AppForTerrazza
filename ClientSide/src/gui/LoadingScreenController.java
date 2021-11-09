@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import gui.util.Utils;
 import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +28,14 @@ public class LoadingScreenController implements Initializable {
 	// PrintWriter que vai ser utilizado pelos vários métodos e vai passar o
 	// argumento para o switch case
 	private PrintWriter pr;
+	
+	private InputStreamReader in;
+	
+	private BufferedReader bf;
+	
+	private String option;
+	
+	private String response;
 
 	@FXML
 	private Button refreshButton;
@@ -36,8 +45,9 @@ public class LoadingScreenController implements Initializable {
 
 	@FXML
 	private Label txtLabel;
-
-	private String option;
+	
+	@FXML
+	private AnchorPane rootPane;
 
 	public String getOption() {
 		return option;
@@ -47,20 +57,16 @@ public class LoadingScreenController implements Initializable {
 		this.option = option;
 	}
 
-	@FXML
-	private AnchorPane rootPane;
-
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-
 	}
-
+	
+	@FXML
 	private void makeFadeInTransition() {
 		FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), loadingGif);
 		fadeTransition.setFromValue(0.0);
 		fadeTransition.setToValue(1.0);
 		fadeTransition.play();
-
 	}
 
 	@FXML
@@ -72,54 +78,32 @@ public class LoadingScreenController implements Initializable {
 		refreshButton.setDisable(true);
 		txtLabel.setVisible(false);
 		makeFadeInTransition();
-		switch (option) {
-		case "a":
-			try {
-				cliente = new Socket("localhost", 3322);
-				pr = new PrintWriter(cliente.getOutputStream());
-				pr.println("a");
-				pr.flush();
-				waitForReponse(event);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			break;
-		case "b":
-			try {
-				cliente = new Socket("localhost", 3322);
-				pr = new PrintWriter(cliente.getOutputStream());
-				pr.println("b");
-				pr.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			break;
-		default:
-			System.out.println("no valid option");
-		}
-		//waitForReponse(event);
+		sendOptionToServer(event);
 	}
-
-	private void waitForReponse(ActionEvent event) {
-		try {
-			int continuar = 1;
-			do {
-			InputStreamReader in = new InputStreamReader(cliente.getInputStream());
-			BufferedReader bf = new BufferedReader(in);
-			String response = bf.readLine();
-			switch (response) {
-			case "a":
-				Utils.currentStage(event).close();
-				continuar = 2;
-				break;
-
-			default:
-				break;
+	
+	@FXML
+	private void sendOptionToServer(ActionEvent event) {
+		
+			try {
+				cliente = new Socket("localhost", 3322);
+				pr = new PrintWriter(cliente.getOutputStream());
+				in = new InputStreamReader(cliente.getInputStream());
+				bf = new BufferedReader(in);
+				pr.println(option);
+				pr.flush();
+				waitForReponse(event, bf);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			} while (continuar == 1);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+	}
+	
+	private void waitForReponse(ActionEvent event, BufferedReader bf) throws IOException {
+		response = bf.readLine();
+		switch (response) {
+		case "a":
+			Utils.currentStage(event).close();
+			break;
 		}
 	}
 }
