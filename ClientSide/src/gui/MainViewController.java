@@ -73,6 +73,13 @@ public class MainViewController implements Initializable {
 			// Pegando referencia para o controlador
 			LoadingScreenController controller = loader.getController();
 			controller.setOption(option);
+			if (option == "a") {
+				controller.setLabel("Atualizar do Waitlist\n(Terrazza 40)");
+			}
+			if (option == "b") {
+				controller.setLabel("Atualizar do Wix\n(38 Floor)");
+			}
+			
 
 			// Instanciar um novo stage (um palco na frente do outro)
 			Stage dialogStage = new Stage();

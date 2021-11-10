@@ -1,7 +1,6 @@
 package gui;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -10,45 +9,35 @@ import java.util.ResourceBundle;
 
 import gui.util.Utils;
 import javafx.animation.FadeTransition;
-import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 public class LoadingScreenController implements Initializable {
 
-	// Socket que vai ser utilizado nos vários métodos para conversar com o servidor
-	private Socket cliente;
-
-	// PrintWriter que vai ser utilizado pelos vários métodos e vai passar o
-	// argumento para o switch case
-	private PrintWriter pr;
-	
-	private InputStreamReader in;
-	
-	private BufferedReader bf;
-	
 	private String option;
-	
-	private String response;
 
 	@FXML
 	private Button refreshButton;
+	
+	@FXML
+	private Button cancelButton;
 
 	@FXML
 	private ImageView loadingGif;
 
 	@FXML
 	private Label txtLabel;
-	
-	@FXML
-	private AnchorPane rootPane;
 
+	@FXML
+	private GridPane rootPane;
+	
 	public String getOption() {
 		return option;
 	}
@@ -56,11 +45,23 @@ public class LoadingScreenController implements Initializable {
 	public void setOption(String option) {
 		this.option = option;
 	}
+	
+	public void setLabel(String option) {
+		this.txtLabel.setText(option);
+	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		
 	}
-	
+
+	private void makeFadeInTransition() {
+		FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), loadingGif);
+		fadeTransition.setFromValue(0.0);
+		fadeTransition.setToValue(1.0);
+		fadeTransition.play();
+	}
+
 	@FXML
 	private void onRefreshButtonAction(ActionEvent event) {
 		if (option == null) {
@@ -68,37 +69,49 @@ public class LoadingScreenController implements Initializable {
 		}
 		refreshButton.setVisible(false);
 		refreshButton.setDisable(true);
+		cancelButton.setVisible(false);
+		cancelButton.setDisable(true);
 		txtLabel.setVisible(false);
-		FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), loadingGif);
-		fadeTransition.setFromValue(0.0);
-		fadeTransition.setToValue(1.0);
-		fadeTransition.play();
-		fadeTransition.setOnFinished((e) -> {sendOptionToServer(event);});
+		makeFadeInTransition();
+		sendOptionToServer(event);
+	}
+
+	private void sendOptionToServer(ActionEvent event) {
+
+		// Running server communication in a Task, in a background thread to unblock the
+		// UI and show all the Transitions
+		Task<String> serverCommunicationTask = new Task<>() {
+			@Override
+			protected String call() throws Exception {
+				try (Socket cliente = new Socket("localhost", 3322);
+						PrintWriter pr = new PrintWriter(cliente.getOutputStream());
+						BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));) {
+					pr.println(option);
+					pr.flush();
+					return bf.readLine();
+				}
+			}
+		};
+
+		serverCommunicationTask.setOnSucceeded((e) -> {
+			if ("a".equals(serverCommunicationTask.getValue())) {
+				Utils.currentStage(event).close();
+			}
+		});
+
+		serverCommunicationTask.setOnFailed((e) -> {
+			serverCommunicationTask.getException().printStackTrace();
+			// handle exception...
+		});
+
+		Thread thread = new Thread(serverCommunicationTask);
+		thread.setDaemon(true);
+		thread.start();
+
 	}
 	
 	@FXML
-	private void sendOptionToServer(ActionEvent event) {
-		
-			try {
-				cliente = new Socket("localhost", 3322);
-				pr = new PrintWriter(cliente.getOutputStream());
-				in = new InputStreamReader(cliente.getInputStream());
-				bf = new BufferedReader(in);
-				pr.println(option);
-				pr.flush();
-				waitForReponse(event, bf);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-	}
-	
-	private void waitForReponse(ActionEvent event, BufferedReader bf) throws IOException {
-		response = bf.readLine();
-		switch (response) {
-		case "a":
-			Utils.currentStage(event).close();
-			break;
-		}
+	private void onCancelButtonAction(ActionEvent event) {
+		Utils.currentStage(event).close();
 	}
 }
