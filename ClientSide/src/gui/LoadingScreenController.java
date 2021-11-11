@@ -65,7 +65,7 @@ public class LoadingScreenController implements Initializable {
 	@FXML
 	private void onRefreshButtonAction(ActionEvent event) {
 		if (option == null) {
-			throw new IllegalStateException("Entity was null");
+			throw new IllegalStateException("Option was null");
 		}
 		refreshButton.setVisible(false);
 		refreshButton.setDisable(true);
@@ -110,6 +110,7 @@ public class LoadingScreenController implements Initializable {
 
 	}
 	
+	//Botão de cancelamento para fechar o painel, pois ele não tem barra superior
 	@FXML
 	private void onCancelButtonAction(ActionEvent event) {
 		Utils.currentStage(event).close();
