@@ -57,7 +57,7 @@ public class Server {
 					OwnFileHandler.verifyAndDeleteFile("a");
 					//Comunicando com o cliente para mostrar que as funções aqui finalizaram
 					pr = new PrintWriter(cliente.getOutputStream());
-					pr.println("a");
+					pr.println("c");
 					pr.flush();
 					break;
 				case "b":
@@ -71,7 +71,7 @@ public class Server {
 					OwnFileHandler.verifyAndDeleteFile("b");
 					//Comunicando com o cliente para mostrar que as funções aqui finalizaram
 					pr = new PrintWriter(cliente.getOutputStream());
-					pr.println("a");
+					pr.println("c");
 					pr.flush();
 					break;
 				default:

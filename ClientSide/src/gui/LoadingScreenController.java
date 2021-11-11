@@ -94,7 +94,7 @@ public class LoadingScreenController implements Initializable {
 		};
 
 		serverCommunicationTask.setOnSucceeded((e) -> {
-			if ("a".equals(serverCommunicationTask.getValue())) {
+			if ("c".equals(serverCommunicationTask.getValue())) {
 				Utils.currentStage(event).close();
 			}
 		});
