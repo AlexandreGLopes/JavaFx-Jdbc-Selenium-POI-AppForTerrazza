@@ -1,18 +1,13 @@
 package gui;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import gui.util.Alerts;
-import gui.util.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
@@ -22,13 +17,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class MainViewController implements Initializable {
-
-	// Socket que vai ser utilizado nos vários métodos para conversar com o servidor
-	private Socket cliente;
-
-	// PrintWriter que vai ser utilizado pelos vários métodos e vai passar o
-	// argumento para o switch case
-	private PrintWriter pr;
 
 	@FXML
 	private MenuItem menuItemRefreshFromWaitlist;
@@ -59,8 +47,6 @@ public class MainViewController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void createLoadingPane(String option, String absoluteName, Stage parentStage) {
@@ -72,18 +58,23 @@ public class MainViewController implements Initializable {
 			// Vamos injetar o departamento client no controlador da tela de loading
 			// Pegando referencia para o controlador
 			LoadingScreenController controller = loader.getController();
+			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
+			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
+			// switch/case para escolher os métodos de download usados
 			controller.setOption(option);
+			// Mudando o Label do próximo painel de acordo com a opção escolhida pelo
+			// usuário. Aprendi que não podemos chamar essas mudanças no initialize porque
+			// sempre vai dar null
 			if (option == "a") {
 				controller.setLabel("Atualizar do Waitlist\n(Terrazza 40)");
 			}
 			if (option == "b") {
 				controller.setLabel("Atualizar do Wix\n(38 Floor)");
 			}
-			
 
 			// Instanciar um novo stage (um palco na frente do outro)
 			Stage dialogStage = new Stage();
-			//Retirando a barra de título do painel de loading
+			// Retirando a barra de título do painel de loading
 			dialogStage.initStyle(StageStyle.UNDECORATED);
 			// Além do stage precisamos de uma Scene
 			dialogStage.setScene(new Scene(pane));

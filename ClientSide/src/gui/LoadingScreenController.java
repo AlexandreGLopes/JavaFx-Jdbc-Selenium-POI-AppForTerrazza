@@ -7,12 +7,14 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.animation.FadeTransition;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -65,6 +67,7 @@ public class LoadingScreenController implements Initializable {
 	@FXML
 	private void onRefreshButtonAction(ActionEvent event) {
 		if (option == null) {
+			Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nOpção (option) estava nula", AlertType.ERROR);
 			throw new IllegalStateException("Option was null");
 		}
 		refreshButton.setVisible(false);

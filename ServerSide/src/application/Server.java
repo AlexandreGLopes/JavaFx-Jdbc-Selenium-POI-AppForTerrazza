@@ -6,9 +6,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.ParseException;
+import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 
+import model.entities.Costumer;
 import util.OwnFileHandler;
 import util.SeleniumUtils;
 
@@ -50,12 +53,23 @@ public class Server {
 					// verificando se ficou algum arquivo antigo baixado para trás e deletando se
 					// existir
 					OwnFileHandler.verifyAndDeleteFile("a");
-					//Fazendo o download do arquivo do Terrazza 40
+					// Fazendo o download do arquivo do Terrazza 40
 					SeleniumUtils.DownloadFromWaitlist();
-					
-					//verificando e excluindo o arquivo de download
+					// Lista que vai receber as reservas/clientes
+					List<Costumer> list = null;
+					// Chamando o método que lê e intancia uma lista de objetos do tipo Costumer
+					// para depois serem colocados no banco de dados
+					try {
+						list = OwnFileHandler.waitlistReaderInstantiator("a");
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+
+					// verificando e excluindo o arquivo de download
 					OwnFileHandler.verifyAndDeleteFile("a");
-					//Comunicando com o cliente para mostrar que as funções aqui finalizaram
+					// Comunicando com o cliente para mostrar que as funções aqui finalizaram
 					pr = new PrintWriter(cliente.getOutputStream());
 					pr.println("c");
 					pr.flush();
@@ -64,12 +78,12 @@ public class Server {
 					// verificando se ficou algum arquivo antigo baixado para trás e deletando se
 					// existir
 					OwnFileHandler.verifyAndDeleteFile("b");
-					//Fazendo o download do arquivo do 38 Floor
+					// Fazendo o download do arquivo do 38 Floor
 					SeleniumUtils.useWix(browser2);
-					
-					//verificando e excluindo o arquivo de download
+
+					// verificando e excluindo o arquivo de download
 					OwnFileHandler.verifyAndDeleteFile("b");
-					//Comunicando com o cliente para mostrar que as funções aqui finalizaram
+					// Comunicando com o cliente para mostrar que as funções aqui finalizaram
 					pr = new PrintWriter(cliente.getOutputStream());
 					pr.println("c");
 					pr.flush();
