@@ -98,11 +98,11 @@ public class Costumer implements Serializable {
 		this.pessoas = pessoas;
 	}
 
-	public Date getDia() {
+	public Date getData() {
 		return data;
 	}
 
-	public void setDia(Date data) {
+	public void setData(Date data) {
 		this.data = data;
 	}
 

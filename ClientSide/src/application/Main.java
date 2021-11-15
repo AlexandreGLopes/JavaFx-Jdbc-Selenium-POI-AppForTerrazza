@@ -5,13 +5,9 @@ import java.io.IOException;
 import gui.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.entities.Costumer;
 import model.services.CostumerService;
 
 public class Main extends Application {
@@ -26,7 +22,7 @@ public class Main extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/MainView.fxml"));
 			ScrollPane scrollPane = loader.load();
-
+			
 			// Ajustando o ScrollPane para ficar ajustado a janela por meio de código
 			scrollPane.setFitToHeight(true);
 			scrollPane.setFitToWidth(true);
@@ -35,10 +31,12 @@ public class Main extends Application {
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("Sample JavaFX application");
 			
+			//Pegando o controller da MainView e instanciando um CostumerService para acessar e trabalhar com a DB 
 			MainViewController controller = loader.getController();
 			controller.setCostumerService(new CostumerService());
+			//Atualizando os valores da TableView
 			controller.updateTableView();
-			
+			//Setando a altura da TableView e enlaçando ela com a altura da janela 
 			controller.getTableViewCostumer().prefHeightProperty().bind(mainScene.heightProperty());
 			
 			primaryStage.show();

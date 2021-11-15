@@ -10,7 +10,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainViewController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainViewController">
    <content>
       <VBox fx:id="rootVBox" prefHeight="427.0" prefWidth="586.0">
          <children>
@@ -47,7 +47,7 @@
                   <TableColumn fx:id="tableColumnData" prefWidth="75.0" text="Data" />
                   <TableColumn fx:id="tableColumnHora" prefWidth="75.0" text="Hora" />
                   <TableColumn fx:id="tableColumnMesa" prefWidth="75.0" text="Mesa" />
-                  <TableColumn fx:id="tableColumnStituacao" prefWidth="75.0" text="Situaçao" />
+                  <TableColumn fx:id="tableColumnSituacao" prefWidth="75.0" text="Situaçao" />
                   <TableColumn fx:id="tableColumnPagamento" prefWidth="75.0" text="Pagamento" />
                   <TableColumn fx:id="tableColumnIdExterno" prefWidth="75.0" text="Id Externo" />
               </columns>

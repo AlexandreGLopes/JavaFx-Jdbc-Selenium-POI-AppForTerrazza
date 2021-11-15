@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -77,7 +78,7 @@ public class MainViewController implements Initializable {
 	private TableColumn<Costumer, String> tableColumnMesa;
 	
 	@FXML
-	private TableColumn<Costumer, String> tableColumnStituacao;
+	private TableColumn<Costumer, String> tableColumnSituacao;
 	
 	@FXML
 	private TableColumn<Costumer, Double> tableColumnPagamento;
@@ -123,6 +124,20 @@ public class MainViewController implements Initializable {
 	private void initializeNodes() {
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+		tableColumnSobrenome.setCellValueFactory(new PropertyValueFactory<>("sobrenome"));
+		tableColumnTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
+		tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		tableColumnSalao.setCellValueFactory(new PropertyValueFactory<>("salao"));
+		tableColumnPessoas.setCellValueFactory(new PropertyValueFactory<>("pessoas"));
+		tableColumnData.setCellValueFactory(new PropertyValueFactory<>("data"));
+		Utils.formatTableColumnDate(tableColumnData, "dd/MM/yyyy");
+		tableColumnHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
+		Utils.formatTableColumnDate(tableColumnHora, "HH:mm:ss");
+		tableColumnMesa.setCellValueFactory(new PropertyValueFactory<>("mesa"));
+		tableColumnSituacao.setCellValueFactory(new PropertyValueFactory<>("situacao"));
+		tableColumnPagamento.setCellValueFactory(new PropertyValueFactory<>("pagamento"));
+		Utils.formatTableColumnDouble(tableColumnPagamento, 2);
+		tableColumnIdExterno.setCellValueFactory(new PropertyValueFactory<>("idExterno"));
 		
 	}
 

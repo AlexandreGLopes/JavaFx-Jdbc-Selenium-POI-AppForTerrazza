@@ -50,10 +50,9 @@ public class Server {
 				// Usando switch case para escolher qual método usar
 				switch (option) {
 				case "a":
-					System.out.println(option);
 					// verificando se ficou algum arquivo antigo baixado para trás e deletando se
 					// existir
-					OwnFileHandler.verifyAndDeleteFile("a");
+					OwnFileHandler.verifyAndDeleteFile(option);
 					// Fazendo o download do arquivo do Terrazza 40
 					SeleniumUtils.DownloadFromWaitlist();
 					// Lista que vai receber as reservas/clientes
