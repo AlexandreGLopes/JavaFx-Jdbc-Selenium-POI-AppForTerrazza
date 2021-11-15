@@ -74,13 +74,12 @@ public class OwnFileHandler {
 				String[] fields = line.split(";");
 				list.add(new Costumer(null, fields[0], fields[1], fields[4], fields[5], fields[7],
 						Integer.parseInt(fields[8]), dt.parse(fields[9]), hr.parse(fields[10]), null, fields[13],
-						null));
+						null, fields[21]));
 				line = br.readLine();
 			}
 		} catch (IOException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
-
 		return list;
 	}
 }

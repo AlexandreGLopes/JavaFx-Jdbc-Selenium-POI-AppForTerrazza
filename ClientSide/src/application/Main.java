@@ -2,11 +2,17 @@ package application;
 
 import java.io.IOException;
 
+import gui.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.entities.Costumer;
+import model.services.CostumerService;
 
 public class Main extends Application {
 
@@ -28,6 +34,13 @@ public class Main extends Application {
 			mainScene = new Scene(scrollPane);
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("Sample JavaFX application");
+			
+			MainViewController controller = loader.getController();
+			controller.setCostumerService(new CostumerService());
+			controller.updateTableView();
+			
+			controller.getTableViewCostumer().prefHeightProperty().bind(mainScene.heightProperty());
+			
 			primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();

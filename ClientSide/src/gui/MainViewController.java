@@ -2,21 +2,34 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import application.Main;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
+import model.entities.Costumer;
+import model.services.CostumerService;
 
 public class MainViewController implements Initializable {
+	
+	private CostumerService service;
 
 	@FXML
 	private MenuItem menuItemRefreshFromWaitlist;
@@ -26,6 +39,63 @@ public class MainViewController implements Initializable {
 
 	@FXML
 	private VBox rootVBox;
+	
+	//Iniciando as referências para a TableView
+
+	@FXML
+	private TableView<Costumer> tableViewCostumer;
+	
+	@FXML
+	private TableColumn<Costumer, Integer> tableColumnId;
+	
+	@FXML
+	private TableColumn<Costumer, String> tableColumnNome;
+	
+	@FXML
+	private TableColumn<Costumer, String> tableColumnSobrenome;
+	
+	@FXML
+	private TableColumn<Costumer, String> tableColumnTelefone;
+	
+	@FXML
+	private TableColumn<Costumer, String> tableColumnEmail;
+	
+	@FXML
+	private TableColumn<Costumer, String> tableColumnSalao;
+	
+	@FXML
+	private TableColumn<Costumer, Integer> tableColumnPessoas;
+	
+	//Date aqui é java.util.date
+	@FXML
+	private TableColumn<Costumer, Date> tableColumnData;
+	
+	@FXML
+	private TableColumn<Costumer, Date> tableColumnHora;
+	
+	@FXML
+	private TableColumn<Costumer, String> tableColumnMesa;
+	
+	@FXML
+	private TableColumn<Costumer, String> tableColumnStituacao;
+	
+	@FXML
+	private TableColumn<Costumer, Double> tableColumnPagamento;
+	
+	@FXML
+	private TableColumn<Costumer, String> tableColumnIdExterno;
+	
+	public TableView<Costumer> getTableViewCostumer() {
+		return tableViewCostumer;
+	}
+	
+	//Final das referências do TableView
+	
+	public void setCostumerService(CostumerService service) {
+		this.service = service;
+	}
+	
+	private ObservableList<Costumer> obsList;
 
 	@FXML
 	public void onMenuItemRefreshFromWaitlistAction(ActionEvent event) {
@@ -47,6 +117,13 @@ public class MainViewController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		initializeNodes();
+	}
+
+	private void initializeNodes() {
+		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+		
 	}
 
 	private void createLoadingPane(String option, String absoluteName, Stage parentStage) {
@@ -92,6 +169,15 @@ public class MainViewController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void updateTableView() {
+		if (service == null) {
+			throw new IllegalStateException("Service was null");
+		}
+		List<Costumer> list = service.findAll();
+		obsList = FXCollections.observableArrayList(list);
+		tableViewCostumer.setItems(obsList);
 	}
 
 }

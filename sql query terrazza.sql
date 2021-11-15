@@ -15,6 +15,7 @@ create table terrazzacostumers (
     Mesa varchar(50) NOT NULL,
     Situacao varchar(35) NOT NULL,
     Pagamento double NOT NULL,
+    IdExterno varchar(30) NOT NULL,
     PRIMARY KEY (Id)
 );
 
@@ -31,5 +32,6 @@ create table bistrocostumers (
     Mesa varchar(50) NOT NULL,
     Situacao varchar(35) NOT NULL,
 	Pagamento double NOT NULL,
+	IdExterno varchar(30) NOT NULL,
     PRIMARY KEY (Id)
 );

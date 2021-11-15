@@ -50,6 +50,7 @@ public class Server {
 				// Usando switch case para escolher qual método usar
 				switch (option) {
 				case "a":
+					System.out.println(option);
 					// verificando se ficou algum arquivo antigo baixado para trás e deletando se
 					// existir
 					OwnFileHandler.verifyAndDeleteFile("a");
