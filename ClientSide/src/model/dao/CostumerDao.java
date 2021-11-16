@@ -1,6 +1,5 @@
 package model.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import model.entities.Costumer;
@@ -10,9 +9,10 @@ public interface CostumerDao {
 	void insert(Costumer costumer);
 	void update(Costumer costumer);
 	void deleteById(Integer id);
-	void deleteAll(Date date);
+	void deleteOlderThan30Days();
 	Costumer findById(Integer id);
 	Costumer findByExternalId(String idExterno);
 	List<Costumer> findAll();
+	List<Costumer> findTodayCostumers();
 
 }

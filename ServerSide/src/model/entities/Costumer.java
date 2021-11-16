@@ -148,7 +148,8 @@ public class Costumer implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(data, email, hora, idExterno, mesa, nome, pagamento, pessoas, salao, situacao, sobrenome,
+				telefone);
 	}
 
 	@Override
@@ -160,7 +161,12 @@ public class Costumer implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Costumer other = (Costumer) obj;
-		return Objects.equals(id, other.id);
+		return Objects.equals(data, other.data) && Objects.equals(email, other.email)
+				&& Objects.equals(hora, other.hora) && Objects.equals(idExterno, other.idExterno)
+				&& Objects.equals(mesa, other.mesa) && Objects.equals(nome, other.nome)
+				&& Objects.equals(pagamento, other.pagamento) && Objects.equals(pessoas, other.pessoas)
+				&& Objects.equals(salao, other.salao) && Objects.equals(situacao, other.situacao)
+				&& Objects.equals(sobrenome, other.sobrenome) && Objects.equals(telefone, other.telefone);
 	}
 	
 	@Override

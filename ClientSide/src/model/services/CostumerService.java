@@ -19,11 +19,18 @@ public class CostumerService {
 		}
 		else {
 			System.out.println("Costumer is already inserted");
+			System.out.println(costumer.equals(costumerSelected));
+			if (!costumer.equals(costumerSelected)) {
+				dao.update(costumer);
+			}
 		}
 	}
 	
 	public List<Costumer> findAll() {
 		return dao.findAll();
 	}
-
+	
+	public List<Costumer> findAllofCurrentDate() {
+		return dao.findTodayCostumers();
+	}
 }

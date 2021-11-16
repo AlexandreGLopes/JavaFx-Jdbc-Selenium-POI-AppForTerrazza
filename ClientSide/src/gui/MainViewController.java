@@ -107,7 +107,7 @@ public class MainViewController implements Initializable {
 	public void onTestButtonAction() throws ParseException {
 		SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
-		Costumer costumer = new Costumer(null, "Erika", "Pires", "41998642881", "erika@hotmail.com", "Terrazza 40", 2, dt.parse("15/11/2021"), hr.parse("19:00"), "1", "Confirmado", 300.00, "suhduahda");
+		Costumer costumer = new Costumer(null, "Erika", "Lima", "41998642881", "erika@hotmail.com", "Terrazza 40", 2, dt.parse("15/11/2021"), hr.parse("19:00"), "1", "Confirmado", 300.00, "suhduahda");
 		service.insertIfExteralIdNotExists(costumer);
 		
 	}
@@ -200,11 +200,12 @@ public class MainViewController implements Initializable {
 		}
 	}
 	
+	//Atualizando os nomes na lista só com os clientes com reservas feitas para a data de hoje
 	public void updateTableView() {
 		if (service == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		List<Costumer> list = service.findAll();
+		List<Costumer> list = service.findAllofCurrentDate();
 		obsList = FXCollections.observableArrayList(list);
 		tableViewCostumer.setItems(obsList);
 	}
