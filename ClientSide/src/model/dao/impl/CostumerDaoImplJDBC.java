@@ -27,13 +27,11 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 	public void insert(Costumer costumer) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement(
-					"INSERT INTO terrazzacostumers "
+			SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+			st = conn.prepareStatement("INSERT INTO terrazzacostumers "
 					+ "(Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) "
-					+ "VALUES "
-					+ "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-					Statement.RETURN_GENERATED_KEYS);
-			
+					+ "VALUES " + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
 			st.setString(1, costumer.getNome());
 			st.setString(2, costumer.getSobrenome());
 			st.setString(3, costumer.getTelefone());
@@ -41,31 +39,28 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			st.setString(5, costumer.getSalao());
 			st.setInt(6, costumer.getPessoas());
 			st.setDate(7, new java.sql.Date(costumer.getData().getTime()));
-			st.setDate(8, new java.sql.Date(costumer.getHora().getTime()));
+			st.setTime(8, new java.sql.Time(costumer.getHora().getTime()));
 			st.setString(9, costumer.getMesa());
 			st.setString(10, costumer.getSituacao());
 			st.setDouble(11, costumer.getPagamento());
 			st.setString(12, costumer.getIdExterno());
-			
+
 			int rowsAffected = st.executeUpdate();
-			
+
 			if (rowsAffected > 0) {
 				ResultSet rs = st.getGeneratedKeys();
-				//Se o rs receber uma generatedKey
+				// Se o rs receber uma generatedKey
 				if (rs.next()) {
 					int id = rs.getInt(1);
 					costumer.setId(id);
 				}
 				DB.closeResultSet(rs);
-			}
-			else {
+			} else {
 				throw new DbException("Erro inesperado: nenhuma linha foi alterada");
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeStatement(st);
 		}
 	}
@@ -157,9 +152,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement(
-							"SELECT * FROM skycuritibacostumers.terrazzacostumers "
-							+ "WHERE Id = ?");
+			st = conn.prepareStatement("SELECT * FROM skycuritibacostumers.terrazzacostumers " + "WHERE IdExterno = ?");
 			st.setString(1, idExterno);
 			rs = st.executeQuery();
 			if (rs.next()) {

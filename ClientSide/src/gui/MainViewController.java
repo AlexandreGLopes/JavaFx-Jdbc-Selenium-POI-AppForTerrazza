@@ -2,6 +2,8 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -15,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -31,6 +34,9 @@ import model.services.CostumerService;
 public class MainViewController implements Initializable {
 	
 	private CostumerService service;
+	
+	@FXML
+	private VBox rootVBox;
 
 	@FXML
 	private MenuItem menuItemRefreshFromWaitlist;
@@ -39,7 +45,7 @@ public class MainViewController implements Initializable {
 	private MenuItem menuItemRefreshFromWix;
 
 	@FXML
-	private VBox rootVBox;
+	private Button testButton;
 	
 	//Iniciando as referências para a TableView
 
@@ -92,11 +98,19 @@ public class MainViewController implements Initializable {
 	
 	//Final das referências do TableView
 	
+	private ObservableList<Costumer> obsList;
+	
 	public void setCostumerService(CostumerService service) {
 		this.service = service;
 	}
 	
-	private ObservableList<Costumer> obsList;
+	public void onTestButtonAction() throws ParseException {
+		SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+		Costumer costumer = new Costumer(null, "Erika", "Pires", "41998642881", "erika@hotmail.com", "Terrazza 40", 2, dt.parse("15/11/2021"), hr.parse("19:00"), "1", "Confirmado", 300.00, "suhduahda");
+		service.insertIfExteralIdNotExists(costumer);
+		
+	}
 
 	@FXML
 	public void onMenuItemRefreshFromWaitlistAction(ActionEvent event) {
@@ -132,7 +146,7 @@ public class MainViewController implements Initializable {
 		tableColumnData.setCellValueFactory(new PropertyValueFactory<>("data"));
 		Utils.formatTableColumnDate(tableColumnData, "dd/MM/yyyy");
 		tableColumnHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
-		Utils.formatTableColumnDate(tableColumnHora, "HH:mm:ss");
+		Utils.formatTableColumnDate(tableColumnHora, "HH:mm");
 		tableColumnMesa.setCellValueFactory(new PropertyValueFactory<>("mesa"));
 		tableColumnSituacao.setCellValueFactory(new PropertyValueFactory<>("situacao"));
 		tableColumnPagamento.setCellValueFactory(new PropertyValueFactory<>("pagamento"));
