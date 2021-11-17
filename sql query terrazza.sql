@@ -13,7 +13,7 @@ create table terrazzacostumers (
     Data date NOT NULL,
     Hora time NOT NULL,
     Mesa varchar(50) NOT NULL,
-    Situacao varchar(35) NOT NULL,
+    Situacao varchar(40) NOT NULL,
     Pagamento double NOT NULL,
     IdExterno varchar(30) NOT NULL,
     PRIMARY KEY (Id)
@@ -54,6 +54,8 @@ insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas,
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) values
 ('Robert', 'Smith', '5541995655618', 'robert@hotmail.com', 'Terrazza Almoço', 3, '2021-11-16', '12:00', '1', 'Confirmado', 0.00, '2876444');
 
+insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) values
+('Robert', 'Smith', '5541995655618', 'robert@hotmail.com', 'Terrazza Almoço', 3, '2021-11-16', '12:00', '1', 'Cancelado por solicitação do cliente', 0.00, '2876444');
 
 /* testes de select */
 
@@ -72,3 +74,8 @@ FROM skycuritibacostumers.terrazzacostumers
 WHERE DATE(Data) = CURDATE();
 
 DELETE FROM skycuritibacostumers.terrazzacostumers WHERE Data < now() - interval 30 DAY;
+
+/** só para limpar os dados para testes **/
+DELETE FROM skycuritibacostumers.terrazzacostumers;
+
+DROP TABLE skycuritibacostumers.terrazzacostumers;

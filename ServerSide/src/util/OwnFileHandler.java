@@ -73,8 +73,8 @@ public class OwnFileHandler {
 				line = line.replace("\"", "");
 				String[] fields = line.split(";");
 				list.add(new Costumer(null, fields[0], fields[1], fields[4], fields[5], fields[7],
-						Integer.parseInt(fields[8]), dt.parse(fields[9]), hr.parse(fields[10]), null, fields[13],
-						null, fields[21]));
+						Integer.parseInt(fields[8]), dt.parse(fields[9]), hr.parse(fields[10]), fields[17], fields[13],
+						0.00, fields[20]));
 				line = br.readLine();
 			}
 		} catch (IOException e) {

@@ -18,8 +18,6 @@ public class CostumerService {
 			dao.insert(costumer);
 		}
 		else {
-			System.out.println("Costumer is already inserted");
-			System.out.println(costumer.equals(costumerSelected));
 			if (!costumer.equals(costumerSelected)) {
 				dao.update(costumer);
 			}

@@ -12,13 +12,17 @@ import java.util.List;
 import org.openqa.selenium.WebDriver;
 
 import model.entities.Costumer;
+import model.services.CostumerService;
 import util.OwnFileHandler;
 import util.SeleniumUtils;
 
 public class Server {
-
+	
 	public static void main(String[] args) {
 		try {
+			
+			CostumerService service = new CostumerService();
+			
 			// Instanciando o socket para receber a conexão
 			ServerSocket server = new ServerSocket(3322);
 			System.out.println("Servidor iniciado na porta 3322");
@@ -52,7 +56,7 @@ public class Server {
 				case "a":
 					// verificando se ficou algum arquivo antigo baixado para trás e deletando se
 					// existir
-					OwnFileHandler.verifyAndDeleteFile(option);
+					OwnFileHandler.verifyAndDeleteFile("a");
 					// Fazendo o download do arquivo do Terrazza 40
 					SeleniumUtils.DownloadFromWaitlist();
 					// Lista que vai receber as reservas/clientes
@@ -66,7 +70,9 @@ public class Server {
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
-
+					for (Costumer obj : list) {
+						service.insertIfExteralIdNotExists(obj);
+					}
 					// verificando e excluindo o arquivo de download
 					OwnFileHandler.verifyAndDeleteFile("a");
 					// Comunicando com o cliente para mostrar que as funções aqui finalizaram
