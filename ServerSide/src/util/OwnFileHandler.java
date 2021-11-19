@@ -58,28 +58,77 @@ public class OwnFileHandler {
 	// o programa principal para que este popule o banco de dados com ela
 	public static List<Costumer> waitlistReaderInstantiator(String option)
 			throws NumberFormatException, ParseException {
+		// SImpleDateFormat para formatar os padrões das datas que vão entrar nas
+		// strings
 		SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+		// Definição do path do arquivo a ser lido
 		String path = definePath();
 		String file = defineFile(option);
 		File tempFile = new File(path + file);
+		// Lista de Costumers que vai receber os objetos para ser retornada no final do
+		// método
 		List<Costumer> list = new ArrayList<>();
+		// Inicio do buffered reader
 		try (BufferedReader br = new BufferedReader(new FileReader(tempFile))) {
 
+			// Lendo a primeira linha e não usando porque ela é cabeçalho
 			br.readLine();
+			// Lendo a próxima linha e jogando na String com a qual vamos trabalhar
 			String line = br.readLine();
-
+			// O array abaixo vai receber o final do split e sempre vai ter que conter 21
+			// elementos
+			String[] array = new String[21];
+			// Loop que vai ler até o final
 			while (line != null) {
+				// Removendo aspas indesejadas da linha
 				line = line.replace("\"", "");
+				// Formando um array dividindo a linha nos ";"
 				String[] fields = line.split(";");
-				list.add(new Costumer(null, fields[0], fields[1], fields[4], fields[5], fields[7],
-						Integer.parseInt(fields[8]), dt.parse(fields[9]), hr.parse(fields[10]), fields[17], fields[13],
-						0.00, fields[20]));
+				// Se o array acima, lido de uma linha específica no meio do loop,
+				// ficar menor que 21 elementos é porque temos uma quebra de linha não esperada
+				// e temos que trabalhar ela
+				if (fields.length < 21) {
+					// Caso verdadeiro o array acima vai receber o resultado do método que junta as
+					// linhas, no caso de uma quebra de linha inesperada
+					array = ifFieldsLengthMinorThan21(line, fields, br);
+				}
+				// Se não, só vamos proceder adicionando o array fields no array que vamos usar
+				// para instanciar os Costumers
+				else {
+					array = fields;
+				}
+				list.add(
+						new Costumer(null, array[0], array[1], array[4], array[5], array[7], Integer.parseInt(array[8]),
+								dt.parse(array[9]), hr.parse(array[10]), array[17], array[13], 0.00, array[20]));
 				line = br.readLine();
 			}
 		} catch (IOException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
 		return list;
+	}
+
+	// Método para deixar menos verboso o waitlistReaderInstantiator()
+	// Este método será utilizado caso o tamanho do array dividido seja menor que 21
+	// elementos
+	// Isso vai ocorrer se tiver alguma quebra de linha indesejada no arquivo csv
+	// Neste caso a linha seguinte vai conter o restante dos elementos e vai somar
+	// 21 no total.
+	// Neste sentido, vaos juntar os elementos de uma leitura de linha na próxima e
+	// fazer um array com elas
+	public static String[] ifFieldsLengthMinorThan21(String line, String[] fields, BufferedReader br)
+			throws IOException {
+		String[] array = new String[21];
+		line = br.readLine();
+		line = line.replace("\"", "");
+		String[] fields2 = line.split(";");
+		for (int i = 0; i < fields.length; i++) {
+			array[i] = fields[i];
+		}
+		for (int i = 1; i < fields2.length; i++) {
+			array[fields.length - 1 + i] = fields2[i];
+		}
+		return array;
 	}
 }
