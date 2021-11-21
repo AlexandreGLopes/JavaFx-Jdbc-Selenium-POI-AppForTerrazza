@@ -17,12 +17,12 @@ import util.OwnFileHandler;
 import util.SeleniumUtils;
 
 public class Server {
-	
+
 	public static void main(String[] args) {
 		try {
-			
+
 			CostumerService service = new CostumerService();
-			
+
 			// Instanciando o socket para receber a conexão
 			ServerSocket server = new ServerSocket(3322);
 			System.out.println("Servidor iniciado na porta 3322");
@@ -49,7 +49,7 @@ public class Server {
 				String option = bf.readLine();
 
 				// Printwriter que será utilzado dentro do switch/case
-				PrintWriter pr;
+				// PrintWriter pr;
 				// Chamando o método estático da classe que faz os downloads via Selenium
 				// Usando switch case para escolher qual método usar
 				// Lista que vai receber as reservas/clientes
@@ -60,27 +60,31 @@ public class Server {
 					// existir
 					OwnFileHandler.verifyAndDeleteFile("a");
 					// Fazendo o download do arquivo do Terrazza 40
-					SeleniumUtils.DownloadFromWaitlist();
+					SeleniumUtils.DownloadFromWaitlist(cliente);
 					// Lista que vai receber as reservas/clientes
-					//List<Costumer> list = null;
+					// List<Costumer> list = null;
 					// Chamando o método que lê e intancia uma lista de objetos do tipo Costumer
 					// para depois serem colocados no banco de dados
 					try {
 						list = OwnFileHandler.waitlistReaderInstantiator("a");
 					} catch (NumberFormatException e) {
-						e.printStackTrace();
+						// e.printStackTrace();
+						sendToClient(cliente, "erroServer");
 					} catch (ParseException e) {
-						e.printStackTrace();
+						// e.printStackTrace();
+						sendToClient(cliente, "erroServer");
 					}
 					for (Costumer obj : list) {
+						try {
 						service.insertIfExternalIdNotExists(obj);
+						} catch (Exception e) {
+							sendToClient(cliente, "erroDB");
+						}
 					}
 					// verificando e excluindo o arquivo de download
 					OwnFileHandler.verifyAndDeleteFile("a");
 					// Comunicando com o cliente para mostrar que as funções aqui finalizaram
-					pr = new PrintWriter(cliente.getOutputStream());
-					pr.println("close");
-					pr.flush();
+					sendToClient(cliente, "close");
 					break;
 				case "b":
 					// verificando se ficou algum arquivo antigo baixado para trás e deletando se
@@ -89,26 +93,29 @@ public class Server {
 					// Fazendo o download do arquivo do 38 Floor
 					SeleniumUtils.useWix(browser2, cliente);
 					// Lista que vai receber as reservas/clientes
-					//List<Costumer> list = null;
+					// List<Costumer> list = null;
 					// Chamando o método que lê e intancia uma lista de objetos do tipo Costumer
 					// para depois serem colocados no banco de dados
 					try {
 						list = OwnFileHandler.wixReaderInstantiator("b");
 					} catch (NumberFormatException e) {
-						e.printStackTrace();
+						// e.printStackTrace();
+						sendToClient(cliente, "erroServer");
 					}
 					for (Costumer obj : list) {
+						try {
 						service.insertIfExternalIdNotExists(obj);
+						} catch (Exception e) {
+							sendToClient(cliente, "erroDB");
+						}
 					}
 					// verificando e excluindo o arquivo de download
 					OwnFileHandler.verifyAndDeleteFile("b");
 					// Comunicando com o cliente para mostrar que as funções aqui finalizaram
-					pr = new PrintWriter(cliente.getOutputStream());
-					pr.println("close");
-					pr.flush();
+					sendToClient(cliente, "close");
 					break;
 				default:
-					System.out.println("no valid option");
+					sendToClient(cliente, "erroServer");
 				}
 
 				// Fechando conexão
@@ -118,6 +125,15 @@ public class Server {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	// Método que vai enviar a mensagem do servidor para o cliente para que o
+	// programa não fique parado e que o usuário saiba se aconteceu algum erro ou se
+	// deu tudo certo
+	public static void sendToClient(Socket cliente, String message) throws IOException {
+		PrintWriter pr = new PrintWriter(cliente.getOutputStream());
+		pr.println(message);
+		pr.flush();
 	}
 
 }

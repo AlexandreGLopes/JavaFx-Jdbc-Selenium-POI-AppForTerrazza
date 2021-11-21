@@ -36,7 +36,8 @@ public class SeleniumUtils {
 	}
 	
 	//Método que faz o download do csv Waitlist
-	public static void DownloadFromWaitlist() {
+	//Throws exeception porque estamos passando o socket do cliente como parâmetro
+	public static void DownloadFromWaitlist(Socket cliente) throws IOException {
 		//Configurando o WebDriver
 		WebDriver browser = setPropertyByOs();
 		
@@ -69,8 +70,9 @@ public class SeleniumUtils {
 			Thread.sleep(5000);
 			browser.close();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PrintWriter pr = new PrintWriter(cliente.getOutputStream());
+			pr.println("erro");
+			pr.flush();
 		}
 		
 	}

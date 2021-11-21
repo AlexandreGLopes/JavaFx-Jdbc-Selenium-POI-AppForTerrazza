@@ -106,12 +106,26 @@ public class LoadingScreenController implements Initializable {
 		};
 
 		serverCommunicationTask.setOnSucceeded((e) -> {
+			//Se o servidor concluir tudo corretamente
 			if ("close".equals(serverCommunicationTask.getValue())) {
 				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 			}
+			//Se der erro na parte do selenium
 			if ("erro".equals(serverCommunicationTask.getValue())) {
-				Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nAlgo deu errado ao acessar o site de reservas terceiro", AlertType.ERROR);
+				Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nAlgo deu errado ao acessar o site de reservas terceiro.\n\nVocê pode contornar o problema adicionando as reservas manualmente.\nPara saber mais clique em Ajuda", AlertType.ERROR);
+				notifyDataChangeListeners();
+				Utils.currentStage(event).close();
+			}
+			//Se der erro em algum processo interno no servidor
+			if ("erroServer".equals(serverCommunicationTask.getValue())) {
+				Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nAlgo deu errado com nosso servidor interno.\n\nVocê pode contornar o problema adicionando as reservas manualmente.\nPara saber mais clique em Ajuda", AlertType.ERROR);
+				notifyDataChangeListeners();
+				Utils.currentStage(event).close();
+			}
+			//Se der erro em algum processo interno no banco de dados
+			if ("erroDB".equals(serverCommunicationTask.getValue())) {
+				Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nAlgo deu errado com nosso Banco de Dados.\n\nVocê pode contornar o problema adicionando as reservas manualmente.\nPara saber mais clique em Ajuda", AlertType.ERROR);
 				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 			}
