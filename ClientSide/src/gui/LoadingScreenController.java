@@ -106,7 +106,12 @@ public class LoadingScreenController implements Initializable {
 		};
 
 		serverCommunicationTask.setOnSucceeded((e) -> {
-			if ("c".equals(serverCommunicationTask.getValue())) {
+			if ("close".equals(serverCommunicationTask.getValue())) {
+				notifyDataChangeListeners();
+				Utils.currentStage(event).close();
+			}
+			if ("erro".equals(serverCommunicationTask.getValue())) {
+				Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nAlgo deu errado ao acessar o site de reservas terceiro", AlertType.ERROR);
 				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 			}

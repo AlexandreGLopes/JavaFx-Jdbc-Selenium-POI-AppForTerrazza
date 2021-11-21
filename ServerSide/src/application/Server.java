@@ -79,7 +79,7 @@ public class Server {
 					OwnFileHandler.verifyAndDeleteFile("a");
 					// Comunicando com o cliente para mostrar que as funções aqui finalizaram
 					pr = new PrintWriter(cliente.getOutputStream());
-					pr.println("c");
+					pr.println("close");
 					pr.flush();
 					break;
 				case "b":
@@ -87,7 +87,7 @@ public class Server {
 					// existir
 					OwnFileHandler.verifyAndDeleteFile("b");
 					// Fazendo o download do arquivo do 38 Floor
-					SeleniumUtils.useWix(browser2);
+					SeleniumUtils.useWix(browser2, cliente);
 					// Lista que vai receber as reservas/clientes
 					//List<Costumer> list = null;
 					// Chamando o método que lê e intancia uma lista de objetos do tipo Costumer
@@ -104,7 +104,7 @@ public class Server {
 					OwnFileHandler.verifyAndDeleteFile("b");
 					// Comunicando com o cliente para mostrar que as funções aqui finalizaram
 					pr = new PrintWriter(cliente.getOutputStream());
-					pr.println("c");
+					pr.println("close");
 					pr.flush();
 					break;
 				default:

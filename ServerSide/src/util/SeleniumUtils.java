@@ -1,5 +1,8 @@
 package util;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -91,8 +94,9 @@ public class SeleniumUtils {
 	}
 	
 	//Método que pega a página já aberta do navegador e procede com o download do xlsx do Wix
-	public static void useWix(WebDriver browser2) {
-		
+	//Throws exeception porque estamos passando o socket do cliente como parâmetro
+	public static void useWix(WebDriver browser2, Socket cliente) throws IOException {
+		try {
 		//Configurando a espera explícita para agauradr os elementos aparecerem
 		WebDriverWait wait = new WebDriverWait(browser2, 20);
 		//Verificando com um booleando se o elemento de botão "Hotéis" se encontra na tela
@@ -122,7 +126,13 @@ public class SeleniumUtils {
 				.click();
 		//Na página principal saindo do iframe e voltando ao html principal
 		browser2.switchTo().defaultContent();
-		
+		}
+		//Excessão para o caso der algo errado e notificar o cliente
+		catch (Exception e) {
+			PrintWriter pr = new PrintWriter(cliente.getOutputStream());
+			pr.println("erro");
+			pr.flush();
+		}
 	}
 
 }
