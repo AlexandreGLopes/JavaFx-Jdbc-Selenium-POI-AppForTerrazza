@@ -5,8 +5,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.animation.FadeTransition;
@@ -24,6 +27,8 @@ import javafx.util.Duration;
 public class LoadingScreenController implements Initializable {
 
 	private String option;
+	
+	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
 	@FXML
 	private Button refreshButton;
@@ -50,6 +55,10 @@ public class LoadingScreenController implements Initializable {
 	
 	public void setLabel(String option) {
 		this.txtLabel.setText(option);
+	}
+	
+	public void subscribeDataChangeListener(DataChangeListener listener) {
+		dataChangeListeners.add(listener);
 	}
 
 	@Override
@@ -98,6 +107,7 @@ public class LoadingScreenController implements Initializable {
 
 		serverCommunicationTask.setOnSucceeded((e) -> {
 			if ("c".equals(serverCommunicationTask.getValue())) {
+				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 			}
 		});
@@ -113,6 +123,12 @@ public class LoadingScreenController implements Initializable {
 
 	}
 	
+	private void notifyDataChangeListeners() {
+		for (DataChangeListener listener : dataChangeListeners) {
+			listener.onDataChanged();
+		}
+	}
+
 	//Botão de cancelamento para fechar o painel, pois ele não tem barra superior
 	@FXML
 	private void onCancelButtonAction(ActionEvent event) {

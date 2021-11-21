@@ -52,6 +52,8 @@ public class Server {
 				PrintWriter pr;
 				// Chamando o método estático da classe que faz os downloads via Selenium
 				// Usando switch case para escolher qual método usar
+				// Lista que vai receber as reservas/clientes
+				List<Costumer> list = null;
 				switch (option) {
 				case "a":
 					// verificando se ficou algum arquivo antigo baixado para trás e deletando se
@@ -60,7 +62,7 @@ public class Server {
 					// Fazendo o download do arquivo do Terrazza 40
 					SeleniumUtils.DownloadFromWaitlist();
 					// Lista que vai receber as reservas/clientes
-					List<Costumer> list = null;
+					//List<Costumer> list = null;
 					// Chamando o método que lê e intancia uma lista de objetos do tipo Costumer
 					// para depois serem colocados no banco de dados
 					try {
@@ -71,7 +73,7 @@ public class Server {
 						e.printStackTrace();
 					}
 					for (Costumer obj : list) {
-						service.insertIfExteralIdNotExists(obj);
+						service.insertIfExternalIdNotExists(obj);
 					}
 					// verificando e excluindo o arquivo de download
 					OwnFileHandler.verifyAndDeleteFile("a");
@@ -86,7 +88,18 @@ public class Server {
 					OwnFileHandler.verifyAndDeleteFile("b");
 					// Fazendo o download do arquivo do 38 Floor
 					SeleniumUtils.useWix(browser2);
-
+					// Lista que vai receber as reservas/clientes
+					//List<Costumer> list = null;
+					// Chamando o método que lê e intancia uma lista de objetos do tipo Costumer
+					// para depois serem colocados no banco de dados
+					try {
+						list = OwnFileHandler.wixReaderInstantiator("b");
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					for (Costumer obj : list) {
+						service.insertIfExternalIdNotExists(obj);
+					}
 					// verificando e excluindo o arquivo de download
 					OwnFileHandler.verifyAndDeleteFile("b");
 					// Comunicando com o cliente para mostrar que as funções aqui finalizaram

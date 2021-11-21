@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import gui.listeners.DataChangeListener;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,7 +30,7 @@ import javafx.stage.StageStyle;
 import model.entities.Costumer;
 import model.services.CostumerService;
 
-public class MainViewController implements Initializable {
+public class MainViewController implements Initializable, DataChangeListener {
 	
 	private CostumerService service;
 	
@@ -166,6 +167,7 @@ public class MainViewController implements Initializable {
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
 			controller.setOption(option);
+			controller.subscribeDataChangeListener(this);
 			// Mudando o Label do próximo painel de acordo com a opção escolhida pelo
 			// usuário. Aprendi que não podemos chamar essas mudanças no initialize porque
 			// sempre vai dar null
@@ -206,6 +208,11 @@ public class MainViewController implements Initializable {
 		List<Costumer> list = service.findAllofCurrentDate();
 		obsList = FXCollections.observableArrayList(list);
 		tableViewCostumer.setItems(obsList);
+	}
+
+	@Override
+	public void onDataChanged() {
+		updateTableView();
 	}
 
 }

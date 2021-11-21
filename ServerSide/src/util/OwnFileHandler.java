@@ -2,12 +2,21 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+
+import org.apache.poi.openxml4j.util.ZipSecureFile;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import model.entities.Costumer;
 
@@ -130,5 +139,107 @@ public class OwnFileHandler {
 			array[fields.length - 1 + i] = fields2[i];
 		}
 		return array;
+	}
+
+	public static List<Costumer> wixReaderInstantiator(String option) {
+		// SImpleDateFormat para formatar os padrões das datas que vão entrar nas
+		// strings
+		SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+		// Definição do path do arquivo a ser lido
+		String path = definePath();
+		String file = defineFile(option);
+		File tempFile = new File(path + file);
+		//Lista de Costumers que vamos retornar
+		List<Costumer> list = new ArrayList<>();
+		
+		try {
+			//O primeiro passo é abrir o arquivo, com a classe FileInputStream, passando o PATH completo do arquivo.
+			FileInputStream arquivo = new FileInputStream(tempFile);
+			//Ajustando a configuração para contornar o Zip Bomb
+			ZipSecureFile.setMinInflateRatio(0);
+			//Depois utilizando a classe XSSFWorkbook, o arquivo é validado se é ou não um arquivo Excel
+			XSSFWorkbook workbook = new XSSFWorkbook(arquivo);
+			//A classe XSSFSheet abre uma planilha específica do arquivo
+			XSSFSheet sheetReservations = workbook.getSheetAt(0);
+			//Depois de aberto o arquivo, e com a planilha que será processado aberta, é necessário ler célula a célula do arquivo, para isso, é recuperado um iterator sobre todas as linhas do arquivo excel. 
+			Iterator<Row> rowIterator = sheetReservations.iterator();
+			//Lendo a primeira linha porque ela é cabeçalho
+			Row row = rowIterator.next();
+			while (rowIterator.hasNext()) {
+				row = rowIterator.next();
+				//Dentro de cada linha, é recuperado outro iterator, agora para iterar sobre as colunas de cada linha. Para ler as linhas do arquivo, é utilizada a classe Row, e para a célula especifica é utilizada a classe Cell. 
+				Iterator<Cell> cellIterator = row.cellIterator();
+				//Instanciando um costumer para receber os valores das células
+				Costumer costumer = new Costumer();
+				//adicionando o costumer vazio na lista
+				list.add(costumer);
+				while(cellIterator.hasNext()) {
+					Cell cell = cellIterator.next();
+					//A classe Cell possui diversos métodos para a manipulação dos dados do arquivo, por exemplo, é possível recuperar os dados que estão na célula com o tipo Java correto, por isso existem métodos para recuperar String, Números, Booleans entre outros.
+					//Switch/case para verificar qual o número da célula que o iterador está e usar o método set do Costumer para adicionar os parâmetros
+					switch(cell.getColumnIndex()) {
+					case 0:
+						costumer.setIdExterno(cell.getStringCellValue());
+						break;
+					case 1:
+						costumer.setNome(cell.getStringCellValue());
+						break;
+					case 2:
+						costumer.setSobrenome(cell.getStringCellValue());
+						break;
+					case 3:
+						costumer.setEmail(cell.getStringCellValue());
+						break;
+					case 5:
+						costumer.setData(cell.getDateCellValue());
+						break;
+					case 7:
+						costumer.setMesa(cell.getStringCellValue());
+						//Vários praâmetros que não temos na planilha por padrão serão adicionados no hardcod aqui
+						costumer.setTelefone("Wix não exporta");;
+						costumer.setSalao("38 Floor");
+						costumer.setPessoas(2);
+						costumer.setSituacao("Verificar Pagamento");
+						String strInicial = cell.getStringCellValue().substring(cell.getStringCellValue().lastIndexOf("(") + 1);
+						String strFinal = strInicial.substring(0, 5);
+						try {
+						costumer.setHora(hr.parse(strFinal));
+						}catch (Exception e) {
+							//System.out.println("não deu");
+						}
+						break;
+					case 10:
+						costumer.setPagamento(cell.getNumericCellValue());
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			//System.out.println(e.getMessage());
+		}
+		//Pegando a data atual do sistema e colocando na variável today
+		SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+		Date currDate = new Date();
+		Date today = null;
+		try {
+			today = dt.parse(dt.format(currDate));
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		//Instanciando um iterator para poder percorrer a lista e poder remover os costumers com data diferente da atual
+		Iterator<Costumer> i = list.iterator();
+		while (i.hasNext()) {
+			//Lendo o próximo costumer
+			Costumer c = i.next();
+			//Método para comparar as data do costumer com a atual
+			if (c.getData().compareTo(today) != 0) {
+				//Se for diferente remover
+				i.remove();
+			}
+		}
+		//retornando a lista
+		return list;
 	}
 }
