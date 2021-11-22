@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import model.services.CostumerService;
 
@@ -29,7 +30,7 @@ public class Main extends Application {
 
 			mainScene = new Scene(scrollPane);
 			primaryStage.setScene(mainScene);
-			primaryStage.setTitle("Sample JavaFX application");
+			primaryStage.setTitle("Mesa de Trabalho de Reservas");
 			
 			//Pegando o controller da MainView e instanciando um CostumerService para acessar e trabalhar com a DB 
 			MainViewController controller = loader.getController();
@@ -38,6 +39,8 @@ public class Main extends Application {
 			controller.updateTableView();
 			//Setando a altura da TableView e enlaçando ela com a altura da janela 
 			controller.getTableViewCostumer().prefHeightProperty().bind(mainScene.heightProperty());
+			//Setando a tabela para deixar as colunas passarem além dos limites horizontais da própria tabela
+			controller.getTableViewCostumer().setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 			
 			primaryStage.show();
 		} catch (IOException e) {

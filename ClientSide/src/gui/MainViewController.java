@@ -3,13 +3,14 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import gui.listeners.DataChangeListener;
+import gui.util.Alerts;
 import gui.util.Utils;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,11 +18,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -50,6 +55,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 
 	@FXML
 	private TableView<Costumer> tableViewCostumer;
+	
+	@FXML
+	private TableColumn<Costumer, Costumer> tableColumnWhats;
 	
 	@FXML
 	private TableColumn<Costumer, Integer> tableColumnId;
@@ -104,10 +112,6 @@ public class MainViewController implements Initializable, DataChangeListener {
 	}
 	
 	public void onTestButtonAction() throws ParseException {
-		SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
-		SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
-		Costumer costumer = new Costumer(null, "Erika", "Lima", "41998642881", "erika@hotmail.com", "Terrazza 40", 2, dt.parse("15/11/2021"), hr.parse("19:00"), "1", "Confirmado", 300.00, "suhduahda");
-		service.insertIfExteralIdNotExists(costumer);
 		
 	}
 
@@ -208,11 +212,56 @@ public class MainViewController implements Initializable, DataChangeListener {
 		List<Costumer> list = service.findAllofCurrentDate();
 		obsList = FXCollections.observableArrayList(list);
 		tableViewCostumer.setItems(obsList);
+		initColumnButtons();
+		Utils.autoResizeColumns(tableViewCostumer);
 	}
 
 	@Override
 	public void onDataChanged() {
 		updateTableView();
 	}
-
+	
+	private void createDialogForm(Costumer obj, String absoluteName, Stage parentStage) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+			Pane pane = loader.load();
+			
+			MessageFormController controller = loader.getController();
+			controller.setCostumer(obj);
+			controller.updateFormData();
+			
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Mensagem para Whatsapp");
+			dialogStage.setScene(new Scene(pane));	
+			dialogStage.setResizable(false);
+			dialogStage.initOwner(parentStage);
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.showAndWait();
+		}
+		catch (IOException e) {
+			Alerts.showAlert("IOException", "Erro carregando o painel", e.getMessage(), AlertType.ERROR);
+		}
+	}
+	
+	private void initColumnButtons() { 
+		  tableColumnWhats.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue())); 
+		  tableColumnWhats.setCellFactory(param -> new TableCell<Costumer, Costumer>() { 
+		    private final Button button = new Button("WhatsApp");
+		 
+		    @Override 
+		    protected void updateItem(Costumer obj, boolean empty) { 
+		      super.updateItem(obj, empty); 
+		 
+		      if (obj == null) { 
+		        setGraphic(null); 
+		        return;
+		      }
+		      
+		      setGraphic(button);
+		      button.setOnAction( 
+		      event -> createDialogForm( 
+		        obj, "/gui/MessageForm.fxml", Utils.currentStage(event))); 
+		    } 
+		  });
+		}
 }
