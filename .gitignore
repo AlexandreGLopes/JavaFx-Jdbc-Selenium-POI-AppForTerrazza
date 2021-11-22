@@ -13,6 +13,10 @@
 # Package Files #
 *.jar
 !selenium-server-*
+!commons-*
+!log4j-api-*
+!poi-*
+!xmlbeans-*
 *.war
 *.nar
 *.ear
