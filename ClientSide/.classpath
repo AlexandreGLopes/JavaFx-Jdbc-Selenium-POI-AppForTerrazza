@@ -18,5 +18,25 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Selenium-Server"/>
+	<classpathentry kind="lib" path="res/POI/commons-collections4-4.4.jar"/>
+	<classpathentry kind="lib" path="res/POI/commons-compress-1.21.jar"/>
+	<classpathentry kind="lib" path="res/POI/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="res/POI/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="res/POI/log4j-api-2.14.1.jar"/>
+	<classpathentry kind="lib" path="res/POI/poi-5.1.0.jar"/>
+	<classpathentry kind="lib" path="res/POI/poi-ooxml-5.1.0.jar"/>
+	<classpathentry kind="lib" path="res/POI/poi-ooxml-full-5.1.0.jar"/>
+	<classpathentry kind="lib" path="res/POI/xmlbeans-5.0.2.jar"/>
+	<classpathentry kind="lib" path="res/POI/commons-math3-3.6.1.jar"/>
+	<classpathentry kind="lib" path="res/POI/log4j-core-2.14.1.jar"/>
+	<classpathentry kind="lib" path="res/POI/commons-codec-1.15.jar"/>
+	<classpathentry kind="lib" path="res/POI/slf4j-api-1.7.32.jar"/>
+	<classpathentry kind="lib" path="res/POI/SparseBitSet-1.2.jar"/>
+	<classpathentry kind="lib" path="res/POI/poi-examples-5.1.0.jar"/>
+	<classpathentry kind="lib" path="res/POI/poi-excelant-5.1.0.jar"/>
+	<classpathentry kind="lib" path="res/POI/poi-javadoc-5.1.0.jar"/>
+	<classpathentry kind="lib" path="res/POI/poi-ooxml-lite-5.1.0.jar"/>
+	<classpathentry kind="lib" path="res/POI/poi-scratchpad-5.1.0.jar"/>
+	<classpathentry kind="lib" path="res/POI/curvesapi-1.06.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

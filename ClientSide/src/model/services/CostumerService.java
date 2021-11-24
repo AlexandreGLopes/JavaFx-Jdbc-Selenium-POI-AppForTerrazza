@@ -12,7 +12,7 @@ public class CostumerService {
 	//Já fizemos a dependência da DB e injetamos a dependência usando o padrão Factory
 	private CostumerDao dao = DaoFactory.createCostumerDao();
 	
-	public void insertIfExteralIdNotExists(Costumer costumer) {
+	public void insertIfExternalIdNotExists(Costumer costumer) {
 		Costumer costumerSelected = dao.findByExternalId(costumer.getIdExterno());
 		if (costumerSelected == null) {
 			dao.insert(costumer);

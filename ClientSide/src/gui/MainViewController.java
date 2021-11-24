@@ -122,7 +122,6 @@ public class MainViewController implements Initializable, DataChangeListener {
 	}
 
 	public void onTestButtonAction() throws ParseException {
-
 	}
 
 	@FXML
@@ -221,22 +220,6 @@ public class MainViewController implements Initializable, DataChangeListener {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			// pane vai receber o que carregou do loader
 			Pane pane = loader.load();
-			// Abaixo comentado o formato antigo
-			/**
-			 * // Vamos injetar o departamento client no controlador da tela de loading //
-			 * Pegando referencia para o controlador LoadingScreenController controller =
-			 * loader.getController(); // Setando qual foi a opção escolhida pelo usuário
-			 * direto no próximo controlador // para que ele envie a opção para o servidor.
-			 * Lá o servidor vai entrar em // switch/case para escolher os métodos de
-			 * download usados controller.setOption(option);
-			 * controller.subscribeDataChangeListener(this); // Mudando o Label do próximo
-			 * painel de acordo com a opção escolhida pelo // usuário. Aprendi que não
-			 * podemos chamar essas mudanças no initialize porque // sempre vai dar null if
-			 * (option == "a") { controller.setLabel("Atualizar do Waitlist\n(Terrazza
-			 * 40)"); } if (option == "b") { controller.setLabel("Atualizar do Wix\n(38
-			 * Floor)"); }
-			 **/
-
 			// Ativando a função passada no parâmetro 4, tipo Consumer<T>
 			// Todas as funções passadas no paraâmetro Consumer são funções para o
 			// Controller

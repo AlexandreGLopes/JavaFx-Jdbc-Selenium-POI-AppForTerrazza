@@ -28,16 +28,24 @@
          </image>
       </ImageView>
       <Button fx:id="refreshButton" minWidth="76.0" mnemonicParsing="false" onAction="#onRefreshButtonAction" text="Iniciar" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <Label fx:id="txtLabel" text="Nenhum arquivo selecionado" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+      <Label fx:id="txtLabel" textAlignment="CENTER" textFill="RED" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="20.0" />
+         </GridPane.margin>
+      </Label>
+      <Button fx:id="cancelButton" minWidth="70.0" mnemonicParsing="false" onAction="#onCancelButtonAction" text="Cancelar" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+      <Button fx:id="filePickerButton" mnemonicParsing="false" onAction="#onFilePickerButtonAction" text="Selecionar arquivo:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+         <GridPane.margin>
+            <Insets top="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Label prefHeight="36.0" prefWidth="164.0" text="Seletor manual de arquivo de reservas" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+         <GridPane.margin>
+            <Insets bottom="12.0" />
+         </GridPane.margin>
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <Button fx:id="cancelButton" minWidth="70.0" mnemonicParsing="false" onAction="#onCancelButtonAction" text="Cancelar" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <Button fx:id="filePickerButton" mnemonicParsing="false" text="Selecionar arquivo:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
-         <GridPane.margin>
-            <Insets bottom="5.0" />
-         </GridPane.margin>
-      </Button>
    </children>
 </GridPane>
