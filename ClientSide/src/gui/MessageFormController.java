@@ -76,11 +76,11 @@ public class MessageFormController implements Initializable {
 
 		try {
 			HttpPost request = new HttpPost("http://51.222.146.252:3333/sendText");
-			StringEntity params = new StringEntity("{\"session\":\"TESTE\",\"number\":\"" + telefone + "\",\"text\":\""
+			StringEntity params = new StringEntity("{\"session\":\"terrazzaobscwb\",\"number\":\"" + telefone + "\",\"text\":\""
 					+ textMessage.getText() + "\"}", "UTF-8");
 			request.setHeader("Accept", "application/json");
 			request.setHeader("Content-Type", "application/json");
-			request.setHeader("sessionkey", "CHAVE1234");
+			request.setHeader("sessionkey", "terrazza@A8K9hD");
 			request.setEntity(params);
 			HttpResponse response = httpClient.execute(request);
 			int statusCode = response.getStatusLine().getStatusCode();

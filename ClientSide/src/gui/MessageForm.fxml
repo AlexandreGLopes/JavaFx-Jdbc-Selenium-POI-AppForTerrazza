@@ -46,7 +46,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                <children>
                   <Button fx:id="btEnviar" minWidth="76.0" mnemonicParsing="false" onAction="#onBtEnviarAction" text="Enviar" />
-                  <Button fx:id="btCancelar" minWidth="76.0" mnemonicParsing="false" onAction="#onBtCancelarAction" text="Cancelar" />
+                  <Button fx:id="btCancelar" minWidth="76.0" mnemonicParsing="false" onAction="#onBtCancelarAction" text="Fechar" />
                </children>
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
