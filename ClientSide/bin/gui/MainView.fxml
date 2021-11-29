@@ -25,7 +25,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Ajuda">
                   <items>
-                        <MenuItem fx:id="menuItemManualRefreshHelp" mnemonicParsing="false" onAction="#onMenuItemManualRefreshHelpAction" text="Atualizar manualmente" />
+                        <MenuItem fx:id="menuItemManualRefreshHelp" mnemonicParsing="false" onAction="#onMenuItemManualRefreshHelpAction" text="Como atualizar manualmente" />
                     <MenuItem fx:id="menuItemAbout" mnemonicParsing="false" onAction="#onMenuItemAboutAction" text="Sobre" />
                   </items>
                 </Menu>

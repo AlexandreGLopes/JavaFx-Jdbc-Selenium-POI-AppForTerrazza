@@ -82,14 +82,16 @@ public class ManualUpdaterScreenController implements Initializable {
 			Alerts.showAlert("Alerta", null, "Nenhum arquivo selecionado", AlertType.WARNING);
 		}
 	}
-
+	
+	//Método que configura o FadeTransition da imagem de carregamento do painel
 	private void makeFadeInTransition() {
 		FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), loadingGif);
 		fadeTransition.setFromValue(0.0);
 		fadeTransition.setToValue(1.0);
 		fadeTransition.play();
 	}
-
+	
+	// Método que trata do clique do botão de iniciar o carregamento do arquivo
 	@FXML
 	private void onRefreshButtonAction(ActionEvent event) {
 

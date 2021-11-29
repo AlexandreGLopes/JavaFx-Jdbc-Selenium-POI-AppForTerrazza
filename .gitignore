@@ -17,6 +17,7 @@
 !log4j-api-*
 !poi-*
 !xmlbeans-*
+!gson-*
 *.war
 *.nar
 *.ear

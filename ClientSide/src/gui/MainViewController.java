@@ -26,8 +26,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -37,7 +35,7 @@ import model.entities.Costumer;
 import model.services.CostumerService;
 
 public class MainViewController implements Initializable, DataChangeListener {
-
+	
 	private CostumerService service;
 
 	@FXML
@@ -130,7 +128,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		createLoadingPane("/gui/LoadingScreen.fxml", currentStage, (LoadingScreenController controller) -> {
+		loadPane("/gui/LoadingScreen.fxml", currentStage, (LoadingScreenController controller) -> {
 			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
@@ -151,7 +149,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		createLoadingPane("/gui/LoadingScreen.fxml", currentStage, (LoadingScreenController controller) -> {
+		loadPane("/gui/LoadingScreen.fxml", currentStage, (LoadingScreenController controller) -> {
 			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
@@ -171,17 +169,20 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		createLoadingPane("/gui/ManualUpdaterScreen.fxml", currentStage,
-				(ManualUpdaterScreenController controller) -> {
-					// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
-					// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
-					// switch/case para escolher os métodos de download usados
-					controller.subscribeDataChangeListener(this);
-				});
+		loadPane("/gui/ManualUpdaterScreen.fxml", currentStage, (ManualUpdaterScreenController controller) -> {
+			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
+			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
+			// switch/case para escolher os métodos de download usados
+			controller.subscribeDataChangeListener(this);
+		});
 	}
 
 	@FXML
 	public void onMenuItemAboutAction() {
+		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
+		// Utils
+		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
+		loadPane("/gui/About.fxml", currentStage, (x) -> {});
 	}
 
 	@FXML
@@ -212,9 +213,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 		tableColumnIdExterno.setCellValueFactory(new PropertyValueFactory<>("idExterno"));
 
 	}
-
-	private <T> void createLoadingPane(String absoluteName, Stage parentStage,
-			Consumer<T> initializingAction) {
+	
+	//Método que carrega novos painéis
+	private <T> void loadPane(String absoluteName, Stage parentStage, Consumer<T> initializingAction) {
 		try {
 			// Carregar o fxml
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
@@ -269,7 +270,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		updateTableView();
 	}
 
-	private void createDialogForm(Costumer obj, String absoluteName, Stage parentStage) {
+	private void createMessageForm(Costumer obj, String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
@@ -305,7 +306,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 				}
 
 				setGraphic(button);
-				button.setOnAction(event -> createDialogForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
+				button.setOnAction(event -> createMessageForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
 			}
 		});
 	}
