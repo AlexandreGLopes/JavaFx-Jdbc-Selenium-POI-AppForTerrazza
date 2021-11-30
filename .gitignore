@@ -18,6 +18,11 @@
 !poi-*
 !xmlbeans-*
 !gson-*
+!httpclient-*
+!httpcore-*
+!httpmime-*
+!jna-*
+!fluent-hc-*
 *.war
 *.nar
 *.ear

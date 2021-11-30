@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="562.0" prefWidth="575.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AboutController">
+   <children>
+      <Label layoutX="182.0" layoutY="14.0" text="Ajuda da Atualizaçao Manual">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Button fx:id="closeButton" layoutX="534.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCloseButtonAction" text="X" />
+      <ScrollPane layoutX="4.0" layoutY="48.0" prefHeight="1000.0" prefWidth="569.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="997.0" prefWidth="567.0">
+               <children>
+                  <Label layoutX="184.0" layoutY="124.0" text="Atualizaçao Manual do Waitlist" />
+                  <Label layoutX="142.0" layoutY="142.0" text="para reservas do Terrazza 40 Convencional" />
+                  <Label layoutX="20.0" layoutY="29.0" prefHeight="65.0" prefWidth="528.0" text="Caso o sistema automatico de atualizaçao de reservas no esteja funcionando por qualquer motivo e possivel fazer essa atualizaçao de forma manual: entrando no site de cada sistema de reservas e baixando o arquivo com as reservas para ser carregado neste programa" textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="20.0" layoutY="515.0" prefHeight="144.0" prefWidth="528.0" text="Entre no site https://waitlist.tagme.com.br e faça o login. Na barra superior encontre a opçao &quot;Relatorios&quot; e clique nela. Em seguida escolha a opçao &quot;Relatorios&quot; mais uma vez e clique nela. Uma pagina com varias opçoes vai aparecer. Na primeira caixa de Relatorio escolha a opçao &quot;Lista Geral de Reservas&quot;. Em seguida verifique se a Data de Inicio corresponde a data de hoje. Se sim, aperte o botao &quot;Filtrar&quot;. As reservas serao carregadas. Depois, clique no botao com a flecha ao lado do de Filtrar e escolha a opçao &quot;Exportar para CSV&quot; e faça o download do arquivo." textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="20.0" layoutY="181.0" prefHeight="16.0" prefWidth="528.0" text="Abaixo e mostrado um gif mostrando como baixar o arquivo:" textAlignment="JUSTIFY" wrapText="true" />
+                  <ImageView fitHeight="324.0" fitWidth="528.0" layoutX="19.0" layoutY="209.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../res/waitlisthelp.gif" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="19.0" layoutY="659.0" prefHeight="72.0" prefWidth="528.0" text="Em seguida, neste programa, voce vai selecionar a opçao &quot;Arquivo&quot; e depois" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
