@@ -35,7 +35,7 @@ import model.entities.Costumer;
 import model.services.CostumerService;
 
 public class MainViewController implements Initializable, DataChangeListener {
-	
+
 	private CostumerService service;
 
 	@FXML
@@ -182,11 +182,17 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/About.fxml", currentStage, (x) -> {});
+		loadPane("/gui/About.fxml", currentStage, (x) -> {
+		});
 	}
 
 	@FXML
 	public void onMenuItemManualRefreshHelpAction() {
+		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
+		// Utils
+		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
+		loadPane("/gui/ManualUpdaterHelp.fxml", currentStage, (x) -> {
+		});
 	}
 
 	@Override
@@ -213,8 +219,8 @@ public class MainViewController implements Initializable, DataChangeListener {
 		tableColumnIdExterno.setCellValueFactory(new PropertyValueFactory<>("idExterno"));
 
 	}
-	
-	//Método que carrega novos painéis
+
+	// Método que carrega novos painéis
 	private <T> void loadPane(String absoluteName, Stage parentStage, Consumer<T> initializingAction) {
 		try {
 			// Carregar o fxml
