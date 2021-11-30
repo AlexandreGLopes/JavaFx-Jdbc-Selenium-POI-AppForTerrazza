@@ -15,8 +15,12 @@
 !selenium-server-*
 !commons-*
 !log4j-api-*
+!log4j-core-*
 !poi-*
 !xmlbeans-*
+!curvesapi-*
+!slf4j-api-*
+!SparseBitSet-*
 !gson-*
 !httpclient-*
 !httpcore-*
