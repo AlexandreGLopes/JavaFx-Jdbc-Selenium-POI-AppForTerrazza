@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="592.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ManualUpdaterController">
+<AnchorPane prefHeight="700.0" prefWidth="592.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ManualUpdaterHelpController">
    <children>
       <Label layoutX="182.0" layoutY="14.0" text="Ajuda da Atualização Manual">
          <font>

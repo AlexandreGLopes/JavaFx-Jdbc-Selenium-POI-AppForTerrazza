@@ -9,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
-public class ManualUpdaterController implements Initializable{
+public class ManualUpdaterHelpController implements Initializable{
 	
 	@FXML
 	private Button closeButton;

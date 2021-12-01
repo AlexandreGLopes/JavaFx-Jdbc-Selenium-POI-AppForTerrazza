@@ -10,7 +10,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainViewController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainViewController">
    <content>
       <VBox fx:id="rootVBox" prefHeight="427.0" prefWidth="586.0">
          <children>
@@ -38,7 +38,7 @@
             </ToolBar>
             <TableView fx:id="tableViewCostumer">
               <columns>
-                <TableColumn fx:id="tableColumnWhats" maxWidth="92.0" minWidth="92.0" prefWidth="92.0" />
+                <TableColumn fx:id="tableColumnWhats" maxWidth="42.0" minWidth="42.0" prefWidth="42.0" />
                 <TableColumn fx:id="tableColumnId" prefWidth="55.0" text="Id" />
                   <TableColumn fx:id="tableColumnNome" prefWidth="88.0" text="Nome" />
                   <TableColumn fx:id="tableColumnSobrenome" prefWidth="115.0" text="Sobrenome" />

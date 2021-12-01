@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
@@ -26,6 +27,8 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -298,10 +301,12 @@ public class MainViewController implements Initializable, DataChangeListener {
 	}
 
 	private void initColumnButtons() {
+		Image img = new Image(new File("res/whatsIcon.png").toURI().toString());
 		tableColumnWhats.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tableColumnWhats.setCellFactory(param -> new TableCell<Costumer, Costumer>() {
-			private final Button button = new Button("WhatsApp");
-
+			ImageView view = new ImageView(img);
+			private final Button button = new Button(null, view);
+			
 			@Override
 			protected void updateItem(Costumer obj, boolean empty) {
 				super.updateItem(obj, empty);
@@ -310,8 +315,11 @@ public class MainViewController implements Initializable, DataChangeListener {
 					setGraphic(null);
 					return;
 				}
-
+				
 				setGraphic(button);
+				button.setPrefWidth(30);
+				view.setFitHeight(18);
+				view.setFitWidth(18);
 				button.setOnAction(event -> createMessageForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
 			}
 		});
