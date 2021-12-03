@@ -227,7 +227,32 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		try {
 			st = conn.prepareStatement(
 					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno "
-							+ "FROM skycuritibacostumers.terrazzacostumers " + "WHERE DATE(Data) = CURDATE()");
+							+ "FROM skycuritibacostumers.terrazzacostumers " + "WHERE DATE(Data) = CURDATE() ORDER BY Hora");
+
+			rs = st.executeQuery();
+
+			List<Costumer> list = new ArrayList<>();
+			while (rs.next()) {
+				Costumer costumer = instantiateCostumer(rs);
+				list.add(costumer);
+			}
+			return list;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+	}
+	
+	@Override
+	public List<Costumer> findTodayCostumersByName() {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno "
+							+ "FROM skycuritibacostumers.terrazzacostumers " + "WHERE DATE(Data) = CURDATE() ORDER BY Nome");
 
 			rs = st.executeQuery();
 

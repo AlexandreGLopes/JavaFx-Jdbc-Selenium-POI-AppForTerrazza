@@ -4,13 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
+import gui.util.CheckDuplicacatesMethods;
 import gui.util.Utils;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -31,6 +34,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -60,7 +64,10 @@ public class MainViewController implements Initializable, DataChangeListener {
 	private MenuItem menuItemManualRefreshHelp;
 
 	@FXML
-	private Button testButton;
+	private Button tabelaPrincipalButton;
+
+	@FXML
+	private Button clientesDuplicadosButton;
 
 	// Iniciando as referências para a TableView
 
@@ -122,7 +129,14 @@ public class MainViewController implements Initializable, DataChangeListener {
 		this.service = service;
 	}
 
-	public void onTestButtonAction() throws ParseException {
+	@FXML
+	public void onTabelaPrincipalButtonAction() throws ParseException {
+		updateTableView();
+	}
+
+	@FXML
+	public void onClientesDuplicadosButtonAction() throws ParseException {
+		showDuplicatedCostumersOnTableView();
 	}
 
 	@FXML
@@ -274,11 +288,24 @@ public class MainViewController implements Initializable, DataChangeListener {
 		Utils.autoResizeColumns(tableViewCostumer);
 	}
 
+	public void showDuplicatedCostumersOnTableView() {
+		if (service == null) {
+			throw new IllegalStateException("Service was null");
+		}
+		List<Costumer> duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByName(service);
+		
+		obsList = FXCollections.observableArrayList(duplicatedList);
+		tableViewCostumer.setItems(obsList);
+		initColumnButtons();
+		Utils.autoResizeColumns(tableViewCostumer);
+	}
+
 	@Override
 	public void onDataChanged() {
 		updateTableView();
 	}
 
+	// Método que cria o formulário das mensagens de whatsapp inividuais
 	private void createMessageForm(Costumer obj, String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
@@ -300,13 +327,14 @@ public class MainViewController implements Initializable, DataChangeListener {
 		}
 	}
 
+	// Método que coloca os botões do whatsapp nas linhas da tableview
 	private void initColumnButtons() {
 		Image img = new Image(new File("res/whatsIcon.png").toURI().toString());
 		tableColumnWhats.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tableColumnWhats.setCellFactory(param -> new TableCell<Costumer, Costumer>() {
 			ImageView view = new ImageView(img);
 			private final Button button = new Button(null, view);
-			
+
 			@Override
 			protected void updateItem(Costumer obj, boolean empty) {
 				super.updateItem(obj, empty);
@@ -315,12 +343,18 @@ public class MainViewController implements Initializable, DataChangeListener {
 					setGraphic(null);
 					return;
 				}
-				
-				setGraphic(button);
-				button.setPrefWidth(30);
-				view.setFitHeight(18);
-				view.setFitWidth(18);
-				button.setOnAction(event -> createMessageForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
+
+				// Adicionei o código para saber se o nome do costumer está nulo porque vai ter
+				// as linhas com clientes nulos para dar um espaço entre os nomes de clientes
+				// duplicados
+				if (obj.getNome() != null) {
+					setGraphic(button);
+					button.setPrefWidth(30);
+					view.setFitHeight(18);
+					view.setFitWidth(18);
+					button.setOnAction(
+							event -> createMessageForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
+				}
 			}
 		});
 	}

@@ -33,7 +33,8 @@
             </MenuBar>
             <ToolBar prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button fx:id="testButton" mnemonicParsing="false" onAction="#onTestButtonAction" text="Inativo" />
+                <Button fx:id="tabelaPrincipalButton" mnemonicParsing="false" onAction="#onTabelaPrincipalButtonAction" text="Tabela Principal" />
+                  <Button fx:id="clientesDuplicadosButton" mnemonicParsing="false" onAction="#onClientesDuplicadosButtonAction" text="Clientes Duplicados" />
               </items>
             </ToolBar>
             <TableView fx:id="tableViewCostumer">

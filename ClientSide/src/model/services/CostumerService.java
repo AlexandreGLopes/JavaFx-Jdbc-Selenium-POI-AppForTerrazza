@@ -31,4 +31,8 @@ public class CostumerService {
 	public List<Costumer> findAllofCurrentDate() {
 		return dao.findTodayCostumers();
 	}
+	
+	public List<Costumer> findAllofCurrentDateOrderByName() {
+		return dao.findTodayCostumersByName();
+	}
 }

@@ -14,5 +14,6 @@ public interface CostumerDao {
 	Costumer findByExternalId(String idExterno);
 	List<Costumer> findAll();
 	List<Costumer> findTodayCostumers();
+	List<Costumer> findTodayCostumersByName();
 
 }
