@@ -293,11 +293,12 @@ public class MainViewController implements Initializable, DataChangeListener {
 			throw new IllegalStateException("Service was null");
 		}
 		List<Costumer> duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByName(service);
-		
+
 		obsList = FXCollections.observableArrayList(duplicatedList);
 		tableViewCostumer.setItems(obsList);
 		initColumnButtons();
 		Utils.autoResizeColumns(tableViewCostumer);
+		clientesDuplicadosButton.setStyle("-fx-border-color: #ff0000;");
 	}
 
 	@Override
