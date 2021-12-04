@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -28,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -285,6 +284,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		obsList = FXCollections.observableArrayList(list);
 		tableViewCostumer.setItems(obsList);
 		initColumnButtons();
+		customiseFactory();
 		Utils.autoResizeColumns(tableViewCostumer);
 	}
 
@@ -298,7 +298,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		tableViewCostumer.setItems(obsList);
 		initColumnButtons();
 		Utils.autoResizeColumns(tableViewCostumer);
-		clientesDuplicadosButton.setStyle("-fx-border-color: #ff0000;");
+		clientesDuplicadosButton.setStyle("-fx-effect: dropshadow(three-pass-box, #4287f5, 5, 0.0, 0, 1);");
 	}
 
 	@Override
@@ -358,5 +358,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 				}
 			}
 		});
+	}
+	
+	private void customiseFactory() {
+
 	}
 }
