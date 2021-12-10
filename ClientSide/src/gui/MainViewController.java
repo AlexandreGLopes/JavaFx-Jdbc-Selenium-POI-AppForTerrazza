@@ -47,6 +47,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import model.entities.Costumer;
 import model.services.CostumerService;
 
@@ -74,12 +75,15 @@ public class MainViewController implements Initializable, DataChangeListener {
 
 	@FXML
 	private Button tabelaPrincipalButton;
-
-	@FXML
-	private CheckComboBox<String> filtrosCheckComboBox;
-
+	
 	@FXML
 	private Button clientesDuplicadosButton;
+
+	@FXML
+	private CheckComboBox<String> filtrosSituacaoCheckComboBox;
+	
+	@FXML
+	private CheckComboBox<String> filtrosSalaoCheckComboBox;
 
 	// Iniciando as referências para a TableView
 
@@ -230,16 +234,99 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// Setando as opções do checkComboBox que vai ser o filtro pras situações das
 		// reservas
 		// retirado de : https://www.youtube.com/watch?v=fjkkzkk7rNc&t=420s
-		final ObservableList<String> options = FXCollections.observableArrayList();
-		options.add("Novo");
-		options.add("Confirmado");
-		options.add("Cancelado pelo cliente");
-		options.add("Cancelado por no-show");
-		options.add("Cancelado por erro");
-		filtrosCheckComboBox.getItems().addAll(options);
+		final ObservableList<String> optionsSituacao = FXCollections.observableArrayList();
+		optionsSituacao.add("Novo");
+		optionsSituacao.add("Confirmado");
+		optionsSituacao.add("Sentado");
+		optionsSituacao.add("Cancelado pelo cliente");
+		optionsSituacao.add("Cancelado por no-show");
+		optionsSituacao.add("Cancelado por erro");
+		filtrosSituacaoCheckComboBox.getItems().addAll(optionsSituacao);
+		// Setando as opções do checkComboBox que vai ser o filtro pros salões
+		final ObservableList<String> optionsSalao = FXCollections.observableArrayList();
+		optionsSalao.add("Almoço");
+		optionsSalao.add("Café da Tarde");
+		optionsSalao.add("Pôr do Sol");
+		optionsSalao.add("Jantar");
+		optionsSalao.add("38 Floor");
+		filtrosSalaoCheckComboBox.getItems().addAll(optionsSalao);
 	}
 
 	private void initializeNodes() {
+		/*
+		tableColumnSituacao.setCellFactory(new Callback<TableColumn<Costumer,String>, TableCell<Costumer,String>>() {
+			
+			@Override
+			public TableCell<Costumer, String> call(
+					TableColumn<Costumer, String> param) {
+				return new TableCell<Costumer, String>(){
+					@Override
+					protected void updateItem(String item, boolean empty) {
+						if (!empty) {
+                            int currentIndex = indexProperty()
+                                    .getValue() < 0 ? 0
+                                    : indexProperty().getValue();
+                            String columnSituacao = param
+                            		.getTableView().getItems()
+                            		.get(currentIndex).getSituacao();
+                            if (columnSituacao.contains("Cancelado")) {
+                            	setTextFill(Color.RED);
+                            	setText(columnSituacao);
+                            }
+                            else {
+                            	setTextFill(Color.BLACK);
+                            	setText(columnSituacao);
+                            }
+						}
+					}
+				};
+			}
+		});
+		*/
+		
+		/*
+		tableViewCostumer.setRowFactory(row -> new TableRow<Costumer>() {
+			@Override
+			public void updateItem(Costumer item, boolean empty) {
+				super.updateItem(item, empty);
+
+				if (item == null) {
+					setStyle("");
+				} else if (item.getSituacao().contains("Cancelado")) {
+					setTextFill(Color.RED);
+						}
+				else {
+					setTextFill(Color.BLACK);
+					}
+			}
+		});
+		*/
+		/*
+		tableViewCostumer.setRowFactory(new Callback<TableView<Costumer>, TableRow<Costumer>>() {
+			@Override
+			public TableRow<Costumer> call(TableView<Costumer> param) {
+				return new TableRow<Costumer>() {
+					@Override
+					protected void updateItem(Costumer item, boolean empty) {
+						if (!empty) {
+							int currentIndex = indexProperty()
+                                    .getValue() < 0 ? 0
+                                    : indexProperty().getValue();
+                            String columnSituacao = param.getItems().get(currentIndex).getSituacao();
+							if(columnSituacao.contains("Cancelado")) {
+								setTextFill(Color.RED);
+							}
+							else {
+								setTextFill(Color.BLACK);
+							}
+						}
+					}
+					
+				};
+			}
+		});
+		*/
+		
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
 		tableColumnSobrenome.setCellValueFactory(new PropertyValueFactory<>("sobrenome"));
@@ -253,9 +340,12 @@ public class MainViewController implements Initializable, DataChangeListener {
 		Utils.formatTableColumnDate(tableColumnHora, "HH:mm");
 		tableColumnMesa.setCellValueFactory(new PropertyValueFactory<>("mesa"));
 		tableColumnSituacao.setCellValueFactory(new PropertyValueFactory<>("situacao"));
+		System.out.println(tableColumnSituacao.getCellObservableValue(null));
 		tableColumnPagamento.setCellValueFactory(new PropertyValueFactory<>("pagamento"));
 		Utils.formatTableColumnDouble(tableColumnPagamento, 2);
 		tableColumnIdExterno.setCellValueFactory(new PropertyValueFactory<>("idExterno"));
+		
+		
 	}
 
 	// Método que carrega novos painéis
@@ -317,13 +407,30 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// Adicionando um listener na checkComboBox e colocando um predicado para a
 		// lista filtrada acima, para poder mexer nela passando os valores da expressão
 		// lambda abaixo
-		filtrosCheckComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+		filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
 			public void onChanged(ListChangeListener.Change<? extends String> c) {
 				filteredList.setPredicate(costumer -> {
-					if (filtrosCheckComboBox.getCheckModel().getCheckedItems() == null) {
+					//listener na combobox dos filtros do salão
+					filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+						public void onChanged(ListChangeListener.Change<? extends String> c) {
+							filteredList.setPredicate(costumer -> {
+								if (filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems() == null) {
+									return true;
+								}
+								for (String item : filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems()) {
+									if (costumer.getSalao().toLowerCase().contains(item.toLowerCase())) {
+										return true;
+									}
+								}
+								return false;
+							});
+						}
+					});
+					
+					if (filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems() == null) {
 						return true;
 					}
-					for (String item : filtrosCheckComboBox.getCheckModel().getCheckedItems()) {
+					for (String item : filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems()) {
 						if (costumer.getSituacao().toLowerCase().contains(item.toLowerCase())) {
 							return true;
 						}
@@ -338,6 +445,8 @@ public class MainViewController implements Initializable, DataChangeListener {
 		sortedData.comparatorProperty().bind(tableViewCostumer.comparatorProperty());
 		// Add sorted (and filtered) data to the table
 		tableViewCostumer.setItems(sortedData);
+		
+		
 		// iniciando os botões nas linhas dos clientes
 		initColumnButtons();
 		// customiseFactory();

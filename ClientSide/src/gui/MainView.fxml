@@ -33,14 +33,20 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <ToolBar prefHeight="40.0" prefWidth="200.0">
+            <ToolBar prefHeight="40.0" prefWidth="859.0">
               <items>
                   <Label text="Tabela Principal:" />
                 <Button fx:id="tabelaPrincipalButton" mnemonicParsing="false" onAction="#onTabelaPrincipalButtonAction" text="Completa" />
-                  <CheckComboBox fx:id="filtrosCheckComboBox" prefWidth="100.0" title="Filtros" />
                   <Label text="Clientes Duplicados:" />
                   <Button fx:id="clientesDuplicadosButton" mnemonicParsing="false" onAction="#onClientesDuplicadosButtonAction" text="Por Nome" />
               </items>
+            </ToolBar>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+               <items>
+                  <Label text="Filtros:" />
+                  <CheckComboBox fx:id="filtrosSituacaoCheckComboBox" prefHeight="24.0" prefWidth="106.0" title="Situação" />
+                  <CheckComboBox fx:id="filtrosSalaoCheckComboBox" prefWidth="106.0" title="Salão" />
+               </items>
             </ToolBar>
             <TableView fx:id="tableViewCostumer" prefHeight="366.0" prefWidth="653.0">
               <columns>
