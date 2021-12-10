@@ -27,6 +27,7 @@
 !httpmime-*
 !jna-*
 !fluent-hc-*
+!controlsfx-
 *.war
 *.nar
 *.ear

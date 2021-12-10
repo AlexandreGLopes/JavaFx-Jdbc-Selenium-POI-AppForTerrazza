@@ -8,14 +8,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+
+import org.controlsfx.control.CheckComboBox;
 
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.CheckDuplicacatesMethods;
 import gui.util.Utils;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +32,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -64,6 +74,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 
 	@FXML
 	private Button tabelaPrincipalButton;
+
+	@FXML
+	private CheckComboBox<String> filtrosCheckComboBox;
 
 	@FXML
 	private Button clientesDuplicadosButton;
@@ -214,6 +227,16 @@ public class MainViewController implements Initializable, DataChangeListener {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		initializeNodes();
+		// Setando as opções do checkComboBox que vai ser o filtro pras situações das
+		// reservas
+		// retirado de : https://www.youtube.com/watch?v=fjkkzkk7rNc&t=420s
+		final ObservableList<String> options = FXCollections.observableArrayList();
+		options.add("Novo");
+		options.add("Confirmado");
+		options.add("Cancelado pelo cliente");
+		options.add("Cancelado por no-show");
+		options.add("Cancelado por erro");
+		filtrosCheckComboBox.getItems().addAll(options);
 	}
 
 	private void initializeNodes() {
@@ -233,7 +256,6 @@ public class MainViewController implements Initializable, DataChangeListener {
 		tableColumnPagamento.setCellValueFactory(new PropertyValueFactory<>("pagamento"));
 		Utils.formatTableColumnDouble(tableColumnPagamento, 2);
 		tableColumnIdExterno.setCellValueFactory(new PropertyValueFactory<>("idExterno"));
-
 	}
 
 	// Método que carrega novos painéis
@@ -280,11 +302,45 @@ public class MainViewController implements Initializable, DataChangeListener {
 		if (service == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		List<Costumer> list = service.findAllofCurrentDate();
-		obsList = FXCollections.observableArrayList(list);
-		tableViewCostumer.setItems(obsList);
+		// Pegando o o resultado da query do MySQL e colocando numa lista principal
+		List<Costumer> masterList = service.findAllofCurrentDate();
+		// A partir daqui é uma mescla de coisas retiradas de:
+		// 1) https://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
+		// e
+		// 2)http://javadox.com/org.controlsfx/controlsfx/8.40.10/org/controlsfx/control/CheckComboBox.html#method.summary
+		// e
+		// 3) do updateTableView do curso de Java da Udemy
+		// Fazendo a observableList padrão desta classe receber a lista principal
+		obsList = FXCollections.observableArrayList(masterList);
+		// Wrap the ObservableList in a FilteredList (initially display all data)
+		FilteredList<Costumer> filteredList = new FilteredList<>(obsList, c -> true);
+		// Adicionando um listener na checkComboBox e colocando um predicado para a
+		// lista filtrada acima, para poder mexer nela passando os valores da expressão
+		// lambda abaixo
+		filtrosCheckComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+			public void onChanged(ListChangeListener.Change<? extends String> c) {
+				filteredList.setPredicate(costumer -> {
+					if (filtrosCheckComboBox.getCheckModel().getCheckedItems() == null) {
+						return true;
+					}
+					for (String item : filtrosCheckComboBox.getCheckModel().getCheckedItems()) {
+						if (costumer.getSituacao().toLowerCase().contains(item.toLowerCase())) {
+							return true;
+						}
+					}
+					return false;
+				});
+			}
+		});
+		// Wrap the FilteredList in a SortedList
+		SortedList<Costumer> sortedData = new SortedList<Costumer>(filteredList);
+		// Bind the SortedList comparator to the TableView comparator
+		sortedData.comparatorProperty().bind(tableViewCostumer.comparatorProperty());
+		// Add sorted (and filtered) data to the table
+		tableViewCostumer.setItems(sortedData);
+		// iniciando os botões nas linhas dos clientes
 		initColumnButtons();
-		customiseFactory();
+		// customiseFactory();
 		Utils.autoResizeColumns(tableViewCostumer);
 	}
 
@@ -359,8 +415,28 @@ public class MainViewController implements Initializable, DataChangeListener {
 			}
 		});
 	}
-	
-	private void customiseFactory() {
 
+	private void customiseFactory() {
+		tableViewCostumer.setRowFactory(row -> new TableRow<Costumer>() {
+			@Override
+			public void updateItem(Costumer item, boolean empty) {
+				super.updateItem(item, empty);
+
+				if (item == null || empty) {
+					setStyle("");
+				} else {
+					if (item.getSituacao().equals("Cancelado pelo cliente")) {
+						for (int i = 0; i < getChildren().size(); i++) {
+							((Labeled) getChildren().get(i)).setTextFill(Color.RED);
+						}
+					} else {
+						for (int i = 0; i < getChildren().size(); i++) {
+							((Labeled) getChildren().get(i)).setTextFill(Color.BLACK);
+							;
+						}
+					}
+				}
+			}
+		});
 	}
 }

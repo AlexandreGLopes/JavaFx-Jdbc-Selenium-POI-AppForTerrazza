@@ -10,6 +10,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckComboBox?>
 
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainViewController">
    <content>
@@ -36,6 +37,7 @@
               <items>
                   <Label text="Tabela Principal:" />
                 <Button fx:id="tabelaPrincipalButton" mnemonicParsing="false" onAction="#onTabelaPrincipalButtonAction" text="Completa" />
+                  <CheckComboBox fx:id="filtrosCheckComboBox" prefWidth="100.0" title="Filtros" />
                   <Label text="Clientes Duplicados:" />
                   <Button fx:id="clientesDuplicadosButton" mnemonicParsing="false" onAction="#onClientesDuplicadosButtonAction" text="Por Nome" />
               </items>
