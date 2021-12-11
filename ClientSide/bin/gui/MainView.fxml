@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckComboBox?>
@@ -46,6 +47,8 @@
                   <Label text="Filtros:" />
                   <CheckComboBox fx:id="filtrosSituacaoCheckComboBox" prefHeight="24.0" prefWidth="106.0" title="Situação" />
                   <CheckComboBox fx:id="filtrosSalaoCheckComboBox" prefWidth="106.0" title="Salão" />
+                  <Label text="Por Nome:" />
+                  <TextField fx:id="filtroNomeSobrenomeTextField" />
                </items>
             </ToolBar>
             <TableView fx:id="tableViewCostumer" prefHeight="366.0" prefWidth="653.0">

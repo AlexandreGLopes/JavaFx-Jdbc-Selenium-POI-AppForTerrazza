@@ -21,10 +21,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +36,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -47,7 +46,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
 import model.entities.Costumer;
 import model.services.CostumerService;
 
@@ -84,6 +82,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 	
 	@FXML
 	private CheckComboBox<String> filtrosSalaoCheckComboBox;
+	
+	@FXML
+	private TextField filtroNomeSobrenomeTextField;
 
 	// Iniciando as referências para a TableView
 
@@ -244,10 +245,10 @@ public class MainViewController implements Initializable, DataChangeListener {
 		filtrosSituacaoCheckComboBox.getItems().addAll(optionsSituacao);
 		// Setando as opções do checkComboBox que vai ser o filtro pros salões
 		final ObservableList<String> optionsSalao = FXCollections.observableArrayList();
-		optionsSalao.add("Almoço");
-		optionsSalao.add("Café da Tarde");
-		optionsSalao.add("Pôr do Sol");
-		optionsSalao.add("Jantar");
+		optionsSalao.add("Almoço Terrazza 40");
+		optionsSalao.add("Café da Tarde na Confeitaria");
+		optionsSalao.add("Pôr do Sol na Confeitaria");
+		optionsSalao.add("Jantar no Terrazza 40");
 		optionsSalao.add("38 Floor");
 		filtrosSalaoCheckComboBox.getItems().addAll(optionsSalao);
 	}
@@ -340,12 +341,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 		Utils.formatTableColumnDate(tableColumnHora, "HH:mm");
 		tableColumnMesa.setCellValueFactory(new PropertyValueFactory<>("mesa"));
 		tableColumnSituacao.setCellValueFactory(new PropertyValueFactory<>("situacao"));
-		System.out.println(tableColumnSituacao.getCellObservableValue(null));
 		tableColumnPagamento.setCellValueFactory(new PropertyValueFactory<>("pagamento"));
 		Utils.formatTableColumnDouble(tableColumnPagamento, 2);
 		tableColumnIdExterno.setCellValueFactory(new PropertyValueFactory<>("idExterno"));
-		
-		
 	}
 
 	// Método que carrega novos painéis
@@ -400,52 +398,39 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// 2)http://javadox.com/org.controlsfx/controlsfx/8.40.10/org/controlsfx/control/CheckComboBox.html#method.summary
 		// e
 		// 3) do updateTableView do curso de Java da Udemy
+		// Por fim, mudei tudo e arrumei usando bindings que encontrei aqui:
+		// 4)https://stackoverflow.com/questions/52232150/filtering-tableview-with-controlsfx-checkcombobox
 		// Fazendo a observableList padrão desta classe receber a lista principal
 		obsList = FXCollections.observableArrayList(masterList);
-		// Wrap the ObservableList in a FilteredList (initially display all data)
-		FilteredList<Costumer> filteredList = new FilteredList<>(obsList, c -> true);
-		// Adicionando um listener na checkComboBox e colocando um predicado para a
-		// lista filtrada acima, para poder mexer nela passando os valores da expressão
-		// lambda abaixo
-		filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-			public void onChanged(ListChangeListener.Change<? extends String> c) {
-				filteredList.setPredicate(costumer -> {
-					//listener na combobox dos filtros do salão
-					filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-						public void onChanged(ListChangeListener.Change<? extends String> c) {
-							filteredList.setPredicate(costumer -> {
-								if (filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems() == null) {
-									return true;
-								}
-								for (String item : filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems()) {
-									if (costumer.getSalao().toLowerCase().contains(item.toLowerCase())) {
-										return true;
-									}
-								}
-								return false;
-							});
-						}
-					});
-					
-					if (filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems() == null) {
-						return true;
-					}
-					for (String item : filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems()) {
-						if (costumer.getSituacao().toLowerCase().contains(item.toLowerCase())) {
-							return true;
-						}
-					}
-					return false;
-				});
-			}
-		});
-		// Wrap the FilteredList in a SortedList
-		SortedList<Costumer> sortedData = new SortedList<Costumer>(filteredList);
-		// Bind the SortedList comparator to the TableView comparator
-		sortedData.comparatorProperty().bind(tableViewCostumer.comparatorProperty());
-		// Add sorted (and filtered) data to the table
-		tableViewCostumer.setItems(sortedData);
 		
+		// Criando predicados para cada checkComboBox e para o TextField
+		ObjectProperty<Predicate<Costumer>> statusFilter = new SimpleObjectProperty<>();
+		ObjectProperty<Predicate<Costumer>> saloonFilter = new SimpleObjectProperty<>();
+		ObjectProperty<Predicate<Costumer>> nameSurnameFilter = new SimpleObjectProperty<>();
+		
+		// Fazendo o bind (enlaçando) cada um dos predicados aos valores das checkComboBox e do TextField
+		statusFilter.bind(Bindings.createObjectBinding(() -> costumer ->filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().isEmpty() ||
+				filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().contains(costumer.getSituacao()),
+				filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems()));
+		
+		saloonFilter.bind(Bindings.createObjectBinding(() -> costumer ->filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().isEmpty() ||
+				filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().contains(costumer.getSalao()),
+				filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems()));
+		
+		nameSurnameFilter.bind(Bindings.createObjectBinding(() ->
+				costumer -> costumer.getNome().toLowerCase().contains(filtroNomeSobrenomeTextField.getText().toLowerCase()) ||
+				costumer.getSobrenome().toLowerCase().contains(filtroNomeSobrenomeTextField.getText().toLowerCase()),
+				filtroNomeSobrenomeTextField.textProperty()));
+		
+		//Passando a observableList para uma lista que será filtrada
+		FilteredList<Costumer> filteredItems = new FilteredList<>(obsList);
+		// Adicionando os dados filtrado à TableView
+		tableViewCostumer.setItems(filteredItems);
+		//Combinando os predicados usando Predicate.and(...) e fazendo o bind (enlaçando)
+		//a propriedade dos predicados da lista filtrada aos resultados
+		filteredItems.predicateProperty().bind(Bindings.createObjectBinding(
+				() -> statusFilter.get().and(saloonFilter.get().and(nameSurnameFilter.get())),
+				statusFilter, saloonFilter, nameSurnameFilter));
 		
 		// iniciando os botões nas linhas dos clientes
 		initColumnButtons();
