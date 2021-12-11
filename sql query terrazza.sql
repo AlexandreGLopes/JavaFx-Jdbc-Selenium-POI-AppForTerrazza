@@ -13,7 +13,7 @@ create table terrazzacostumers (
     Data date NOT NULL,
     Hora time NOT NULL,
     Mesa varchar(50) NOT NULL,
-    Situacao varchar(40) NOT NULL,
+    Situacao varchar(40) NOT NULL,	
     Pagamento double NOT NULL,
     IdExterno varchar(30) NOT NULL,
     PRIMARY KEY (Id)
@@ -74,6 +74,11 @@ FROM skycuritibacostumers.terrazzacostumers
 WHERE DATE(Data) = CURDATE();
 
 DELETE FROM skycuritibacostumers.terrazzacostumers WHERE Data < now() - interval 30 DAY;
+
+SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno
+FROM skycuritibacostumers.terrazzacostumers
+WHERE DATE(Data) = CURDATE() AND Situacao != "Cancelado pelo cliente" AND Situacao != "Cancelado por solicitação do cliente"
+AND Situacao != "Cancelado por no-show do cliente" AND Situacao != "Cancelado por erro de cadastro";
 
 /** só para limpar os dados para testes **/
 DELETE FROM skycuritibacostumers.terrazzacostumers;

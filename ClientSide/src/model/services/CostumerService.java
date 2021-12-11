@@ -1,6 +1,5 @@
 package model.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.CostumerDao;
@@ -34,5 +33,9 @@ public class CostumerService {
 	
 	public List<Costumer> findAllofCurrentDateOrderByName() {
 		return dao.findTodayCostumersByName();
+	}
+	
+	public List<Costumer> findAllofCurrentDateOrderByNameExceptCancelled() {
+		return dao.findTodayCostumersByNameExceptCancelled();
 	}
 }

@@ -11,7 +11,7 @@ public class CheckDuplicacatesMethods {
 	
 	public static List<Costumer> checkDuplicatesByName(CostumerService service) {
 		
-		List<Costumer> list = service.findAllofCurrentDateOrderByName();
+		List<Costumer> list = service.findAllofCurrentDateOrderByNameExceptCancelled();
 		List<Costumer> duplicatedList = new ArrayList<>();
 
 		// System.out.println(list.size());
