@@ -162,7 +162,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/LoadingScreen.fxml", currentStage, (LoadingScreenController controller) -> {
+		loadPane("/gui/LoadingScreen.fxml", currentStage, true, (LoadingScreenController controller) -> {
 			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
@@ -183,7 +183,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/LoadingScreen.fxml", currentStage, (LoadingScreenController controller) -> {
+		loadPane("/gui/LoadingScreen.fxml", currentStage, true, (LoadingScreenController controller) -> {
 			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
@@ -203,7 +203,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/ManualUpdaterScreen.fxml", currentStage, (ManualUpdaterScreenController controller) -> {
+		loadPane("/gui/ManualUpdaterScreen.fxml", currentStage, true, (ManualUpdaterScreenController controller) -> {
 			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
@@ -216,7 +216,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/About.fxml", currentStage, (x) -> {
+		loadPane("/gui/About.fxml", currentStage, true, (x) -> {
 		});
 	}
 
@@ -225,7 +225,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/ManualUpdaterHelp.fxml", currentStage, (x) -> {
+		loadPane("/gui/ManualUpdaterHelp.fxml", currentStage, true, (x) -> {
 		});
 	}
 
@@ -347,7 +347,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 	}
 
 	// Método que carrega novos painéis
-	private <T> void loadPane(String absoluteName, Stage parentStage, Consumer<T> initializingAction) {
+	private <T> void loadPane(String absoluteName, Stage parentStage, boolean staticScreen, Consumer<T> initializingAction) {
 		try {
 			// Carregar o fxml
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
@@ -365,18 +365,21 @@ public class MainViewController implements Initializable, DataChangeListener {
 
 			// Instanciar um novo stage (um palco na frente do outro)
 			Stage dialogStage = new Stage();
-			// Retirando a barra de título do painel de loading
-			dialogStage.initStyle(StageStyle.UNDECORATED);
 			// Além do stage precisamos de uma Scene
 			dialogStage.setScene(new Scene(pane));
-			// Não poderá ser redimensionada
-			dialogStage.setResizable(false);
 			// Passando o Stage "pai" dessa janela, que passamos como segundo parâmetro
 			// neste método
 			dialogStage.initOwner(parentStage);
 			// Ela será modal, enquanto você não fechar ela não poderá acessar a janela
 			// anterior
 			dialogStage.initModality(Modality.WINDOW_MODAL);
+			// verificando se a tela terá que ter regras para não aumentar e nao ter barra de título
+			if (staticScreen) {
+				// Retirando a barra de título do painel de loading
+				dialogStage.initStyle(StageStyle.UNDECORATED);
+				// Não poderá ser redimensionada
+				dialogStage.setResizable(false);
+			}
 			dialogStage.showAndWait();
 
 		} catch (IOException e) {
@@ -448,7 +451,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		tableViewCostumer.setItems(obsList);
 		initColumnButtons();
 		Utils.autoResizeColumns(tableViewCostumer);
-		clientesDuplicadosButton.setStyle("-fx-effect: dropshadow(three-pass-box, #4287f5, 5, 0.0, 0, 1);");
+		//clientesDuplicadosButton.setStyle("-fx-effect: dropshadow(three-pass-box, #4287f5, 5, 0.0, 0, 1);");
 	}
 
 	@Override

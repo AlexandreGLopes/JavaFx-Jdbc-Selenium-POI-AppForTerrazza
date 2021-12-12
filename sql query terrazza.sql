@@ -19,6 +19,22 @@ create table terrazzacostumers (
     PRIMARY KEY (Id)
 );
 
+create table waitingcostumers (
+	Id int(11) NOT NULL AUTO_INCREMENT,
+    Nome varchar(60) NOT NULL,
+    Sobrenome varchar(80) NOT NULL,
+    Telefone varchar(20) NOT NULL,
+    Salao varchar(30) NOT NULL,
+    Pessoas int(2) NOT NULL,
+    Data date NOT NULL,
+    HoraChegada time NOT NULL,
+    HoraSentada time,
+    Mesa varchar(50),
+    Situacao varchar(40),
+    Observacao text,
+    PRIMARY KEY (Id)
+);
+
 /** Não vamos usar mais duas tabelas. Apenas uma
 /*
 create table bistrocostumers (
@@ -79,6 +95,11 @@ SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, S
 FROM skycuritibacostumers.terrazzacostumers
 WHERE DATE(Data) = CURDATE() AND Situacao != "Cancelado pelo cliente" AND Situacao != "Cancelado por solicitação do cliente"
 AND Situacao != "Cancelado por no-show do cliente" AND Situacao != "Cancelado por erro de cadastro";
+
+/** update para colocar cientes na database no domingo para poder fazer testes **/
+update terrazzacostumers
+set Data = CURDATE()
+where DATE(Data) = '2021-12-11';
 
 /** só para limpar os dados para testes **/
 DELETE FROM skycuritibacostumers.terrazzacostumers;

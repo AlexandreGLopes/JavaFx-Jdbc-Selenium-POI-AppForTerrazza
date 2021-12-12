@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<AnchorPane prefHeight="351.0" prefWidth="594.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.WaitingListPaneController">
+   <children>
+      <VBox prefHeight="306.0" prefWidth="554.0">
+         <children>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+              <items>
+                <Button fx:id="novaEsperaButton" mnemonicParsing="false" text="Nova Espera" />
+                  <Label text="Filtros:" />
+                  <CheckComboBox fx:id="filtroSituacaoCheckComboBox" title="Situação" />
+                  <Label text="Por Nome:" />
+                  <TextField fx:id="filtroPorNomeTextField" />
+              </items>
+            </ToolBar>
+            <TableView fx:id="tableViewWaitingCostumer" prefHeight="216.0" prefWidth="492.0">
+              <columns>
+                <TableColumn fx:id="tableColumnWhats" prefWidth="75.0" text="whats" />
+                <TableColumn fx:id="tableColumnEdit" prefWidth="75.0" text="edit" />
+                  <TableColumn fx:id="tableColumnNome" prefWidth="75.0" text="Nome" />
+                  <TableColumn fx:id="tableColumnSobrenome" prefWidth="75.0" text="Sobrenome" />
+                  <TableColumn fx:id="tableColumnHora" prefWidth="75.0" text="Hora" />
+                  <TableColumn fx:id="tableColumnSituacao" prefWidth="75.0" text="Situação" />
+                  <TableColumn fx:id="tableColumnObservacoes" prefWidth="103.0" text="Observações" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
