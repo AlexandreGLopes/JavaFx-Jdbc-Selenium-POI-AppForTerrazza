@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="269.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DuplicatedListPaneController">
+   <children>
+      <TableView fx:id="tableViewCostumer" prefHeight="224.0" prefWidth="708.0">
+         <columns>
+            <TableColumn fx:id="tableColumnWhats" maxWidth="42.0" minWidth="42.0" prefWidth="42.0" />
+            <TableColumn fx:id="tableColumnId" prefWidth="55.0" style="-fx-alignment: CENTER-LEFT;" text="Id" />
+            <TableColumn fx:id="tableColumnNome" prefWidth="88.0" style="-fx-alignment: CENTER-LEFT;" text="Nome" />
+            <TableColumn fx:id="tableColumnSobrenome" prefWidth="115.0" style="-fx-alignment: CENTER-LEFT;" text="Sobrenome" />
+            <TableColumn fx:id="tableColumnTelefone" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Telefone" />
+            <TableColumn fx:id="tableColumnEmail" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="E-mail" />
+            <TableColumn fx:id="tableColumnSalao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Salao" />
+            <TableColumn fx:id="tableColumnPessoas" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Pessoas" />
+            <TableColumn fx:id="tableColumnHora" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Hora" />
+            <TableColumn fx:id="tableColumnMesa" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Mesa" />
+            <TableColumn fx:id="tableColumnSituacao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Situaçao" />
+            <TableColumn fx:id="tableColumnIdExterno" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Id Externo" />
+         </columns>
+      </TableView>
+   </children>
+</VBox>

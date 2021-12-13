@@ -2,6 +2,8 @@ create database skycuritibacostumers;
 
 USE skycuritibacostumers;
 
+/** Tabela de clientes com reserva **/
+
 create table terrazzacostumers (
 	Id int(11) NOT NULL AUTO_INCREMENT,
     Nome varchar(60) NOT NULL,
@@ -19,6 +21,8 @@ create table terrazzacostumers (
     PRIMARY KEY (Id)
 );
 
+/** Tabela de clientes da filda de espera **/
+
 create table waitingcostumers (
 	Id int(11) NOT NULL AUTO_INCREMENT,
     Nome varchar(60) NOT NULL,
@@ -35,7 +39,7 @@ create table waitingcostumers (
     PRIMARY KEY (Id)
 );
 
-/** Não vamos usar mais duas tabelas. Apenas uma
+/** Não vamos usar mais duas tabelas. Apenas uma **/
 /*
 create table bistrocostumers (
 	Id int(11) NOT NULL AUTO_INCREMENT,
@@ -99,7 +103,7 @@ AND Situacao != "Cancelado por no-show do cliente" AND Situacao != "Cancelado po
 /** update para colocar cientes na database no domingo para poder fazer testes **/
 update terrazzacostumers
 set Data = CURDATE()
-where DATE(Data) = '2021-12-11';
+where DATE(Data) = '2021-12-10';
 
 /** só para limpar os dados para testes **/
 DELETE FROM skycuritibacostumers.terrazzacostumers;

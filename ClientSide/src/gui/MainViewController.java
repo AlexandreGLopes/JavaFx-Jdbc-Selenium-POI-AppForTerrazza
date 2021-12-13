@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 
 import org.controlsfx.control.CheckComboBox;
 
+import application.Main;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.CheckDuplicacatesMethods;
@@ -27,11 +28,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -42,7 +44,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -73,16 +74,16 @@ public class MainViewController implements Initializable, DataChangeListener {
 
 	@FXML
 	private Button tabelaPrincipalButton;
-	
+
 	@FXML
 	private Button clientesDuplicadosButton;
 
 	@FXML
 	private CheckComboBox<String> filtrosSituacaoCheckComboBox;
-	
+
 	@FXML
 	private CheckComboBox<String> filtrosSalaoCheckComboBox;
-	
+
 	@FXML
 	private TextField filtroNomeSobrenomeTextField;
 
@@ -148,12 +149,19 @@ public class MainViewController implements Initializable, DataChangeListener {
 
 	@FXML
 	public void onTabelaPrincipalButtonAction() throws ParseException {
-		updateTableView();
+		loadView("/gui/MainView.fxml", (MainViewController controller) -> {
+			controller.setCostumerService(service);
+			controller.updateTableView();
+		});
 	}
 
 	@FXML
 	public void onClientesDuplicadosButtonAction() throws ParseException {
-		showDuplicatedCostumersOnTableView();
+		// showDuplicatedCostumersOnTableView();
+		loadView("/gui/DuplicatedListPane.fxml", (DuplicatedListPaneController controller) -> {
+			controller.setCostumerService(new CostumerService());
+			controller.updateTableView();
+		});
 	}
 
 	@FXML
@@ -240,6 +248,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		optionsSituacao.add("Confirmado");
 		optionsSituacao.add("Sentado");
 		optionsSituacao.add("Cancelado pelo cliente");
+		optionsSituacao.add("Cancelado por solicitação do cliente");
 		optionsSituacao.add("Cancelado por no-show");
 		optionsSituacao.add("Cancelado por erro");
 		filtrosSituacaoCheckComboBox.getItems().addAll(optionsSituacao);
@@ -254,80 +263,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 	}
 
 	private void initializeNodes() {
-		/*
-		tableColumnSituacao.setCellFactory(new Callback<TableColumn<Costumer,String>, TableCell<Costumer,String>>() {
-			
-			@Override
-			public TableCell<Costumer, String> call(
-					TableColumn<Costumer, String> param) {
-				return new TableCell<Costumer, String>(){
-					@Override
-					protected void updateItem(String item, boolean empty) {
-						if (!empty) {
-                            int currentIndex = indexProperty()
-                                    .getValue() < 0 ? 0
-                                    : indexProperty().getValue();
-                            String columnSituacao = param
-                            		.getTableView().getItems()
-                            		.get(currentIndex).getSituacao();
-                            if (columnSituacao.contains("Cancelado")) {
-                            	setTextFill(Color.RED);
-                            	setText(columnSituacao);
-                            }
-                            else {
-                            	setTextFill(Color.BLACK);
-                            	setText(columnSituacao);
-                            }
-						}
-					}
-				};
-			}
-		});
-		*/
-		
-		/*
-		tableViewCostumer.setRowFactory(row -> new TableRow<Costumer>() {
-			@Override
-			public void updateItem(Costumer item, boolean empty) {
-				super.updateItem(item, empty);
 
-				if (item == null) {
-					setStyle("");
-				} else if (item.getSituacao().contains("Cancelado")) {
-					setTextFill(Color.RED);
-						}
-				else {
-					setTextFill(Color.BLACK);
-					}
-			}
-		});
-		*/
-		/*
-		tableViewCostumer.setRowFactory(new Callback<TableView<Costumer>, TableRow<Costumer>>() {
-			@Override
-			public TableRow<Costumer> call(TableView<Costumer> param) {
-				return new TableRow<Costumer>() {
-					@Override
-					protected void updateItem(Costumer item, boolean empty) {
-						if (!empty) {
-							int currentIndex = indexProperty()
-                                    .getValue() < 0 ? 0
-                                    : indexProperty().getValue();
-                            String columnSituacao = param.getItems().get(currentIndex).getSituacao();
-							if(columnSituacao.contains("Cancelado")) {
-								setTextFill(Color.RED);
-							}
-							else {
-								setTextFill(Color.BLACK);
-							}
-						}
-					}
-					
-				};
-			}
-		});
-		*/
-		
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
 		tableColumnSobrenome.setCellValueFactory(new PropertyValueFactory<>("sobrenome"));
@@ -344,10 +280,15 @@ public class MainViewController implements Initializable, DataChangeListener {
 		tableColumnPagamento.setCellValueFactory(new PropertyValueFactory<>("pagamento"));
 		Utils.formatTableColumnDouble(tableColumnPagamento, 2);
 		tableColumnIdExterno.setCellValueFactory(new PropertyValueFactory<>("idExterno"));
+
+		// Colorindo a linha que estiver cancelada
+		customiseFactory();
+
 	}
 
 	// Método que carrega novos painéis
-	private <T> void loadPane(String absoluteName, Stage parentStage, boolean staticScreen, Consumer<T> initializingAction) {
+	private <T> void loadPane(String absoluteName, Stage parentStage, boolean staticScreen,
+			Consumer<T> initializingAction) {
 		try {
 			// Carregar o fxml
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
@@ -373,7 +314,8 @@ public class MainViewController implements Initializable, DataChangeListener {
 			// Ela será modal, enquanto você não fechar ela não poderá acessar a janela
 			// anterior
 			dialogStage.initModality(Modality.WINDOW_MODAL);
-			// verificando se a tela terá que ter regras para não aumentar e nao ter barra de título
+			// verificando se a tela terá que ter regras para não aumentar e nao ter barra
+			// de título
 			if (staticScreen) {
 				// Retirando a barra de título do painel de loading
 				dialogStage.initStyle(StageStyle.UNDECORATED);
@@ -383,7 +325,47 @@ public class MainViewController implements Initializable, DataChangeListener {
 			dialogStage.showAndWait();
 
 		} catch (IOException e) {
+			Alerts.showAlert("Erro ao carregar tela", null, "Erro ao carregar: " + absoluteName, AlertType.ERROR);
 			e.printStackTrace();
+		}
+	}
+	
+	//Função para abrir outra tela (Private porque vamos chamá-la aqui mesmo)
+	//Adicionamos "synchronized" para só mostrar o resultado após carregar tudo. Assim o processamento não será interrompido durante o multithreading
+	//Parametro 1 é o caminho do fxml
+	//Parametro 2 define a função como genérica para receber um tipo qualquer
+	private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+			//carregar a view
+			VBox newVBox = loader.load();
+			
+			//Mostrar a view dentro da janela principal
+			Scene mainScene = Main.getMainScene();
+			//vamos pegar os "filhos" da VBox About e carregá-los nos filhos da VBox da MainView (ver a hierarquia das tags de fxml para entender)
+			//Pegando o primeiro elemento da minha view (fazendo um casting de ScrollPane para o compilador entender que é issoq ue eu quero)
+			//getContent() Pegando o filho de ScrollPane
+			//Finalizando com um casting para Vbox antes de tudo para que o compilador entenda que eu quero o Vbox
+			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+			
+			//A partir daqui teremos que preservar o MenuBar, excluir tudo o que tiver nos filhos do VBox, incluir o MenuBar e depois os filhos do VBox de About
+			//Guardar referencia para o menu
+			Node mainMenu = mainVBox.getChildren().get(0);
+			Node mainToolBar = mainVBox.getChildren().get(1);
+			//excluindo da tela os filhos de mainVbox
+			mainVBox.getChildren().clear();
+			//Adicionar o mainMenu e depis os filhos do newVBox (About)
+			mainVBox.getChildren().add(mainMenu);
+			mainVBox.getChildren().add(mainToolBar);
+			mainVBox.getChildren().addAll(newVBox.getChildren());
+			
+			//Ativando a função passada no parâmetro 2, tipo Consumer<T>
+			T controller = loader.getController();
+			initializingAction.accept(controller);
+			
+		}
+		catch (IOException e) {
+			Alerts.showAlert("IOException", "Error loading view", e.getMessage(), AlertType.ERROR);
 		}
 	}
 
@@ -405,39 +387,44 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// 4)https://stackoverflow.com/questions/52232150/filtering-tableview-with-controlsfx-checkcombobox
 		// Fazendo a observableList padrão desta classe receber a lista principal
 		obsList = FXCollections.observableArrayList(masterList);
-		
+
 		// Criando predicados para cada checkComboBox e para o TextField
 		ObjectProperty<Predicate<Costumer>> statusFilter = new SimpleObjectProperty<>();
 		ObjectProperty<Predicate<Costumer>> saloonFilter = new SimpleObjectProperty<>();
 		ObjectProperty<Predicate<Costumer>> nameSurnameFilter = new SimpleObjectProperty<>();
-		
-		// Fazendo o bind (enlaçando) cada um dos predicados aos valores das checkComboBox e do TextField
-		statusFilter.bind(Bindings.createObjectBinding(() -> costumer ->filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().isEmpty() ||
-				filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().contains(costumer.getSituacao()),
+
+		// Fazendo o bind (enlaçando) cada um dos predicados aos valores das
+		// checkComboBox e do TextField
+		statusFilter.bind(Bindings.createObjectBinding(
+				() -> costumer -> filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().isEmpty()
+						|| filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems()
+								.contains(costumer.getSituacao()),
 				filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems()));
-		
-		saloonFilter.bind(Bindings.createObjectBinding(() -> costumer ->filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().isEmpty() ||
-				filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().contains(costumer.getSalao()),
+
+		saloonFilter.bind(Bindings.createObjectBinding(
+				() -> costumer -> filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().isEmpty()
+						|| filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().contains(costumer.getSalao()),
 				filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems()));
-		
-		nameSurnameFilter.bind(Bindings.createObjectBinding(() ->
-				costumer -> costumer.getNome().toLowerCase().contains(filtroNomeSobrenomeTextField.getText().toLowerCase()) ||
-				costumer.getSobrenome().toLowerCase().contains(filtroNomeSobrenomeTextField.getText().toLowerCase()),
+
+		nameSurnameFilter.bind(Bindings.createObjectBinding(() -> costumer -> costumer.getNome().toLowerCase()
+				.contains(filtroNomeSobrenomeTextField.getText().toLowerCase())
+				|| costumer.getSobrenome().toLowerCase().contains(filtroNomeSobrenomeTextField.getText().toLowerCase()),
 				filtroNomeSobrenomeTextField.textProperty()));
-		
-		//Passando a observableList para uma lista que será filtrada
+
+		// Passando a observableList para uma lista que será filtrada
 		FilteredList<Costumer> filteredItems = new FilteredList<>(obsList);
 		// Adicionando os dados filtrado à TableView
 		tableViewCostumer.setItems(filteredItems);
-		//Combinando os predicados usando Predicate.and(...) e fazendo o bind (enlaçando)
-		//a propriedade dos predicados da lista filtrada aos resultados
-		filteredItems.predicateProperty().bind(Bindings.createObjectBinding(
-				() -> statusFilter.get().and(saloonFilter.get().and(nameSurnameFilter.get())),
-				statusFilter, saloonFilter, nameSurnameFilter));
-		
+		// Combinando os predicados usando Predicate.and(...) e fazendo o bind
+		// (enlaçando)
+		// a propriedade dos predicados da lista filtrada aos resultados
+		filteredItems.predicateProperty()
+				.bind(Bindings.createObjectBinding(
+						() -> statusFilter.get().and(saloonFilter.get().and(nameSurnameFilter.get())), statusFilter,
+						saloonFilter, nameSurnameFilter));
+
 		// iniciando os botões nas linhas dos clientes
 		initColumnButtons();
-		// customiseFactory();
 		Utils.autoResizeColumns(tableViewCostumer);
 	}
 
@@ -445,13 +432,16 @@ public class MainViewController implements Initializable, DataChangeListener {
 		if (service == null) {
 			throw new IllegalStateException("Service was null");
 		}
+
 		List<Costumer> duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByName(service);
 
 		obsList = FXCollections.observableArrayList(duplicatedList);
 		tableViewCostumer.setItems(obsList);
 		initColumnButtons();
 		Utils.autoResizeColumns(tableViewCostumer);
-		//clientesDuplicadosButton.setStyle("-fx-effect: dropshadow(three-pass-box, #4287f5, 5, 0.0, 0, 1);");
+
+		// clientesDuplicadosButton.setStyle("-fx-effect: dropshadow(three-pass-box,
+		// #4287f5, 5, 0.0, 0, 1);");
 	}
 
 	@Override
@@ -518,20 +508,12 @@ public class MainViewController implements Initializable, DataChangeListener {
 			@Override
 			public void updateItem(Costumer item, boolean empty) {
 				super.updateItem(item, empty);
-
-				if (item == null || empty) {
+				if (item == null) {
 					setStyle("");
+				} else if (item.getSituacao().contains("Cancelado")) {
+					setStyle("-fx-background-color: tomato;");
 				} else {
-					if (item.getSituacao().equals("Cancelado pelo cliente")) {
-						for (int i = 0; i < getChildren().size(); i++) {
-							((Labeled) getChildren().get(i)).setTextFill(Color.RED);
-						}
-					} else {
-						for (int i = 0; i < getChildren().size(); i++) {
-							((Labeled) getChildren().get(i)).setTextFill(Color.BLACK);
-							;
-						}
-					}
+					setStyle("");
 				}
 			}
 		});
