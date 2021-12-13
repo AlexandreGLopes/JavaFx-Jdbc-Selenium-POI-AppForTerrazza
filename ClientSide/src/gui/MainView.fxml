@@ -45,9 +45,9 @@
                                  <HBox.margin>
                                     <Insets left="50.0" />
                                  </HBox.margin></Label>
-                              <Button fx:id="clientesDuplicadosButton" mnemonicParsing="false" onAction="#onClientesDuplicadosButtonAction" prefWidth="82.0" text="Nome" />
-                              <Button mnemonicParsing="false" prefWidth="82.0" text="Telefone" />
-                              <Button mnemonicParsing="false" prefWidth="82.0" text="E-mail" />
+                              <Button fx:id="clientesDuplicadosPorNomeButton" mnemonicParsing="false" onAction="#onClientesDuplicadosPorNomeButtonAction" prefWidth="82.0" text="Nome" />
+                              <Button fx:id="clientesDuplicadosPorTelefoneButton" mnemonicParsing="false" onAction="#onClientesDuplicadosPorTelefoneButtonAction" prefWidth="82.0" text="Telefone" />
+                              <Button fx:id="clientesDuplicadosPorEmailButton" mnemonicParsing="false" onAction="#onClientesDuplicadosPorEmailButtonAction" prefWidth="82.0" text="E-mail" />
                            </children>
                         </HBox>
                      </children>

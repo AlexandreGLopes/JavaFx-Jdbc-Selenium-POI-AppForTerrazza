@@ -16,5 +16,7 @@ public interface CostumerDao {
 	List<Costumer> findTodayCostumers();
 	List<Costumer> findTodayCostumersByName();
 	List<Costumer> findTodayCostumersByNameExceptCancelled();
+	List<Costumer> findTodayCostumersByTelephoneExceptCancelled();
+	List<Costumer> findTodayCostumersByEmailExceptCancelled();
 
 }

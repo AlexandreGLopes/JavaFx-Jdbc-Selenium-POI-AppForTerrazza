@@ -38,4 +38,12 @@ public class CostumerService {
 	public List<Costumer> findAllofCurrentDateOrderByNameExceptCancelled() {
 		return dao.findTodayCostumersByNameExceptCancelled();
 	}
+	
+	public List<Costumer> findAllofCurrentDateOrderByTelephoneExceptCancelled() {
+		return dao.findTodayCostumersByTelephoneExceptCancelled();
+	}
+	
+	public List<Costumer> findAllofCurrentDateOrderByEmailExceptCancelled() {
+		return dao.findTodayCostumersByEmailExceptCancelled();
+	}
 }

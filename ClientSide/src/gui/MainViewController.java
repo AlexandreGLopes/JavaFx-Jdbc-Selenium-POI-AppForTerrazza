@@ -74,7 +74,13 @@ public class MainViewController implements Initializable, DataChangeListener {
 	private Button tabelaPrincipalButton;
 
 	@FXML
-	private Button clientesDuplicadosButton;
+	private Button clientesDuplicadosPorNomeButton;
+	
+	@FXML
+	private Button clientesDuplicadosPorTelefoneButton;
+	
+	@FXML
+	private Button clientesDuplicadosPorEmailButton;
 
 	@FXML
 	public void onTabelaPrincipalButtonAction() throws ParseException {
@@ -87,10 +93,26 @@ public class MainViewController implements Initializable, DataChangeListener {
 	}
 
 	@FXML
-	public void onClientesDuplicadosButtonAction() throws ParseException {
+	public void onClientesDuplicadosPorNomeButtonAction() throws ParseException {
 		loadView("/gui/DuplicatedListPane.fxml", (DuplicatedListPaneController controller) -> {
 			controller.setCostumerService(new CostumerService());
-			controller.updateTableView();
+			controller.updateTableView("name");
+		});
+	}
+	
+	@FXML
+	public void onClientesDuplicadosPorTelefoneButtonAction() throws ParseException {
+		loadView("/gui/DuplicatedListPane.fxml", (DuplicatedListPaneController controller) -> {
+			controller.setCostumerService(new CostumerService());
+			controller.updateTableView("telefone");
+		});
+	}
+	
+	@FXML
+	public void onClientesDuplicadosPorEmailButtonAction() throws ParseException {
+		loadView("/gui/DuplicatedListPane.fxml", (DuplicatedListPaneController controller) -> {
+			controller.setCostumerService(new CostumerService());
+			controller.updateTableView("email");
 		});
 	}
 

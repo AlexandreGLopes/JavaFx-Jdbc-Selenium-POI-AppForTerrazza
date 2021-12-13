@@ -3,6 +3,7 @@ package gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -113,13 +114,30 @@ public class DuplicatedListPaneController implements Initializable {
 
 	}
 	
-	public void updateTableView() {
+	public void updateTableView(String option) {
 		if (service == null) {
 			throw new IllegalStateException("Service was null");
 		}
+		
+		List<Costumer> duplicatedList = new ArrayList<>();
+		
+		switch (option) {
+		case "name":
+			duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByName(service);
+			break;
+			
+		case "telefone":
+			duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByTelephone(service);
+			break;
+			
+		case "email":
+			duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByEmail(service);
+			break;
 
-		List<Costumer> duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByName(service);
-
+		default:
+			break;
+		}
+		
 		obsList = FXCollections.observableArrayList(duplicatedList);
 		tableViewCostumer.setItems(obsList);
 		initColumnButtons();

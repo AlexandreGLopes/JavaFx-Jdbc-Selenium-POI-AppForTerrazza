@@ -298,4 +298,60 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		}
 	}
 
+	@Override
+	public List<Costumer> findTodayCostumersByTelephoneExceptCancelled() {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno "
+							+ "FROM skycuritibacostumers.terrazzacostumers "
+							+ "WHERE DATE(Data) = CURDATE() AND Situacao != \"Cancelado pelo cliente\" AND Situacao != \"Cancelado por solicitação do cliente\" "
+							+ "AND Situacao != \"Cancelado por no-show do cliente\" AND Situacao != \"Cancelado por erro de cadastro\" "
+							+ "ORDER BY Telefone");
+
+			rs = st.executeQuery();
+
+			List<Costumer> list = new ArrayList<>();
+			while (rs.next()) {
+				Costumer costumer = instantiateCostumer(rs);
+				list.add(costumer);
+			}
+			return list;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+	}
+
+	@Override
+	public List<Costumer> findTodayCostumersByEmailExceptCancelled() {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno "
+							+ "FROM skycuritibacostumers.terrazzacostumers "
+							+ "WHERE DATE(Data) = CURDATE() AND Situacao != \"Cancelado pelo cliente\" AND Situacao != \"Cancelado por solicitação do cliente\" "
+							+ "AND Situacao != \"Cancelado por no-show do cliente\" AND Situacao != \"Cancelado por erro de cadastro\" "
+							+ "ORDER BY Email");
+
+			rs = st.executeQuery();
+
+			List<Costumer> list = new ArrayList<>();
+			while (rs.next()) {
+				Costumer costumer = instantiateCostumer(rs);
+				list.add(costumer);
+			}
+			return list;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+	}
+
 }
