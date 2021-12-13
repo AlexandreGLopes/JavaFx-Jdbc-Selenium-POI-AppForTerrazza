@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<VBox prefHeight="269.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ReservationsListPaneController">
+   <children>
+      <ToolBar prefHeight="40.0" prefWidth="200.0">
+         <items>
+            <Label text="Filtros:" />
+            <CheckComboBox fx:id="filtrosSituacaoCheckComboBox" prefWidth="110.0" title="Situação" />
+            <CheckComboBox fx:id="filtrosSalaoCheckComboBox" prefWidth="110.0" title="Salão" />
+            <Label text="Por Nome:" />
+            <TextField fx:id="filtroNomeSobrenomeTextField" />
+         </items></ToolBar>
+      <TableView fx:id="tableViewCostumer" prefHeight="224.0" prefWidth="708.0">
+         <columns>
+            <TableColumn fx:id="tableColumnWhats" maxWidth="42.0" minWidth="42.0" prefWidth="42.0" />
+                  <TableColumn fx:id="tableColumnHora" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Hora" />
+                  <TableColumn fx:id="tableColumnPessoas" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Pessoas" />
+                  <TableColumn fx:id="tableColumnNome" prefWidth="88.0" style="-fx-alignment: CENTER-LEFT;" text="Nome" />
+                  <TableColumn fx:id="tableColumnSobrenome" prefWidth="115.0" style="-fx-alignment: CENTER-LEFT;" text="Sobrenome" />
+                  <TableColumn fx:id="tableColumnSituacao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Situaçao" />
+                  <TableColumn fx:id="tableColumnSalao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Salao" />
+                  <TableColumn fx:id="tableColumnMesa" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Mesa" />
+                  <TableColumn fx:id="tableColumnTelefone" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Telefone" />
+                  <TableColumn fx:id="tableColumnEmail" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="E-mail" />
+                  <TableColumn fx:id="tableColumnData" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Data" />
+                  <TableColumn fx:id="tableColumnPagamento" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Pagamento" />
+                <TableColumn fx:id="tableColumnId" prefWidth="55.0" style="-fx-alignment: CENTER-LEFT;" text="Id" />
+                  <TableColumn fx:id="tableColumnIdExterno" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Id Externo" />
+         </columns>
+      </TableView>
+   </children>
+</VBox>

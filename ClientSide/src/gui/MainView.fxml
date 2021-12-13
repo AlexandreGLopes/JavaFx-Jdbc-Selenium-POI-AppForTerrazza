@@ -7,13 +7,9 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import org.controlsfx.control.CheckComboBox?>
 
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainViewController">
    <content>
@@ -36,11 +32,11 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <ToolBar prefHeight="28.0" prefWidth="859.0">
+            <ToolBar prefHeight="25.0" prefWidth="859.0">
               <items>
-                  <VBox prefHeight="60.0" prefWidth="833.0">
+                  <VBox prefHeight="25.0" prefWidth="833.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="497.0" spacing="5.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="497.0" spacing="5.0">
                            <children>
                               <Label text="Tabelas:" />
                               <Button fx:id="tabelaPrincipalButton" mnemonicParsing="false" onAction="#onTabelaPrincipalButtonAction" prefWidth="82.0" text="Reservas" />
@@ -54,40 +50,10 @@
                               <Button mnemonicParsing="false" prefWidth="82.0" text="E-mail" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="497.0" spacing="5.0">
-                           <children>
-                              <Label text="Filtros:" />
-                              <CheckComboBox fx:id="filtrosSituacaoCheckComboBox" prefHeight="24.0" prefWidth="106.0" title="Situação" />
-                              <CheckComboBox fx:id="filtrosSalaoCheckComboBox" prefWidth="106.0" title="Salão" />
-                              <Label text="Por Nome:" />
-                              <TextField fx:id="filtroNomeSobrenomeTextField" />
-                           </children>
-                        </HBox>
                      </children>
                   </VBox>
               </items>
             </ToolBar>
-            <TableView fx:id="tableViewCostumer" prefHeight="366.0" prefWidth="653.0">
-              <columns>
-                <TableColumn fx:id="tableColumnWhats" maxWidth="42.0" minWidth="42.0" prefWidth="42.0" />
-                <TableColumn fx:id="tableColumnId" prefWidth="55.0" style="-fx-alignment: CENTER-LEFT;" text="Id" />
-                  <TableColumn fx:id="tableColumnNome" prefWidth="88.0" style="-fx-alignment: CENTER-LEFT;" text="Nome" />
-                  <TableColumn fx:id="tableColumnSobrenome" prefWidth="115.0" style="-fx-alignment: CENTER-LEFT;" text="Sobrenome" />
-                  <TableColumn fx:id="tableColumnTelefone" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Telefone" />
-                  <TableColumn fx:id="tableColumnEmail" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="E-mail" />
-                  <TableColumn fx:id="tableColumnSalao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Salao" />
-                  <TableColumn fx:id="tableColumnPessoas" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Pessoas" />
-                  <TableColumn fx:id="tableColumnData" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Data" />
-                  <TableColumn fx:id="tableColumnHora" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Hora" />
-                  <TableColumn fx:id="tableColumnMesa" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Mesa" />
-                  <TableColumn fx:id="tableColumnSituacao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Situaçao" />
-                  <TableColumn fx:id="tableColumnPagamento" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Pagamento" />
-                  <TableColumn fx:id="tableColumnIdExterno" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Id Externo" />
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
          </children>
       </VBox>
    </content>

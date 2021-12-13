@@ -1,6 +1,7 @@
 package application;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import gui.MainViewController;
 import javafx.application.Application;
@@ -19,7 +20,7 @@ public class Main extends Application {
 	private static Scene mainScene;
 
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws ParseException {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/MainView.fxml"));
 			ScrollPane scrollPane = loader.load();
@@ -32,15 +33,10 @@ public class Main extends Application {
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("Mesa de Trabalho de Reservas");
 			
-			//Pegando o controller da MainView e instanciando um CostumerService para acessar e trabalhar com a DB 
+			//Pegando o controller da MainView para poder chamar o método que inicializa o Painel separado da tabela
 			MainViewController controller = loader.getController();
-			controller.setCostumerService(new CostumerService());
 			//Atualizando os valores da TableView
-			controller.updateTableView();
-			//Setando a altura da TableView e enlaçando ela com a altura da janela 
-			controller.getTableViewCostumer().prefHeightProperty().bind(mainScene.heightProperty());
-			//Setando a tabela para deixar as colunas passarem além dos limites horizontais da própria tabela
-			controller.getTableViewCostumer().setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+			controller.onTabelaPrincipalButtonAction();
 			
 			primaryStage.show();
 		} catch (IOException e) {
