@@ -3,6 +3,7 @@ package gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,19 +26,21 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.entities.Costumer;
 import model.services.CostumerService;
 
@@ -95,6 +98,9 @@ public class ReservationsListPaneController implements Initializable, DataChange
 
 	@FXML
 	private TableColumn<Costumer, String> tableColumnSituacao;
+	
+	@FXML
+	private TableColumn<Costumer, Costumer> tableColumnObservacoes;
 
 	@FXML
 	private TableColumn<Costumer, Double> tableColumnPagamento;
@@ -112,6 +118,11 @@ public class ReservationsListPaneController implements Initializable, DataChange
 
 	public void setCostumerService(CostumerService service) {
 		this.service = service;
+	}
+
+	@Override
+	public void onDataChanged() {
+		updateTableView();
 	}
 
 	@Override
@@ -141,22 +152,15 @@ public class ReservationsListPaneController implements Initializable, DataChange
 
 	private void initializeNodes() {
 
-		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-		tableColumnSobrenome.setCellValueFactory(new PropertyValueFactory<>("sobrenome"));
-		tableColumnTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
-		tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 		tableColumnSalao.setCellValueFactory(new PropertyValueFactory<>("salao"));
 		tableColumnPessoas.setCellValueFactory(new PropertyValueFactory<>("pessoas"));
-		tableColumnData.setCellValueFactory(new PropertyValueFactory<>("data"));
-		Utils.formatTableColumnDate(tableColumnData, "dd/MM/yyyy");
 		tableColumnHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
 		Utils.formatTableColumnDate(tableColumnHora, "HH:mm");
 		tableColumnMesa.setCellValueFactory(new PropertyValueFactory<>("mesa"));
 		tableColumnSituacao.setCellValueFactory(new PropertyValueFactory<>("situacao"));
 		tableColumnPagamento.setCellValueFactory(new PropertyValueFactory<>("pagamento"));
 		Utils.formatTableColumnDouble(tableColumnPagamento, 2);
-		tableColumnIdExterno.setCellValueFactory(new PropertyValueFactory<>("idExterno"));
 
 		// Arrumando largura e altura da tabela
 		// Window é uma superclasse do stage então teremos que fazer um downcasting pro
@@ -164,25 +168,9 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewCostumer.prefHeightProperty().bind(stage.heightProperty());
 
-		// Colorindo a linha que estiver cancelada
+		// Método para customizar a tabela
 		customiseFactory();
 
-	}
-
-	private void customiseFactory() {
-		tableViewCostumer.setRowFactory(row -> new TableRow<Costumer>() {
-			@Override
-			public void updateItem(Costumer item, boolean empty) {
-				super.updateItem(item, empty);
-				if (item == null) {
-					setStyle("");
-				} else if (item.getSituacao().contains("Cancelado")) {
-					setStyle("-fx-background-color: tomato;");
-				} else {
-					setStyle("");
-				}
-			}
-		});
 	}
 
 	// Atualizando os nomes na lista só com os clientes com reservas feitas para a
@@ -240,40 +228,9 @@ public class ReservationsListPaneController implements Initializable, DataChange
 						saloonFilter, nameSurnameFilter));
 
 		// iniciando os botões nas linhas dos clientes
-		initColumnButtons();
-		Utils.autoResizeColumns(tableViewCostumer);
-	}
-
-	// Método que coloca os botões do whatsapp nas linhas da tableview
-	private void initColumnButtons() {
-		Image img = new Image(new File("res/whatsIcon.png").toURI().toString());
-		tableColumnWhats.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tableColumnWhats.setCellFactory(param -> new TableCell<Costumer, Costumer>() {
-			ImageView view = new ImageView(img);
-			private final Button button = new Button(null, view);
-
-			@Override
-			protected void updateItem(Costumer obj, boolean empty) {
-				super.updateItem(obj, empty);
-
-				if (obj == null) {
-					setGraphic(null);
-					return;
-				}
-
-				// Adicionei o código para saber se o nome do costumer está nulo porque vai ter
-				// as linhas com clientes nulos para dar um espaço entre os nomes de clientes
-				// duplicados
-				if (obj.getNome() != null) {
-					setGraphic(button);
-					button.setPrefWidth(30);
-					view.setFitHeight(18);
-					view.setFitWidth(18);
-					button.setOnAction(
-							event -> createMessageForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
-				}
-			}
-		});
+		initColumnWhatsButtons();
+		initColumnObsButtons();
+		// Utils.autoResizeColumns(tableViewCostumer);
 	}
 
 	// Método que cria o formulário das mensagens de whatsapp inividuais
@@ -298,8 +255,275 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		}
 	}
 
-	@Override
-	public void onDataChanged() {
-		updateTableView();
+	// Método que coloca os botões do whatsapp nas linhas da tableview
+	private void initColumnWhatsButtons() {
+		Image img = new Image(new File("res/whatsIcon.png").toURI().toString());
+		tableColumnWhats.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnWhats.setCellFactory(param -> new TableCell<Costumer, Costumer>() {
+			ImageView view = new ImageView(img);
+			private final Button button = new Button(null, view);
+
+			@Override
+			protected void updateItem(Costumer obj, boolean empty) {
+				super.updateItem(obj, empty);
+
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+
+				// Adicionei o código para saber se o nome do costumer está nulo porque vai ter
+				// as linhas com clientes nulos para dar um espaço entre os nomes de clientes
+				// duplicados
+				if (obj.getNome() != null) {
+					setGraphic(button);
+					button.setPrefWidth(50);
+					button.setPrefHeight(50);
+					view.setFitHeight(20);
+					view.setFitWidth(20);
+					button.setOnAction(
+							event -> createMessageForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
+				}
+			}
+		});
+	}
+	
+	// Método que coloca os botões de Observações nas linhas da tableview
+	private void initColumnObsButtons() {
+		tableColumnObservacoes.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnObservacoes.setCellFactory(param -> new TableCell<Costumer, Costumer>() {
+			private final Button button = new Button("*");
+
+			@Override
+			protected void updateItem(Costumer obj, boolean empty) {
+				super.updateItem(obj, empty);
+
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+
+				// Adicionei o código para saber se o nome do costumer está nulo porque vai ter
+				// as linhas com clientes nulos para dar um espaço entre os nomes de clientes
+				// duplicados
+					setGraphic(button);
+					button.setPrefWidth(50);
+					button.setPrefHeight(50);
+					button.setOnAction(
+							event -> createMessageForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
+			}
+		});
+	}
+
+	// Método que customiza as células da tabela de dinamicamente, de acordo com os
+	// valores
+	private void customiseFactory() {
+		// Cores
+		Color corCancelado = Color.RED;
+		Color corNovoConfirmado = Color.valueOf("#6e8003");
+		// Talvez precise formatar hora, mas por enquanto não estou conseguindo usar.
+		// deixando para depois
+		//SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+
+		// Customização de linhas inteiras
+		tableViewCostumer.setRowFactory(row -> new TableRow<Costumer>() {
+			@Override
+			public void updateItem(Costumer item, boolean empty) {
+				super.updateItem(item, empty);
+				if (item == null) {
+					setStyle("");
+				}
+				/*
+				 * else if (item.getSituacao().contains("Cancelado")) {
+				 * setStyle("-fx-background-color: tomato;"); } else if
+				 * (item.getSituacao().contains("Sentado")) {
+				 * setStyle("-fx-background-color: #8ea604;"); }
+				 */
+				else {
+					setStyle("");
+					setPrefHeight(100);
+				}
+			}
+		});
+
+		// A partir daqui:
+		// Customização das colunas
+		tableColumnNome.setCellFactory(new Callback<TableColumn<Costumer, String>, TableCell<Costumer, String>>() {
+			@Override
+			public TableCell<Costumer, String> call(TableColumn<Costumer, String> param) {
+				return new TableCell<Costumer, String>() {
+					@Override
+					protected void updateItem(String item, boolean empty) {
+						if (!empty) {
+							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
+							String columnNome = param.getTableView().getItems().get(currentIndex).getNome();
+							String columnSobrenome = param.getTableView().getItems().get(currentIndex).getSobrenome();
+
+							setStyle("-fx-alignment:  CENTER-LEFT; -fx-font-weight: bold; -fx-font-size: 14;");
+							setText(columnNome + " " + columnSobrenome);
+							setPrefWidth(250);
+							setWidth(250);
+							setWrapText(true);
+						}
+						else {
+							setText(null);
+						}
+					}
+				};
+			}
+		});
+		/*
+		 * tableColumnHora.setCellFactory(new Callback<TableColumn<Costumer, Date>,
+		 * TableCell<Costumer, Date>>() {
+		 * 
+		 * @Override public TableCell<Costumer, Date> call(TableColumn<Costumer, Date>
+		 * param) { return new TableCell<Costumer, Date>() {
+		 * 
+		 * @Override protected void updateItem(Date item, boolean empty) { if (!empty) {
+		 * int currentIndex = indexProperty().getValue() < 0 ? 0 :
+		 * indexProperty().getValue(); Date columnData =
+		 * param.getTableView().getItems().get(currentIndex).getData(); String
+		 * columnSituacao =
+		 * param.getTableView().getItems().get(currentIndex).getSituacao();
+		 * 
+		 * setText(hr.format(columnData)); setStyle("-fx-alignment: CENTER;"); if
+		 * (columnSituacao.contains("Cancelado")) { this.setTextFill(Color.RED); } else
+		 * { this.setTextFill(Color.BLACK); } } } }; } });
+		 */
+		tableColumnPessoas.setCellFactory(new Callback<TableColumn<Costumer, Integer>, TableCell<Costumer, Integer>>() {
+			@Override
+			public TableCell<Costumer, Integer> call(TableColumn<Costumer, Integer> param) {
+				return new TableCell<Costumer, Integer>() {
+					@Override
+					protected void updateItem(Integer item, boolean empty) {
+						if (!empty) {
+							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
+							Integer columnPessoas = param.getTableView().getItems().get(currentIndex).getPessoas();
+							String columnSituacao = param.getTableView().getItems().get(currentIndex).getSituacao();
+
+							setText(columnPessoas.toString());
+							setStyle("-fx-alignment: CENTER; -fx-font-size: 16; -fx-font-weight: bold;");
+							if (columnSituacao.contains("Cancelado")) {
+								this.setTextFill(corCancelado);
+							} else {
+								this.setTextFill(corNovoConfirmado);
+							}
+						}
+						else {
+							setText(null);
+						}
+					}
+				};
+			}
+		});
+
+		tableColumnSituacao.setCellFactory(new Callback<TableColumn<Costumer, String>, TableCell<Costumer, String>>() {
+			@Override
+			public TableCell<Costumer, String> call(TableColumn<Costumer, String> param) {
+				return new TableCell<Costumer, String>() {
+					@Override
+					protected void updateItem(String item, boolean empty) {
+						if (!empty) {
+							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
+							String columnSituacao = param.getTableView().getItems().get(currentIndex).getSituacao();
+
+							setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER; -fx-font-weight: bold;");
+							setWrapText(true);
+							setPrefWidth(100);
+							setWidth(100);
+							setText(columnSituacao);
+							if (columnSituacao.contains("Cancelado")) {
+								this.setTextFill(corCancelado);
+							} else {
+								this.setTextFill(corNovoConfirmado);
+							}
+						}
+						else {
+							setText(null);
+						}
+					}
+				};
+			}
+		});
+
+		tableColumnSalao.setCellFactory(new Callback<TableColumn<Costumer, String>, TableCell<Costumer, String>>() {
+			@Override
+			public TableCell<Costumer, String> call(TableColumn<Costumer, String> param) {
+				return new TableCell<Costumer, String>() {
+					@Override
+					protected void updateItem(String item, boolean empty) {
+						if (!empty) {
+							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
+							String columnSituacao = param.getTableView().getItems().get(currentIndex).getSituacao();
+							String columnSalao = param.getTableView().getItems().get(currentIndex).getSalao();
+
+							setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER; -fx-font-weight: bold;");
+							setWrapText(true);
+							setPrefWidth(120);
+							setWidth(120);
+							setText(columnSalao);
+							if (columnSituacao.contains("Cancelado")) {
+								this.setTextFill(corCancelado);
+							} else {
+								this.setTextFill(corNovoConfirmado);
+							}
+						}
+						else {
+							setText(null);
+						}
+					}
+				};
+			}
+		});
+		
+		tableColumnMesa.setCellFactory(new Callback<TableColumn<Costumer, String>, TableCell<Costumer, String>>() {
+			@Override
+			public TableCell<Costumer, String> call(TableColumn<Costumer, String> param) {
+				return new TableCell<Costumer, String>() {
+					@Override
+					protected void updateItem(String item, boolean empty) {
+						if (!empty) {
+							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
+							String columnMesa = param.getTableView().getItems().get(currentIndex).getMesa();
+
+							setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER;");
+							setWrapText(true);
+							setPrefWidth(120);
+							setWidth(120);
+							setText(columnMesa);
+						}
+						else {
+							setText(null);
+						}
+					}
+				};
+			}
+		});
+		
+		tableColumnPagamento.setCellFactory(new Callback<TableColumn<Costumer, Double>, TableCell<Costumer, Double>>() {
+			@Override
+			public TableCell<Costumer, Double> call(TableColumn<Costumer, Double> param) {
+				return new TableCell<Costumer, Double>() {
+					@Override
+					protected void updateItem(Double item, boolean empty) {
+						if (!empty) {
+							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
+							Double columnPagamento = param.getTableView().getItems().get(currentIndex).getPagamento();
+
+							setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER;");
+							if (columnPagamento == 0.00) {
+								this.setText("");
+							}
+							else {
+								this.setText(columnPagamento.toString());
+							}
+						}
+						else {
+							setText(null);
+						}
+					}
+				};
+			}
+		});
 	}
 }

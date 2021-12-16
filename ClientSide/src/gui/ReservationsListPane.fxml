@@ -20,20 +20,15 @@
          </items></ToolBar>
       <TableView fx:id="tableViewCostumer" prefHeight="224.0" prefWidth="708.0">
          <columns>
-            <TableColumn fx:id="tableColumnWhats" maxWidth="42.0" minWidth="42.0" prefWidth="42.0" />
-                  <TableColumn fx:id="tableColumnHora" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Hora" />
-                  <TableColumn fx:id="tableColumnPessoas" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Pessoas" />
-                  <TableColumn fx:id="tableColumnNome" prefWidth="88.0" style="-fx-alignment: CENTER-LEFT;" text="Nome" />
-                  <TableColumn fx:id="tableColumnSobrenome" prefWidth="115.0" style="-fx-alignment: CENTER-LEFT;" text="Sobrenome" />
-                  <TableColumn fx:id="tableColumnSituacao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Situaçao" />
-                  <TableColumn fx:id="tableColumnSalao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Salao" />
-                  <TableColumn fx:id="tableColumnMesa" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Mesa" />
-                  <TableColumn fx:id="tableColumnTelefone" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Telefone" />
-                  <TableColumn fx:id="tableColumnEmail" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="E-mail" />
-                  <TableColumn fx:id="tableColumnData" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Data" />
-                  <TableColumn fx:id="tableColumnPagamento" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Pagamento" />
-                <TableColumn fx:id="tableColumnId" prefWidth="55.0" style="-fx-alignment: CENTER-LEFT;" text="Id" />
-                  <TableColumn fx:id="tableColumnIdExterno" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Id Externo" />
+            <TableColumn fx:id="tableColumnWhats" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" />
+                  <TableColumn fx:id="tableColumnNome" prefWidth="250.0" resizable="false" text="Nome" />
+                  <TableColumn fx:id="tableColumnHora" prefWidth="75.0" resizable="false" style="-fx-alignment: CENTER; -fx-font-weight: bold;" text="Hora" />
+                  <TableColumn fx:id="tableColumnPessoas" prefWidth="75.0" resizable="false" style="-fx-alignment: CENTER-LEFT; -fx-font-weight: bold;" text="Pessoas" />
+            <TableColumn fx:id="tableColumnSituacao" maxWidth="100.0" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER-LEFT; -fx-font-weight: bold;" text="Situação" />
+                  <TableColumn fx:id="tableColumnSalao" prefWidth="120.0" resizable="false" style="-fx-alignment: CENTER-LEFT; -fx-font-weight: bold;" text="Salao" />
+            <TableColumn fx:id="tableColumnObservacoes" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" text="Obs." />
+                  <TableColumn fx:id="tableColumnMesa" prefWidth="120.0" resizable="false" style="-fx-alignment: CENTER;" text="Mesa" />
+                  <TableColumn fx:id="tableColumnPagamento" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER-LEFT;" text="Pagamento" />
          </columns>
       </TableView>
    </children>
