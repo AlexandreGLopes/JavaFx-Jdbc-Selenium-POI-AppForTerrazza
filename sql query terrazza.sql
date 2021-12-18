@@ -21,6 +21,9 @@ create table terrazzacostumers (
     PRIMARY KEY (Id)
 );
 
+ALTER TABLE terrazzacostumers
+ADD COLUMN Observacao text AFTER Situacao;
+
 /** Tabela de clientes da filda de espera **/
 
 create table waitingcostumers (
@@ -76,6 +79,11 @@ insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas,
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) values
 ('Robert', 'Smith', '5541995655618', 'robert@hotmail.com', 'Terrazza Almoço', 3, '2021-11-16', '12:00', '1', 'Cancelado por solicitação do cliente', 0.00, '2876444');
+
+/** inserção com o novo campo de texto **/
+
+insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno) values
+('Cabeleleila', 'Leila', '5541995655618', 'cabeleleilaleila@hotmail.com', 'Terrazza Almoço', 3, CURDATE(), '12:00', '1', 'Cancelado por solicitação do cliente', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', 0.00, '2876444');
 
 /* testes de select */
 

@@ -156,7 +156,7 @@ public class DuplicatedListPaneController implements Initializable {
 			protected void updateItem(Costumer obj, boolean empty) {
 				super.updateItem(obj, empty);
 
-				if (obj == null) {
+				if (obj == null || obj.getNome() == null) {
 					setGraphic(null);
 					return;
 				}

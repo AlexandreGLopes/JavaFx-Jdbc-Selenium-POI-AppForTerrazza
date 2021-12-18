@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MessageFormController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MessageFormController">
    <children>
       <GridPane>
         <columnConstraints>
@@ -29,7 +29,7 @@
             <Label fx:id="labelCostumerPhone" text="Telefone:" GridPane.columnIndex="1" />
          </children>
       </GridPane>
-      <TextArea fx:id="textMessage" prefHeight="289.0" prefWidth="600.0">
+      <TextArea fx:id="textMessage" prefHeight="289.0" prefWidth="600.0" wrapText="true">
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>

@@ -109,7 +109,7 @@ public class OwnFileHandler {
 				}
 				list.add(
 						new Costumer(null, array[0], array[1], array[4], array[5], array[7], Integer.parseInt(array[8]),
-								dt.parse(array[9]), hr.parse(array[10]), array[17], array[13], 0.00, array[20]));
+								dt.parse(array[9]), hr.parse(array[10]), array[17], array[13], array[15], 0.00, array[20]));
 				line = br.readLine();
 			}
 		} catch (IOException e) {

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.controlsfx.control.CheckComboBox;
@@ -98,12 +99,15 @@ public class ReservationsListPaneController implements Initializable, DataChange
 
 	@FXML
 	private TableColumn<Costumer, String> tableColumnSituacao;
-	
+
 	@FXML
 	private TableColumn<Costumer, Costumer> tableColumnObservacoes;
 
 	@FXML
 	private TableColumn<Costumer, Double> tableColumnPagamento;
+
+	@FXML
+	private TableColumn<Costumer, Costumer> tableColumnEdit;
 
 	@FXML
 	private TableColumn<Costumer, String> tableColumnIdExterno;
@@ -230,26 +234,32 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		// iniciando os botões nas linhas dos clientes
 		initColumnWhatsButtons();
 		initColumnObsButtons();
+		initColumnEditButtons();
 		// Utils.autoResizeColumns(tableViewCostumer);
 	}
 
 	// Método que cria o formulário das mensagens de whatsapp inividuais
-	private void createMessageForm(Costumer obj, String absoluteName, Stage parentStage) {
+	private <T> void createMessageForm(String title,Costumer obj, String absoluteName, Stage parentStage,
+			Consumer<T> initializingAction) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
 
-			MessageFormController controller = loader.getController();
-			controller.setCostumer(obj);
-			controller.updateFormData();
+			// Abaixo inicializando o controller
+			T controller = loader.getController();
+			initializingAction.accept(controller);
+			// MessageFormController controller = loader.getController();
+			// controller.setCostumer(obj);
+			// controller.updateFormData();
 
 			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Mensagem para Whatsapp");
+			dialogStage.setTitle(title);
 			dialogStage.setScene(new Scene(pane));
 			dialogStage.setResizable(false);
 			dialogStage.initOwner(parentStage);
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.showAndWait();
+
 		} catch (IOException e) {
 			Alerts.showAlert("IOException", "Erro carregando o painel", e.getMessage(), AlertType.ERROR);
 		}
@@ -281,18 +291,55 @@ public class ReservationsListPaneController implements Initializable, DataChange
 					button.setPrefHeight(50);
 					view.setFitHeight(20);
 					view.setFitWidth(20);
-					button.setOnAction(
-							event -> createMessageForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
+					button.setOnAction(event -> createMessageForm("Mensagem para Whatsapp", obj, "/gui/MessageForm.fxml",
+							Utils.currentStage(event), (MessageFormController controller) -> {
+								controller.setCostumer(obj);
+								controller.updateFormData();
+							}));
 				}
 			}
 		});
 	}
-	
+
 	// Método que coloca os botões de Observações nas linhas da tableview
 	private void initColumnObsButtons() {
 		tableColumnObservacoes.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tableColumnObservacoes.setCellFactory(param -> new TableCell<Costumer, Costumer>() {
 			private final Button button = new Button("*");
+
+			@Override
+			protected void updateItem(Costumer obj, boolean empty) {
+				super.updateItem(obj, empty);
+
+				if (obj == null || obj.getObservacao().isBlank()) {
+					setGraphic(null);
+					return;
+				}
+
+				// Adicionei o código para saber se o nome do costumer está nulo porque vai ter
+				// as linhas com clientes nulos para dar um espaço entre os nomes de clientes
+				// duplicados
+				if (!obj.getObservacao().isBlank()) {
+				setGraphic(button);
+				button.setPrefWidth(50);
+				button.setPrefHeight(50);
+				button.setOnAction(event -> createMessageForm("Observações", obj, "/gui/NotesForm.fxml", Utils.currentStage(event),
+						(NotesFormController controller) -> {
+							controller.setCostumer(obj);
+							controller.updateFormData();
+						}));
+				}
+			}
+		});
+	}
+
+	// Método que coloca os botões de Observações nas linhas da tableview
+	private void initColumnEditButtons() {
+		Image img = new Image(new File("res/pencil_24x24.png").toURI().toString());
+		tableColumnEdit.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnEdit.setCellFactory(param -> new TableCell<Costumer, Costumer>() {
+			ImageView view = new ImageView(img);
+			private final Button button = new Button(null, view);
 
 			@Override
 			protected void updateItem(Costumer obj, boolean empty) {
@@ -306,11 +353,16 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				// Adicionei o código para saber se o nome do costumer está nulo porque vai ter
 				// as linhas com clientes nulos para dar um espaço entre os nomes de clientes
 				// duplicados
-					setGraphic(button);
-					button.setPrefWidth(50);
-					button.setPrefHeight(50);
-					button.setOnAction(
-							event -> createMessageForm(obj, "/gui/MessageForm.fxml", Utils.currentStage(event)));
+				setGraphic(button);
+				button.setPrefWidth(50);
+				button.setPrefHeight(50);
+				view.setFitHeight(20);
+				view.setFitWidth(20);
+				button.setOnAction(event -> createMessageForm("Editar Reserva", obj, "/gui/MessageForm.fxml", Utils.currentStage(event),
+						(MessageFormController controller) -> {
+							controller.setCostumer(obj);
+							controller.updateFormData();
+						}));
 			}
 		});
 	}
@@ -323,7 +375,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		Color corNovoConfirmado = Color.valueOf("#6e8003");
 		// Talvez precise formatar hora, mas por enquanto não estou conseguindo usar.
 		// deixando para depois
-		//SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+		// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
 
 		// Customização de linhas inteiras
 		tableViewCostumer.setRowFactory(row -> new TableRow<Costumer>() {
@@ -342,6 +394,9 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				else {
 					setStyle("");
 					setPrefHeight(100);
+					if (isSelected()) {
+						setStyle("-fx-background-color: #7bc0e8;");
+					}
 				}
 			}
 		});
@@ -364,8 +419,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							setPrefWidth(250);
 							setWidth(250);
 							setWrapText(true);
-						}
-						else {
+						} else {
 							setText(null);
 						}
 					}
@@ -408,8 +462,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							} else {
 								this.setTextFill(corNovoConfirmado);
 							}
-						}
-						else {
+						} else {
 							setText(null);
 						}
 					}
@@ -437,8 +490,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							} else {
 								this.setTextFill(corNovoConfirmado);
 							}
-						}
-						else {
+						} else {
 							setText(null);
 						}
 					}
@@ -467,15 +519,14 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							} else {
 								this.setTextFill(corNovoConfirmado);
 							}
-						}
-						else {
+						} else {
 							setText(null);
 						}
 					}
 				};
 			}
 		});
-		
+
 		tableColumnMesa.setCellFactory(new Callback<TableColumn<Costumer, String>, TableCell<Costumer, String>>() {
 			@Override
 			public TableCell<Costumer, String> call(TableColumn<Costumer, String> param) {
@@ -491,15 +542,14 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							setPrefWidth(120);
 							setWidth(120);
 							setText(columnMesa);
-						}
-						else {
+						} else {
 							setText(null);
 						}
 					}
 				};
 			}
 		});
-		
+
 		tableColumnPagamento.setCellFactory(new Callback<TableColumn<Costumer, Double>, TableCell<Costumer, Double>>() {
 			@Override
 			public TableCell<Costumer, Double> call(TableColumn<Costumer, Double> param) {
@@ -513,12 +563,10 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER;");
 							if (columnPagamento == 0.00) {
 								this.setText("");
-							}
-							else {
+							} else {
 								this.setText(columnPagamento.toString());
 							}
-						}
-						else {
+						} else {
 							setText(null);
 						}
 					}

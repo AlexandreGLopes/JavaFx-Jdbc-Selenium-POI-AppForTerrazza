@@ -29,8 +29,8 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
 			st = conn.prepareStatement("INSERT INTO terrazzacostumers "
-					+ "(Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) "
-					+ "VALUES " + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					+ "(Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno) "
+					+ "VALUES " + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, costumer.getNome());
 			st.setString(2, costumer.getSobrenome());
@@ -42,8 +42,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			st.setTime(8, new java.sql.Time(costumer.getHora().getTime()));
 			st.setString(9, costumer.getMesa());
 			st.setString(10, costumer.getSituacao());
-			st.setDouble(11, costumer.getPagamento());
-			st.setString(12, costumer.getIdExterno());
+			st.setString(11, costumer.getObservacao());
+			st.setDouble(12, costumer.getPagamento());
+			st.setString(13, costumer.getIdExterno());
 
 			int rowsAffected = st.executeUpdate();
 
@@ -71,7 +72,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
 			st = conn.prepareStatement("UPDATE terrazzacostumers "
-					+ "SET Nome = ?, Sobrenome = ?, Telefone = ?, Email = ?, Salao = ?, Pessoas = ?, Data = ?, Hora = ?, Mesa = ?, Situacao = ?, Pagamento = ? "
+					+ "SET Nome = ?, Sobrenome = ?, Telefone = ?, Email = ?, Salao = ?, Pessoas = ?, Data = ?, Hora = ?, Mesa = ?, Situacao = ?, Observacao = ?, Pagamento = ? "
 					+ "WHERE IdExterno = ?");
 
 			st.setString(1, costumer.getNome());
@@ -84,8 +85,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			st.setTime(8, new java.sql.Time(costumer.getHora().getTime()));
 			st.setString(9, costumer.getMesa());
 			st.setString(10, costumer.getSituacao());
-			st.setDouble(11, costumer.getPagamento());
-			st.setString(12, costumer.getIdExterno());
+			st.setString(11, costumer.getObservacao());
+			st.setDouble(12, costumer.getPagamento());
+			st.setString(13, costumer.getIdExterno());
 
 			st.executeUpdate();
 
@@ -171,6 +173,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		costumer.setHora(rs.getTime("Hora"));
 		costumer.setMesa(rs.getString("Mesa"));
 		costumer.setSituacao(rs.getString("Situacao"));
+		costumer.setObservacao(rs.getString("Observacao"));
 		costumer.setPagamento(rs.getDouble("Pagamento"));
 		costumer.setIdExterno(rs.getString("IdExterno"));
 		return costumer;
@@ -226,7 +229,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno "
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
 							+ "FROM skycuritibacostumers.terrazzacostumers " + "WHERE DATE(Data) = CURDATE() ORDER BY Hora");
 
 			rs = st.executeQuery();
@@ -251,7 +254,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno "
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
 							+ "FROM skycuritibacostumers.terrazzacostumers " + "WHERE DATE(Data) = CURDATE() ORDER BY Nome");
 
 			rs = st.executeQuery();
@@ -276,7 +279,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno "
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
 							+ "FROM skycuritibacostumers.terrazzacostumers "
 							+ "WHERE DATE(Data) = CURDATE() AND Situacao != \"Cancelado pelo cliente\" AND Situacao != \"Cancelado por solicitação do cliente\" "
 							+ "AND Situacao != \"Cancelado por no-show do cliente\" AND Situacao != \"Cancelado por erro de cadastro\" "
@@ -304,7 +307,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno "
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
 							+ "FROM skycuritibacostumers.terrazzacostumers "
 							+ "WHERE DATE(Data) = CURDATE() AND Situacao != \"Cancelado pelo cliente\" AND Situacao != \"Cancelado por solicitação do cliente\" "
 							+ "AND Situacao != \"Cancelado por no-show do cliente\" AND Situacao != \"Cancelado por erro de cadastro\" "
@@ -332,7 +335,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno "
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
 							+ "FROM skycuritibacostumers.terrazzacostumers "
 							+ "WHERE DATE(Data) = CURDATE() AND Situacao != \"Cancelado pelo cliente\" AND Situacao != \"Cancelado por solicitação do cliente\" "
 							+ "AND Situacao != \"Cancelado por no-show do cliente\" AND Situacao != \"Cancelado por erro de cadastro\" "

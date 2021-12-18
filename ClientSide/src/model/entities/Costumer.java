@@ -19,6 +19,7 @@ public class Costumer implements Serializable {
 	private Date hora;
 	private String mesa;
 	private String situacao;
+	private String observacao;
 	private Double pagamento;
 	private String idExterno;
 	
@@ -26,7 +27,7 @@ public class Costumer implements Serializable {
 	}
 
 	public Costumer(Integer id, String nome, String sobrenome, String telefone, String email, String salao,
-			Integer pessoas, Date data, Date hora, String mesa, String situacao, Double pagamento, String idExterno) {
+			Integer pessoas, Date data, Date hora, String mesa, String situacao, String observacao, Double pagamento, String idExterno) {
 		this.id = id;
 		this.nome = nome;
 		this.sobrenome = sobrenome;
@@ -38,6 +39,7 @@ public class Costumer implements Serializable {
 		this.hora = hora;
 		this.mesa = mesa;
 		this.situacao = situacao;
+		this.observacao = observacao;
 		this.pagamento = pagamento;
 		this.idExterno = idExterno;
 	}
@@ -129,6 +131,14 @@ public class Costumer implements Serializable {
 	public void setSituacao(String situacao) {
 		this.situacao = situacao;
 	}
+	
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
 
 	public Double getPagamento() {
 		return pagamento;
@@ -145,13 +155,15 @@ public class Costumer implements Serializable {
 	public void setIdExterno(String idExterno) {
 		this.idExterno = idExterno;
 	}
-
+	
+	//Sem observação e sem id
 	@Override
 	public int hashCode() {
 		return Objects.hash(data, email, hora, idExterno, mesa, nome, pagamento, pessoas, salao, situacao, sobrenome,
 				telefone);
 	}
 
+	//Sem observação e sem id
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -169,6 +181,7 @@ public class Costumer implements Serializable {
 				&& Objects.equals(sobrenome, other.sobrenome) && Objects.equals(telefone, other.telefone);
 	}
 	
+	//Sem observação e sem id
 	@Override
 	public String toString() {
 		return "Costumer [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", telefone=" + telefone
@@ -176,5 +189,5 @@ public class Costumer implements Serializable {
 				+ ", mesa=" + mesa + ", situacao=" + situacao + ", pagamento=" + pagamento + ", idExterno=" + idExterno
 				+ "]";
 	}
-	
+
 }

@@ -29,6 +29,7 @@
             <TableColumn fx:id="tableColumnObservacoes" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" text="Obs." />
                   <TableColumn fx:id="tableColumnMesa" prefWidth="120.0" resizable="false" style="-fx-alignment: CENTER;" text="Mesa" />
                   <TableColumn fx:id="tableColumnPagamento" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER-LEFT;" text="Pagamento" />
+            <TableColumn fx:id="tableColumnEdit" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" />
          </columns>
       </TableView>
    </children>
