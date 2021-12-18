@@ -239,7 +239,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 	}
 
 	// Método que cria o formulário das mensagens de whatsapp inividuais
-	private <T> void createMessageForm(String title,Costumer obj, String absoluteName, Stage parentStage,
+	private <T> void createMessageForm(String title, Costumer obj, String absoluteName, Stage parentStage,
 			Consumer<T> initializingAction) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
@@ -291,8 +291,8 @@ public class ReservationsListPaneController implements Initializable, DataChange
 					button.setPrefHeight(50);
 					view.setFitHeight(20);
 					view.setFitWidth(20);
-					button.setOnAction(event -> createMessageForm("Mensagem para Whatsapp", obj, "/gui/MessageForm.fxml",
-							Utils.currentStage(event), (MessageFormController controller) -> {
+					button.setOnAction(event -> createMessageForm("Mensagem para Whatsapp", obj,
+							"/gui/MessageForm.fxml", Utils.currentStage(event), (MessageFormController controller) -> {
 								controller.setCostumer(obj);
 								controller.updateFormData();
 							}));
@@ -320,14 +320,14 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				// as linhas com clientes nulos para dar um espaço entre os nomes de clientes
 				// duplicados
 				if (!obj.getObservacao().isBlank()) {
-				setGraphic(button);
-				button.setPrefWidth(50);
-				button.setPrefHeight(50);
-				button.setOnAction(event -> createMessageForm("Observações", obj, "/gui/NotesForm.fxml", Utils.currentStage(event),
-						(NotesFormController controller) -> {
-							controller.setCostumer(obj);
-							controller.updateFormData();
-						}));
+					setGraphic(button);
+					button.setPrefWidth(50);
+					button.setPrefHeight(50);
+					button.setOnAction(event -> createMessageForm("Observações", obj, "/gui/NotesForm.fxml",
+							Utils.currentStage(event), (NotesFormController controller) -> {
+								controller.setCostumer(obj);
+								controller.updateFormData();
+							}));
 				}
 			}
 		});
@@ -358,8 +358,8 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				button.setPrefHeight(50);
 				view.setFitHeight(20);
 				view.setFitWidth(20);
-				button.setOnAction(event -> createMessageForm("Editar Reserva", obj, "/gui/MessageForm.fxml", Utils.currentStage(event),
-						(MessageFormController controller) -> {
+				button.setOnAction(event -> createMessageForm("Editar Reserva", obj, "/gui/MessageForm.fxml",
+						Utils.currentStage(event), (MessageFormController controller) -> {
 							controller.setCostumer(obj);
 							controller.updateFormData();
 						}));
@@ -373,9 +373,12 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		// Cores
 		Color corCancelado = Color.RED;
 		Color corNovoConfirmado = Color.valueOf("#6e8003");
-		// Talvez precise formatar hora, mas por enquanto não estou conseguindo usar.
-		// deixando para depois
-		// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+		
+		//Imagem 
+		Image imgWaiting = new Image(new File("res/costumer_waiting_48x53.png").toURI().toString());
+
+		// Retirando as linhas das bordas da tabela
+		tableViewCostumer.setStyle("-fx-table-cell-border-color: transparent;");
 
 		// Customização de linhas inteiras
 		tableViewCostumer.setRowFactory(row -> new TableRow<Costumer>() {
@@ -384,18 +387,11 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				super.updateItem(item, empty);
 				if (item == null) {
 					setStyle("");
-				}
-				/*
-				 * else if (item.getSituacao().contains("Cancelado")) {
-				 * setStyle("-fx-background-color: tomato;"); } else if
-				 * (item.getSituacao().contains("Sentado")) {
-				 * setStyle("-fx-background-color: #8ea604;"); }
-				 */
-				else {
+				} else {
 					setStyle("");
 					setPrefHeight(100);
 					if (isSelected()) {
-						setStyle("-fx-background-color: #7bc0e8;");
+						setStyle("-fx-background-color: #7bc0e8; -fx-table-cell-border-color: transparent;");
 					}
 				}
 			}
@@ -426,24 +422,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				};
 			}
 		});
-		/*
-		 * tableColumnHora.setCellFactory(new Callback<TableColumn<Costumer, Date>,
-		 * TableCell<Costumer, Date>>() {
-		 * 
-		 * @Override public TableCell<Costumer, Date> call(TableColumn<Costumer, Date>
-		 * param) { return new TableCell<Costumer, Date>() {
-		 * 
-		 * @Override protected void updateItem(Date item, boolean empty) { if (!empty) {
-		 * int currentIndex = indexProperty().getValue() < 0 ? 0 :
-		 * indexProperty().getValue(); Date columnData =
-		 * param.getTableView().getItems().get(currentIndex).getData(); String
-		 * columnSituacao =
-		 * param.getTableView().getItems().get(currentIndex).getSituacao();
-		 * 
-		 * setText(hr.format(columnData)); setStyle("-fx-alignment: CENTER;"); if
-		 * (columnSituacao.contains("Cancelado")) { this.setTextFill(Color.RED); } else
-		 * { this.setTextFill(Color.BLACK); } } } }; } });
-		 */
+
 		tableColumnPessoas.setCellFactory(new Callback<TableColumn<Costumer, Integer>, TableCell<Costumer, Integer>>() {
 			@Override
 			public TableCell<Costumer, Integer> call(TableColumn<Costumer, Integer> param) {
@@ -477,18 +456,27 @@ public class ReservationsListPaneController implements Initializable, DataChange
 					@Override
 					protected void updateItem(String item, boolean empty) {
 						if (!empty) {
+							ImageView view = new ImageView(imgWaiting);
 							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
 							String columnSituacao = param.getTableView().getItems().get(currentIndex).getSituacao();
+							boolean statusAguardando = param.getTableView().getItems().get(currentIndex).isAguardando();
 
-							setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER; -fx-font-weight: bold;");
-							setWrapText(true);
-							setPrefWidth(100);
-							setWidth(100);
-							setText(columnSituacao);
-							if (columnSituacao.contains("Cancelado")) {
-								this.setTextFill(corCancelado);
+							if (statusAguardando) {
+								view.setFitHeight(24);
+								view.setFitWidth(28);
+								setGraphic(view);
+								setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER;");
 							} else {
-								this.setTextFill(corNovoConfirmado);
+								setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER; -fx-font-weight: bold;");
+								setWrapText(true);
+								setPrefWidth(100);
+								setWidth(100);
+								setText(columnSituacao);
+								if (columnSituacao.contains("Cancelado")) {
+									this.setTextFill(corCancelado);
+								} else {
+									this.setTextFill(corNovoConfirmado);
+								}
 							}
 						} else {
 							setText(null);

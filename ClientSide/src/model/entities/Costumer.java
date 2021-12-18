@@ -20,6 +20,7 @@ public class Costumer implements Serializable {
 	private String mesa;
 	private String situacao;
 	private String observacao;
+	private boolean aguardando;
 	private Double pagamento;
 	private String idExterno;
 	
@@ -27,7 +28,7 @@ public class Costumer implements Serializable {
 	}
 
 	public Costumer(Integer id, String nome, String sobrenome, String telefone, String email, String salao,
-			Integer pessoas, Date data, Date hora, String mesa, String situacao, String observacao, Double pagamento, String idExterno) {
+			Integer pessoas, Date data, Date hora, String mesa, String situacao, String observacao, boolean aguardando, Double pagamento, String idExterno) {
 		this.id = id;
 		this.nome = nome;
 		this.sobrenome = sobrenome;
@@ -40,6 +41,7 @@ public class Costumer implements Serializable {
 		this.mesa = mesa;
 		this.situacao = situacao;
 		this.observacao = observacao;
+		this.aguardando = aguardando;
 		this.pagamento = pagamento;
 		this.idExterno = idExterno;
 	}
@@ -138,6 +140,14 @@ public class Costumer implements Serializable {
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+	
+	public boolean isAguardando() {
+		return aguardando;
+	}
+
+	public void setAguardando(boolean aguardando) {
+		this.aguardando = aguardando;
 	}
 
 	public Double getPagamento() {

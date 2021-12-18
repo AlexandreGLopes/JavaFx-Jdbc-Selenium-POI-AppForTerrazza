@@ -3,6 +3,7 @@ package gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,22 +20,27 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.entities.Costumer;
 import model.services.CostumerService;
 
 public class DuplicatedListPaneController implements Initializable {
-	
+
+	SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+
 	private CostumerService service;
 
 	@FXML
@@ -80,9 +86,9 @@ public class DuplicatedListPaneController implements Initializable {
 	public TableView<Costumer> getTableViewCostumer() {
 		return tableViewCostumer;
 	}
-	
+
 	private ObservableList<Costumer> obsList;
-	
+
 	public void setCostumerService(CostumerService service) {
 		this.service = service;
 	}
@@ -112,24 +118,77 @@ public class DuplicatedListPaneController implements Initializable {
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewCostumer.prefHeightProperty().bind(stage.heightProperty());
 
+		// Customização das células e colunas
+		customizeFactory();
+
 	}
-	
+
+	private void customizeFactory() {
+
+		// Customização de linhas inteiras
+		tableViewCostumer.setRowFactory(row -> new TableRow<Costumer>() {
+			@Override
+			public void updateItem(Costumer item, boolean empty) {
+				super.updateItem(item, empty);
+				if (item == null) {
+					setStyle("");
+				} else {
+					setStyle("");
+					if (isSelected()) {
+						setStyle("-fx-background-color: #7bc0e8; ");
+					}
+				}
+			}
+		});
+
+		// Customização das colunas
+		tableColumnHora.setCellFactory(new Callback<TableColumn<Costumer, Date>, TableCell<Costumer, Date>>() {
+			@Override
+			public TableCell<Costumer, Date> call(TableColumn<Costumer, Date> param) {
+				return new TableCell<Costumer, Date>() {
+					@Override
+					protected void updateItem(Date item, boolean empty) {
+						if (!empty) {
+							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
+							String columnNome = param.getTableView().getItems().get(currentIndex).getNome();
+							Date columnHora = param.getTableView().getItems().get(currentIndex).getHora();
+							String data = hr.format(columnHora);
+
+							if (columnNome != null) {
+								setStyle("-fx-alignment: CENTER-LEFT;");
+								setText(data);
+							} else if (columnNome == null) {
+								setText(null);
+							}
+						} else {
+							setText(null);
+						}
+					}
+				};
+			}
+		});
+
+	}
+
+	// O updatetableview aqui vai ter um switch/case para que possamos usar os três
+	// tipos de comparações: por nome, por telefone e por email. cada uma vai usar
+	// um método para pegar os dados do Banco já filtrados para ficar melhor de trabalhar
 	public void updateTableView(String option) {
 		if (service == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		
+
 		List<Costumer> duplicatedList = new ArrayList<>();
-		
+
 		switch (option) {
 		case "name":
 			duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByName(service);
 			break;
-			
+
 		case "telefone":
 			duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByTelephone(service);
 			break;
-			
+
 		case "email":
 			duplicatedList = CheckDuplicacatesMethods.checkDuplicatesByEmail(service);
 			break;
@@ -137,13 +196,13 @@ public class DuplicatedListPaneController implements Initializable {
 		default:
 			break;
 		}
-		
+
 		obsList = FXCollections.observableArrayList(duplicatedList);
 		tableViewCostumer.setItems(obsList);
 		initColumnButtons();
 		Utils.autoResizeColumns(tableViewCostumer);
 	}
-	
+
 	// Método que coloca os botões do whatsapp nas linhas da tableview
 	private void initColumnButtons() {
 		Image img = new Image(new File("res/whatsIcon.png").toURI().toString());
@@ -156,6 +215,9 @@ public class DuplicatedListPaneController implements Initializable {
 			protected void updateItem(Costumer obj, boolean empty) {
 				super.updateItem(obj, empty);
 
+				// Ao rolar para baixo apareciam mais bitões. aí adicionei mais uma checagem:
+				// "obj.getNome() == null" porque não é só o objeto que tem que estar nulo. Isso
+				// parece ter resolvido
 				if (obj == null || obj.getNome() == null) {
 					setGraphic(null);
 					return;
@@ -175,7 +237,7 @@ public class DuplicatedListPaneController implements Initializable {
 			}
 		});
 	}
-	
+
 	// Método que cria o formulário das mensagens de whatsapp inividuais
 	private void createMessageForm(Costumer obj, String absoluteName, Stage parentStage) {
 		try {

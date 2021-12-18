@@ -106,6 +106,7 @@ public class OwnFileHandler {
 				Costumer costumer = new Costumer();
 				// adicionando o costumer vazio na lista
 				list.add(costumer);
+				costumer.setAguardando(false);
 				while (cellIterator.hasNext()) {
 					Cell cell = cellIterator.next();
 					// A classe Cell possui diversos métodos para a manipulação dos dados do
@@ -144,7 +145,7 @@ public class OwnFileHandler {
 						costumer.setSituacao(cell.getStringCellValue());
 						break;
 					case 15:
-						costumer.setSituacao(cell.getStringCellValue());
+						costumer.setObservacao(cell.getStringCellValue());
 						break;
 					case 17:
 						costumer.setMesa(cell.getStringCellValue());
@@ -212,7 +213,7 @@ public class OwnFileHandler {
 				}
 				list.add(
 						new Costumer(null, array[0], array[1], array[4], array[5], array[7], Integer.parseInt(array[8]),
-								dt.parse(array[9]), hr.parse(array[10]), array[17], array[13], array[15], 0.00, array[20]));
+								dt.parse(array[9]), hr.parse(array[10]), array[17], array[13], array[15], false, 0.00, array[20]));
 				line = br.readLine();
 			}
 		} catch (IOException e) {

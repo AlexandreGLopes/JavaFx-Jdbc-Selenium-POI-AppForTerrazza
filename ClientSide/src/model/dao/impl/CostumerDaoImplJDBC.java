@@ -29,8 +29,8 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
 			st = conn.prepareStatement("INSERT INTO terrazzacostumers "
-					+ "(Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno) "
-					+ "VALUES " + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					+ "(Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) "
+					+ "VALUES " + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, costumer.getNome());
 			st.setString(2, costumer.getSobrenome());
@@ -43,8 +43,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			st.setString(9, costumer.getMesa());
 			st.setString(10, costumer.getSituacao());
 			st.setString(11, costumer.getObservacao());
-			st.setDouble(12, costumer.getPagamento());
-			st.setString(13, costumer.getIdExterno());
+			st.setBoolean(12, costumer.isAguardando());
+			st.setDouble(13, costumer.getPagamento());
+			st.setString(14, costumer.getIdExterno());
 
 			int rowsAffected = st.executeUpdate();
 
@@ -174,6 +175,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		costumer.setMesa(rs.getString("Mesa"));
 		costumer.setSituacao(rs.getString("Situacao"));
 		costumer.setObservacao(rs.getString("Observacao"));
+		costumer.setAguardando(rs.getBoolean("Aguardando"));
 		costumer.setPagamento(rs.getDouble("Pagamento"));
 		costumer.setIdExterno(rs.getString("IdExterno"));
 		return costumer;
@@ -229,8 +231,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
-							+ "FROM skycuritibacostumers.terrazzacostumers " + "WHERE DATE(Data) = CURDATE() ORDER BY Hora");
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno "
+							+ "FROM skycuritibacostumers.terrazzacostumers "
+							+ "WHERE DATE(Data) = CURDATE() ORDER BY Hora");
 
 			rs = st.executeQuery();
 
@@ -247,15 +250,16 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			DB.closeResultSet(rs);
 		}
 	}
-	
+
 	@Override
 	public List<Costumer> findTodayCostumersByName() {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
-							+ "FROM skycuritibacostumers.terrazzacostumers " + "WHERE DATE(Data) = CURDATE() ORDER BY Nome");
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno "
+							+ "FROM skycuritibacostumers.terrazzacostumers "
+							+ "WHERE DATE(Data) = CURDATE() ORDER BY Nome");
 
 			rs = st.executeQuery();
 
@@ -272,14 +276,16 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			DB.closeResultSet(rs);
 		}
 	}
-	
+
+	// Método que vai ser utilizado para as tabelas de checagem de clientes com
+	// reservas DUPLICADAS
 	@Override
 	public List<Costumer> findTodayCostumersByNameExceptCancelled() {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno "
 							+ "FROM skycuritibacostumers.terrazzacostumers "
 							+ "WHERE DATE(Data) = CURDATE() AND Situacao != \"Cancelado pelo cliente\" AND Situacao != \"Cancelado por solicitação do cliente\" "
 							+ "AND Situacao != \"Cancelado por no-show do cliente\" AND Situacao != \"Cancelado por erro de cadastro\" "
@@ -301,13 +307,16 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		}
 	}
 
+	// Segundo método que vai ser utilizado para as tabelas de checagem de clientes
+	// com
+	// reservas DUPLICADAS
 	@Override
 	public List<Costumer> findTodayCostumersByTelephoneExceptCancelled() {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno "
 							+ "FROM skycuritibacostumers.terrazzacostumers "
 							+ "WHERE DATE(Data) = CURDATE() AND Situacao != \"Cancelado pelo cliente\" AND Situacao != \"Cancelado por solicitação do cliente\" "
 							+ "AND Situacao != \"Cancelado por no-show do cliente\" AND Situacao != \"Cancelado por erro de cadastro\" "
@@ -329,13 +338,16 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		}
 	}
 
+	// Terceiro método que vai ser utilizado para as tabelas de checagem de clientes
+	// com
+	// reservas DUPLICADAS
 	@Override
 	public List<Costumer> findTodayCostumersByEmailExceptCancelled() {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
+					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno "
 							+ "FROM skycuritibacostumers.terrazzacostumers "
 							+ "WHERE DATE(Data) = CURDATE() AND Situacao != \"Cancelado pelo cliente\" AND Situacao != \"Cancelado por solicitação do cliente\" "
 							+ "AND Situacao != \"Cancelado por no-show do cliente\" AND Situacao != \"Cancelado por erro de cadastro\" "
