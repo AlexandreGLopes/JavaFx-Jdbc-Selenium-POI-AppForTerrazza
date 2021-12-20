@@ -3,7 +3,6 @@ package gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -248,6 +247,10 @@ public class ReservationsListPaneController implements Initializable, DataChange
 			// Abaixo inicializando o controller
 			T controller = loader.getController();
 			initializingAction.accept(controller);
+			//TESTANDO PARA VER SE ADICIONAMOS UM LISTENER POR AQUI. NA CELULA NAO ESTA DANDO CERTO
+			if (title.equals("Editar Reserva")) {
+			((EditReservationFormController) controller).subscribeDataChangeListener(this);
+			}
 			// MessageFormController controller = loader.getController();
 			// controller.setCostumer(obj);
 			// controller.updateFormData();
@@ -358,8 +361,8 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				button.setPrefHeight(50);
 				view.setFitHeight(20);
 				view.setFitWidth(20);
-				button.setOnAction(event -> createMessageForm("Editar Reserva", obj, "/gui/MessageForm.fxml",
-						Utils.currentStage(event), (MessageFormController controller) -> {
+				button.setOnAction(event -> createMessageForm("Editar Reserva", obj, "/gui/EditReservationForm.fxml",
+						Utils.currentStage(event), (EditReservationFormController controller) -> {
 							controller.setCostumer(obj);
 							controller.updateFormData();
 						}));
@@ -460,13 +463,14 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
 							String columnSituacao = param.getTableView().getItems().get(currentIndex).getSituacao();
 							boolean statusAguardando = param.getTableView().getItems().get(currentIndex).isAguardando();
-
-							if (statusAguardando) {
+							
+							if (statusAguardando == true || statusAguardando) {
 								view.setFitHeight(24);
 								view.setFitWidth(28);
 								setGraphic(view);
 								setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER;");
-							} else {
+							} 
+							else {
 								setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER; -fx-font-weight: bold;");
 								setWrapText(true);
 								setPrefWidth(100);

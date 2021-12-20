@@ -67,6 +67,10 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		}
 	}
 
+	// update geral que puxa do waitlist. Como vamos ter um método que atualiza o
+	// banco de dados (sentando e dando no show nos clientes, sem atualizar o banco
+	// de dados do waitlist) o método que puxa do waitlist não pode conflitar com esses
+	// dados.
 	@Override
 	public void update(Costumer costumer) {
 		PreparedStatement st = null;
@@ -74,7 +78,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
 			st = conn.prepareStatement("UPDATE terrazzacostumers "
 					+ "SET Nome = ?, Sobrenome = ?, Telefone = ?, Email = ?, Salao = ?, Pessoas = ?, Data = ?, Hora = ?, Mesa = ?, Situacao = ?, Observacao = ?, Pagamento = ? "
-					+ "WHERE IdExterno = ?");
+					+ "WHERE IdExterno = ? AND Situacao !=  'Cancelado por no-show' AND Situacao != 'Sentado'");
 
 			st.setString(1, costumer.getNome());
 			st.setString(2, costumer.getSobrenome());

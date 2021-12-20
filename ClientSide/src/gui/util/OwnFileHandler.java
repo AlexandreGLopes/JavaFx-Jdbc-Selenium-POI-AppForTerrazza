@@ -312,7 +312,8 @@ public class OwnFileHandler {
 						costumer.setTelefone("Wix não exporta");
 						costumer.setSalao("38 Floor");
 						costumer.setPessoas(2);
-						costumer.setSituacao("Verificar Pagamento");
+						costumer.setSituacao("Novo");
+						costumer.setObservacao("");
 						String strInicial = cell.getStringCellValue()
 								.substring(cell.getStringCellValue().lastIndexOf("(") + 1);
 						String strFinal = strInicial.substring(0, 5);

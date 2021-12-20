@@ -116,10 +116,19 @@ FROM skycuritibacostumers.terrazzacostumers
 WHERE DATE(Data) = CURDATE() AND Situacao != "Cancelado pelo cliente" AND Situacao != "Cancelado por solicitação do cliente"
 AND Situacao != "Cancelado por no-show do cliente" AND Situacao != "Cancelado por erro de cadastro";
 
+/** updates a serem usados no nos dao.impl **/
+UPDATE terrazzacostumers
+SET Nome = ?, Sobrenome = ?, Telefone = ?, Email = ?, Salao = ?, Pessoas = ?, Data = ?, Hora = ?, Mesa = ?, Situacao = ?, Observacao = ?, Pagamento = ?
+WHERE IdExterno = '2876444' AND Situacao !=  'Cancelado por no-show' AND Situacao != 'Sentado';
+
+UPDATE terrazzacostumers
+SET Nome = 'vamos ver se mudou', Sobrenome = 'a', Telefone = 'a', Email = 'a', Salao = 'Jantar no Terrazza 40', Pessoas = 1, Data = CURDATE(), Hora = '19:00', Mesa = '1', Situacao = 'Cancelado por no-show', Observacao = 'a', Pagamento = 0.00
+WHERE IdExterno = '2876444' AND Situacao !=  'Cancelado por no-show' AND Situacao != 'Sentado';
+
 /** update para colocar cientes na database no domingo para poder fazer testes **/
 update terrazzacostumers
 set Data = CURDATE()
-where DATE(Data) = '2021-12-10';
+where DATE(Data) = '2021-12-18';
 
 /** só para limpar os dados para testes **/
 DELETE FROM skycuritibacostumers.terrazzacostumers;
