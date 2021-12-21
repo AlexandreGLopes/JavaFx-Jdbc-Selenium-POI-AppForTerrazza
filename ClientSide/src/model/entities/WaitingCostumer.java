@@ -17,12 +17,13 @@ public class WaitingCostumer {
 	private String mesa;
 	private String situacao;
 	private String observacao;
+	private boolean aguardando;
 	
 	public WaitingCostumer() {
 	}
 
 	public WaitingCostumer(Integer id, String nome, String sobrenome, String telefone, String salao, Integer pessoas,
-			Date data, Date horaChegada, Date horaSentada, String mesa, String situacao, String observacao) {
+			Date data, Date horaChegada, Date horaSentada, String mesa, String situacao, String observacao, boolean aguardando) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -36,6 +37,7 @@ public class WaitingCostumer {
 		this.mesa = mesa;
 		this.situacao = situacao;
 		this.observacao = observacao;
+		this.setAguardando(aguardando);
 	}
 
 	public Integer getId() {
@@ -132,6 +134,14 @@ public class WaitingCostumer {
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+	
+	public boolean isAguardando() {
+		return aguardando;
+	}
+
+	public void setAguardando(boolean aguardando) {
+		this.aguardando = aguardando;
 	}
 
 	@Override

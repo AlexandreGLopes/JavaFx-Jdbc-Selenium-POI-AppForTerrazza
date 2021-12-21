@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import org.apache.poi.hemf.record.emf.HemfText.SetTextJustification;
 import org.controlsfx.control.CheckComboBox;
 
 import application.Main;
@@ -129,7 +130,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 	}
 
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+	public void initialize(URL url, ResourceBundle rb) {
 		initializeNodes();
 		// Setando as opções do checkComboBox que vai ser o filtro pras situações das
 		// reservas
@@ -247,9 +248,12 @@ public class ReservationsListPaneController implements Initializable, DataChange
 			// Abaixo inicializando o controller
 			T controller = loader.getController();
 			initializingAction.accept(controller);
-			//TESTANDO PARA VER SE ADICIONAMOS UM LISTENER POR AQUI. NA CELULA NAO ESTA DANDO CERTO
+			// Adicionando listener numa clausula if/else e não chamando no
+			// InitializingAction na expressão lambda como os outros métodos do controller
+			// porque lá o "this" estava se referindo à célula e não à classe. ENtão tive
+			// que adicionar aqui para resolver o problema
 			if (title.equals("Editar Reserva")) {
-			((EditReservationFormController) controller).subscribeDataChangeListener(this);
+				((EditReservationFormController) controller).subscribeDataChangeListener(this);
 			}
 			// MessageFormController controller = loader.getController();
 			// controller.setCostumer(obj);
@@ -314,14 +318,14 @@ public class ReservationsListPaneController implements Initializable, DataChange
 			protected void updateItem(Costumer obj, boolean empty) {
 				super.updateItem(obj, empty);
 
+				// Adicionei o código para saber se a observação vai estar em branco. Se estiver
+				// não vai adicionar o botão. Se tiver observação vai aparecer um botão para
+				// acessar o texto
 				if (obj == null || obj.getObservacao().isBlank()) {
 					setGraphic(null);
 					return;
 				}
 
-				// Adicionei o código para saber se o nome do costumer está nulo porque vai ter
-				// as linhas com clientes nulos para dar um espaço entre os nomes de clientes
-				// duplicados
 				if (!obj.getObservacao().isBlank()) {
 					setGraphic(button);
 					button.setPrefWidth(50);
@@ -353,9 +357,6 @@ public class ReservationsListPaneController implements Initializable, DataChange
 					return;
 				}
 
-				// Adicionei o código para saber se o nome do costumer está nulo porque vai ter
-				// as linhas com clientes nulos para dar um espaço entre os nomes de clientes
-				// duplicados
 				setGraphic(button);
 				button.setPrefWidth(50);
 				button.setPrefHeight(50);
@@ -377,8 +378,8 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		Color corCancelado = Color.RED;
 		Color corNovoConfirmado = Color.valueOf("#6e8003");
 		Color corSentado = Color.DARKBLUE;
-		
-		//Imagem 
+
+		// Imagem
 		Image imgWaiting = new Image(new File("res/costumer_waiting_48x53.png").toURI().toString());
 
 		// Retirando as linhas das bordas da tabela
@@ -442,11 +443,9 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							setStyle("-fx-alignment: CENTER; -fx-font-size: 16; -fx-font-weight: bold;");
 							if (columnSituacao.contains("Cancelado")) {
 								this.setTextFill(corCancelado);
-							}
-							else if (columnSituacao.contains("Sentado")) {
+							} else if (columnSituacao.contains("Sentado")) {
 								this.setTextFill(corSentado);
-							}
-							else {
+							} else {
 								this.setTextFill(corNovoConfirmado);
 							}
 						} else {
@@ -468,14 +467,15 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
 							String columnSituacao = param.getTableView().getItems().get(currentIndex).getSituacao();
 							boolean statusAguardando = param.getTableView().getItems().get(currentIndex).isAguardando();
-							
+
 							if (statusAguardando == true || statusAguardando) {
 								view.setFitHeight(24);
 								view.setFitWidth(28);
 								setGraphic(view);
+								setText(null);
 								setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER;");
-							} 
-							else {
+							} else {
+								setGraphic(null);
 								setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER; -fx-font-weight: bold;");
 								setWrapText(true);
 								setPrefWidth(100);
@@ -483,11 +483,9 @@ public class ReservationsListPaneController implements Initializable, DataChange
 								setText(columnSituacao);
 								if (columnSituacao.contains("Cancelado")) {
 									this.setTextFill(corCancelado);
-								}
-								else if (columnSituacao.contains("Sentado")) {
+								} else if (columnSituacao.contains("Sentado")) {
 									this.setTextFill(corSentado);
-								}
-								else {
+								} else {
 									this.setTextFill(corNovoConfirmado);
 								}
 							}
@@ -517,11 +515,9 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							setText(columnSalao);
 							if (columnSituacao.contains("Cancelado")) {
 								this.setTextFill(corCancelado);
-							}
-							else if (columnSituacao.contains("Sentado")) {
+							} else if (columnSituacao.contains("Sentado")) {
 								this.setTextFill(corSentado);
-							}
-							else {
+							} else {
 								this.setTextFill(corNovoConfirmado);
 							}
 						} else {

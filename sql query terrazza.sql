@@ -45,6 +45,9 @@ create table waitingcostumers (
     PRIMARY KEY (Id)
 );
 
+ALTER TABLE waitingcostumers
+ADD COLUMN Aguardando boolean AFTER Observacao;
+
 /** Não vamos usar mais duas tabelas. Apenas uma **/
 /*
 create table bistrocostumers (

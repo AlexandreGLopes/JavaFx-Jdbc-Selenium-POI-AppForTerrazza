@@ -2,6 +2,7 @@ package model.dao;
 
 import db.DB;
 import model.dao.impl.CostumerDaoImplJDBC;
+import model.dao.impl.WaitingCostumerDaoImplJDBC;
 
 public class DaoFactory {
 	
@@ -10,6 +11,10 @@ public class DaoFactory {
 	//pois no programa principal vamos chamar apenas a interface e vamos fazer ela receber o método do DaoFactory
 	public static CostumerDao createCostumerDao() {
 		return new CostumerDaoImplJDBC(DB.getConnection());
+	}
+	
+	public static WaitingCostumerDao createWaitingCostumerDao() {
+		return new WaitingCostumerDaoImplJDBC(DB.getConnection());
 	}
 
 }

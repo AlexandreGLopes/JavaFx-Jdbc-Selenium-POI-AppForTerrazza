@@ -26,12 +26,12 @@
             <TableView fx:id="tableViewWaitingCostumer" prefHeight="216.0" prefWidth="492.0">
               <columns>
                 <TableColumn fx:id="tableColumnWhats" prefWidth="75.0" text="whats" />
-                <TableColumn fx:id="tableColumnEdit" prefWidth="75.0" text="edit" />
                   <TableColumn fx:id="tableColumnNome" prefWidth="75.0" text="Nome" />
                   <TableColumn fx:id="tableColumnSobrenome" prefWidth="75.0" text="Sobrenome" />
                   <TableColumn fx:id="tableColumnHora" prefWidth="75.0" text="Hora" />
                   <TableColumn fx:id="tableColumnSituacao" prefWidth="75.0" text="Situação" />
                   <TableColumn fx:id="tableColumnObservacoes" prefWidth="103.0" text="Observações" />
+                <TableColumn fx:id="tableColumnEdit" prefWidth="75.0" text="edit" />
               </columns>
             </TableView>
          </children>
