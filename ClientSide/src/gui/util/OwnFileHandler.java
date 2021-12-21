@@ -281,6 +281,7 @@ public class OwnFileHandler {
 				Costumer costumer = new Costumer();
 				// adicionando o costumer vazio na lista
 				list.add(costumer);
+				costumer.setAguardando(false);
 				while (cellIterator.hasNext()) {
 					Cell cell = cellIterator.next();
 					// A classe Cell possui diversos métodos para a manipulação dos dados do

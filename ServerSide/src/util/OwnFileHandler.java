@@ -109,7 +109,7 @@ public class OwnFileHandler {
 				}
 				list.add(
 						new Costumer(null, array[0], array[1], array[4], array[5], array[7], Integer.parseInt(array[8]),
-								dt.parse(array[9]), hr.parse(array[10]), array[17], array[13], array[15], 0.00, array[20]));
+								dt.parse(array[9]), hr.parse(array[10]), array[17], array[13], array[15], false, 0.00, array[20]));
 				line = br.readLine();
 			}
 		} catch (IOException e) {
@@ -173,6 +173,7 @@ public class OwnFileHandler {
 				Costumer costumer = new Costumer();
 				//adicionando o costumer vazio na lista
 				list.add(costumer);
+				costumer.setAguardando(false);
 				while(cellIterator.hasNext()) {
 					Cell cell = cellIterator.next();
 					//A classe Cell possui diversos métodos para a manipulação dos dados do arquivo, por exemplo, é possível recuperar os dados que estão na célula com o tipo Java correto, por isso existem métodos para recuperar String, Números, Booleans entre outros.
@@ -199,7 +200,8 @@ public class OwnFileHandler {
 						costumer.setTelefone("Wix não exporta");;
 						costumer.setSalao("38 Floor");
 						costumer.setPessoas(2);
-						costumer.setSituacao("Verificar Pagamento");
+						costumer.setSituacao("Novo");
+						costumer.setObservacao("");
 						String strInicial = cell.getStringCellValue().substring(cell.getStringCellValue().lastIndexOf("(") + 1);
 						String strFinal = strInicial.substring(0, 5);
 						try {

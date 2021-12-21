@@ -72,7 +72,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 	// de dados do waitlist) o método que puxa do waitlist não pode conflitar com esses
 	// dados.
 	@Override
-	public void update(Costumer costumer) {
+	public void updateByExternalIdExceptNoshowAndSited(Costumer costumer) {
 		PreparedStatement st = null;
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
@@ -371,6 +371,31 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
+	}
+
+	@Override
+	public void updateTableStatusObsAndWaiting(Costumer costumer) {
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("UPDATE terrazzacostumers "
+					+ "SET Pessoas = ?, Mesa = ?, Situacao = ?, Observacao = ?, Aguardando = ? "
+					+ "WHERE IdExterno = ?");
+
+			st.setInt(1, costumer.getPessoas());
+			st.setString(2, costumer.getMesa());
+			st.setString(3, costumer.getSituacao());
+			st.setString(4, costumer.getObservacao());
+			st.setBoolean(5, costumer.isAguardando());
+			st.setString(6, costumer.getIdExterno());
+
+			st.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
+		
 	}
 
 }

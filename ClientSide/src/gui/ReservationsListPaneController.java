@@ -376,6 +376,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		// Cores
 		Color corCancelado = Color.RED;
 		Color corNovoConfirmado = Color.valueOf("#6e8003");
+		Color corSentado = Color.DARKBLUE;
 		
 		//Imagem 
 		Image imgWaiting = new Image(new File("res/costumer_waiting_48x53.png").toURI().toString());
@@ -441,7 +442,11 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							setStyle("-fx-alignment: CENTER; -fx-font-size: 16; -fx-font-weight: bold;");
 							if (columnSituacao.contains("Cancelado")) {
 								this.setTextFill(corCancelado);
-							} else {
+							}
+							else if (columnSituacao.contains("Sentado")) {
+								this.setTextFill(corSentado);
+							}
+							else {
 								this.setTextFill(corNovoConfirmado);
 							}
 						} else {
@@ -478,7 +483,11 @@ public class ReservationsListPaneController implements Initializable, DataChange
 								setText(columnSituacao);
 								if (columnSituacao.contains("Cancelado")) {
 									this.setTextFill(corCancelado);
-								} else {
+								}
+								else if (columnSituacao.contains("Sentado")) {
+									this.setTextFill(corSentado);
+								}
+								else {
 									this.setTextFill(corNovoConfirmado);
 								}
 							}
@@ -508,7 +517,11 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							setText(columnSalao);
 							if (columnSituacao.contains("Cancelado")) {
 								this.setTextFill(corCancelado);
-							} else {
+							}
+							else if (columnSituacao.contains("Sentado")) {
+								this.setTextFill(corSentado);
+							}
+							else {
 								this.setTextFill(corNovoConfirmado);
 							}
 						} else {
@@ -529,7 +542,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							int currentIndex = indexProperty().getValue() < 0 ? 0 : indexProperty().getValue();
 							String columnMesa = param.getTableView().getItems().get(currentIndex).getMesa();
 
-							setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER;");
+							setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER; -fx-font-weight: bold;");
 							setWrapText(true);
 							setPrefWidth(120);
 							setWidth(120);

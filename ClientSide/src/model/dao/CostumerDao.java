@@ -7,7 +7,7 @@ import model.entities.Costumer;
 public interface CostumerDao {
 	
 	void insert(Costumer costumer);
-	void update(Costumer costumer);
+	void updateByExternalIdExceptNoshowAndSited(Costumer costumer);
 	void deleteById(Integer id);
 	void deleteOlderThan30Days();
 	Costumer findById(Integer id);
@@ -18,5 +18,6 @@ public interface CostumerDao {
 	List<Costumer> findTodayCostumersByNameExceptCancelled();
 	List<Costumer> findTodayCostumersByTelephoneExceptCancelled();
 	List<Costumer> findTodayCostumersByEmailExceptCancelled();
+	void updateTableStatusObsAndWaiting(Costumer costumer);
 
 }

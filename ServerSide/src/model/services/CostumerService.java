@@ -18,7 +18,7 @@ public class CostumerService {
 		}
 		else {
 			if (!costumer.equals(costumerSelected)) {
-				dao.update(costumer);
+				dao.updateByExternalIdExceptNoshowAndSited(costumer);
 			}
 		}
 	}

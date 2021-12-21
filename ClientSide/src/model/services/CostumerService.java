@@ -18,7 +18,7 @@ public class CostumerService {
 		}
 		else {
 			if (!costumer.equals(costumerSelected)) {
-				dao.update(costumer);
+				dao.updateByExternalIdExceptNoshowAndSited(costumer);
 			}
 		}
 	}
@@ -45,5 +45,9 @@ public class CostumerService {
 	
 	public List<Costumer> findAllofCurrentDateOrderByEmailExceptCancelled() {
 		return dao.findTodayCostumersByEmailExceptCancelled();
+	}
+	
+	public void updateCostumerFromEditForm(Costumer costumer) {
+		dao.updateTableStatusObsAndWaiting(costumer);
 	}
 }

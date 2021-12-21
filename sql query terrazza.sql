@@ -101,6 +101,9 @@ SELECT * FROM skycuritibacostumers.terrazzacostumers
 WHERE Id = 2;
 
 SELECT * FROM skycuritibacostumers.terrazzacostumers
+WHERE Data = CURDATE();
+
+SELECT * FROM skycuritibacostumers.terrazzacostumers
 WHERE IdExterno= '61894688acfaa40012fd6306';
 
 select CURDATE();
@@ -116,11 +119,16 @@ FROM skycuritibacostumers.terrazzacostumers
 WHERE DATE(Data) = CURDATE() AND Situacao != "Cancelado pelo cliente" AND Situacao != "Cancelado por solicitação do cliente"
 AND Situacao != "Cancelado por no-show do cliente" AND Situacao != "Cancelado por erro de cadastro";
 
-/** updates a serem usados no nos dao.impl **/
+/** updates a serem usados no nos costumer.dao.impl **/
 UPDATE terrazzacostumers
 SET Nome = ?, Sobrenome = ?, Telefone = ?, Email = ?, Salao = ?, Pessoas = ?, Data = ?, Hora = ?, Mesa = ?, Situacao = ?, Observacao = ?, Pagamento = ?
-WHERE IdExterno = '2876444' AND Situacao !=  'Cancelado por no-show' AND Situacao != 'Sentado';
+WHERE IdExterno = ? AND Situacao !=  'Cancelado por no-show' AND Situacao != 'Sentado';
 
+UPDATE terrazzacostumers
+SET Pessoas = ?, Mesa = ?, Situacao = ?, Observacao = ?, Aguardando = ?
+WHERE IdExterno = ?;
+
+/** teste
 UPDATE terrazzacostumers
 SET Nome = 'vamos ver se mudou', Sobrenome = 'a', Telefone = 'a', Email = 'a', Salao = 'Jantar no Terrazza 40', Pessoas = 1, Data = CURDATE(), Hora = '19:00', Mesa = '1', Situacao = 'Cancelado por no-show', Observacao = 'a', Pagamento = 0.00
 WHERE IdExterno = '2876444' AND Situacao !=  'Cancelado por no-show' AND Situacao != 'Sentado';

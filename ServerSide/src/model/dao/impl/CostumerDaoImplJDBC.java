@@ -29,8 +29,8 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
 			st = conn.prepareStatement("INSERT INTO terrazzacostumers "
-					+ "(Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno) "
-					+ "VALUES " + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					+ "(Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) "
+					+ "VALUES " + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, costumer.getNome());
 			st.setString(2, costumer.getSobrenome());
@@ -43,8 +43,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			st.setString(9, costumer.getMesa());
 			st.setString(10, costumer.getSituacao());
 			st.setString(11, costumer.getObservacao());
-			st.setDouble(12, costumer.getPagamento());
-			st.setString(13, costumer.getIdExterno());
+			st.setBoolean(12, costumer.isAguardando());
+			st.setDouble(13, costumer.getPagamento());
+			st.setString(14, costumer.getIdExterno());
 
 			int rowsAffected = st.executeUpdate();
 
@@ -67,13 +68,13 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 	}
 
 	@Override
-	public void update(Costumer costumer) {
+	public void updateByExternalIdExceptNoshowAndSited(Costumer costumer) {
 		PreparedStatement st = null;
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
 			st = conn.prepareStatement("UPDATE terrazzacostumers "
 					+ "SET Nome = ?, Sobrenome = ?, Telefone = ?, Email = ?, Salao = ?, Pessoas = ?, Data = ?, Hora = ?, Mesa = ?, Situacao = ?, Observacao = ?, Pagamento = ? "
-					+ "WHERE IdExterno = ?");
+					+ "WHERE IdExterno = ? AND Situacao !=  'Cancelado por no-show' AND Situacao != 'Sentado'");
 
 			st.setString(1, costumer.getNome());
 			st.setString(2, costumer.getSobrenome());
