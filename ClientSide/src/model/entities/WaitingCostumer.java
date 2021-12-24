@@ -3,7 +3,10 @@ package model.entities;
 import java.util.Date;
 import java.util.Objects;
 
-public class WaitingCostumer {
+//Vamos extender de Costumer para podermos utilizar a mesma MessageForm
+public class WaitingCostumer extends Costumer {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
 	private String nome;

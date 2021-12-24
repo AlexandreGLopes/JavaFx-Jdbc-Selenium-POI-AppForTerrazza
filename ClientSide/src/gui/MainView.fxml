@@ -40,7 +40,7 @@
                            <children>
                               <Label text="Tabelas:" />
                               <Button fx:id="tabelaPrincipalButton" mnemonicParsing="false" onAction="#onTabelaPrincipalButtonAction" prefWidth="82.0" text="Reservas" />
-                              <Button mnemonicParsing="false" prefWidth="82.0" text="Espera" />
+                              <Button fx:id="tabelaEsperaButton" mnemonicParsing="false" onAction="#onTabelaEsperaButtonAction" prefWidth="82.0" text="Espera" />
                               <Label text="Clientes Duplicados por:">
                                  <HBox.margin>
                                     <Insets left="50.0" />

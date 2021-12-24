@@ -26,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.services.CostumerService;
+import model.services.WaitingCostumerService;
 
 public class MainViewController implements Initializable, DataChangeListener {
 
@@ -51,11 +52,14 @@ public class MainViewController implements Initializable, DataChangeListener {
 	private Button tabelaPrincipalButton;
 
 	@FXML
+	private Button tabelaEsperaButton;
+
+	@FXML
 	private Button clientesDuplicadosPorNomeButton;
-	
+
 	@FXML
 	private Button clientesDuplicadosPorTelefoneButton;
-	
+
 	@FXML
 	private Button clientesDuplicadosPorEmailButton;
 
@@ -63,8 +67,20 @@ public class MainViewController implements Initializable, DataChangeListener {
 	public void onTabelaPrincipalButtonAction() throws ParseException {
 		loadView("/gui/ReservationsListPane.fxml", (ReservationsListPaneController controller) -> {
 			controller.setCostumerService(new CostumerService());
-			//Setando a tabela para deixar as colunas passarem além dos limites horizontais da própria tabela
+			// Setando a tabela para deixar as colunas passarem além dos limites horizontais
+			// da própria tabela
 			controller.getTableViewCostumer().setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+			controller.updateTableView();
+		});
+	}
+
+	@FXML
+	public void onTabelaEsperaButtonAction() throws ParseException {
+		loadView("/gui/WaitingListPane.fxml", (WaitingListPaneController controller) -> {
+			controller.setWaitingCostumerService(new WaitingCostumerService());
+			// Setando a tabela para deixar as colunas passarem além dos limites horizontais
+			// da própria tabela
+			controller.getTableViewWaitingCostumer().setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 			controller.updateTableView();
 		});
 	}
@@ -76,7 +92,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 			controller.updateTableView("name");
 		});
 	}
-	
+
 	@FXML
 	public void onClientesDuplicadosPorTelefoneButtonAction() throws ParseException {
 		loadView("/gui/DuplicatedListPane.fxml", (DuplicatedListPaneController controller) -> {
@@ -84,7 +100,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 			controller.updateTableView("telefone");
 		});
 	}
-	
+
 	@FXML
 	public void onClientesDuplicadosPorEmailButtonAction() throws ParseException {
 		loadView("/gui/DuplicatedListPane.fxml", (DuplicatedListPaneController controller) -> {
@@ -213,47 +229,53 @@ public class MainViewController implements Initializable, DataChangeListener {
 			e.printStackTrace();
 		}
 	}
-	
-	//Função para abrir outra tela (Private porque vamos chamá-la aqui mesmo)
-	//Adicionamos "synchronized" para só mostrar o resultado após carregar tudo. Assim o processamento não será interrompido durante o multithreading
-	//Parametro 1 é o caminho do fxml
-	//Parametro 2 define a função como genérica para receber um tipo qualquer
+
+	// Função para abrir outra tela (Private porque vamos chamá-la aqui mesmo)
+	// Adicionamos "synchronized" para só mostrar o resultado após carregar tudo.
+	// Assim o processamento não será interrompido durante o multithreading
+	// Parametro 1 é o caminho do fxml
+	// Parametro 2 define a função como genérica para receber um tipo qualquer
 	private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
-			//carregar a view
+			// carregar a view
 			VBox newVBox = loader.load();
-			
-			//Mostrar a view dentro da janela principal
+
+			// Mostrar a view dentro da janela principal
 			Scene mainScene = Main.getMainScene();
-			//vamos pegar os "filhos" da VBox About e carregá-los nos filhos da VBox da MainView (ver a hierarquia das tags de fxml para entender)
-			//Pegando o primeiro elemento da minha view (fazendo um casting de ScrollPane para o compilador entender que é issoq ue eu quero)
-			//getContent() Pegando o filho de ScrollPane
-			//Finalizando com um casting para Vbox antes de tudo para que o compilador entenda que eu quero o Vbox
+			// vamos pegar os "filhos" da VBox About e carregá-los nos filhos da VBox da
+			// MainView (ver a hierarquia das tags de fxml para entender)
+			// Pegando o primeiro elemento da minha view (fazendo um casting de ScrollPane
+			// para o compilador entender que é issoq ue eu quero)
+			// getContent() Pegando o filho de ScrollPane
+			// Finalizando com um casting para Vbox antes de tudo para que o compilador
+			// entenda que eu quero o Vbox
 			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
-			
-			//A partir daqui teremos que preservar o MenuBar, excluir tudo o que tiver nos filhos do VBox, incluir o MenuBar e depois os filhos do VBox de About
-			//Guardar referencia para o menu
+
+			// A partir daqui teremos que preservar o MenuBar, excluir tudo o que tiver nos
+			// filhos do VBox, incluir o MenuBar e depois os filhos do VBox de About
+			// Guardar referencia para o menu
 			Node mainMenu = mainVBox.getChildren().get(0);
 			Node mainToolBar = mainVBox.getChildren().get(1);
-			//excluindo da tela os filhos de mainVbox
+			// excluindo da tela os filhos de mainVbox
 			mainVBox.getChildren().clear();
-			//Adicionar o mainMenu e depis os filhos do newVBox (About)
+			// Adicionar o mainMenu e depis os filhos do newVBox (About)
 			mainVBox.getChildren().add(mainMenu);
 			mainVBox.getChildren().add(mainToolBar);
 			mainVBox.getChildren().addAll(newVBox.getChildren());
-			
-			//Ativando a função passada no parâmetro 2, tipo Consumer<T>
+
+			// Ativando a função passada no parâmetro 2, tipo Consumer<T>
 			T controller = loader.getController();
 			initializingAction.accept(controller);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			Alerts.showAlert("IOException", "Error loading view", e.getMessage(), AlertType.ERROR);
 		}
 	}
 
 	@Override
 	public void onDataChanged() {
+		// Toda vez que a gente atualizar os dados do banco vamos voltar para a tabela
+		// principal, mesmo que o usuario esteja em outra tabela
 		loadView("/gui/ReservationsListPane.fxml", (ReservationsListPaneController controller) -> {
 			controller.setCostumerService(new CostumerService());
 			controller.updateTableView();

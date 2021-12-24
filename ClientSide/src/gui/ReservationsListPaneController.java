@@ -239,7 +239,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 	}
 
 	// Método que cria o formulário das mensagens de whatsapp inividuais
-	private <T> void createMessageForm(String title, Costumer obj, String absoluteName, Stage parentStage,
+	private <T> void createForm(String title, Costumer obj, String absoluteName, Stage parentStage,
 			Consumer<T> initializingAction) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
@@ -298,7 +298,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 					button.setPrefHeight(50);
 					view.setFitHeight(20);
 					view.setFitWidth(20);
-					button.setOnAction(event -> createMessageForm("Mensagem para Whatsapp", obj,
+					button.setOnAction(event -> createForm("Mensagem para Whatsapp", obj,
 							"/gui/MessageForm.fxml", Utils.currentStage(event), (MessageFormController controller) -> {
 								controller.setCostumer(obj);
 								controller.updateFormData();
@@ -330,7 +330,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 					setGraphic(button);
 					button.setPrefWidth(50);
 					button.setPrefHeight(50);
-					button.setOnAction(event -> createMessageForm("Observações", obj, "/gui/NotesForm.fxml",
+					button.setOnAction(event -> createForm("Observações", obj, "/gui/NotesForm.fxml",
 							Utils.currentStage(event), (NotesFormController controller) -> {
 								controller.setCostumer(obj);
 								controller.updateFormData();
@@ -362,7 +362,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				button.setPrefHeight(50);
 				view.setFitHeight(20);
 				view.setFitWidth(20);
-				button.setOnAction(event -> createMessageForm("Editar Reserva", obj, "/gui/EditReservationForm.fxml",
+				button.setOnAction(event -> createForm("Editar Reserva", obj, "/gui/EditReservationForm.fxml",
 						Utils.currentStage(event), (EditReservationFormController controller) -> {
 							controller.setCostumer(obj);
 							controller.updateFormData();

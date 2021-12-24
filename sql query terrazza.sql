@@ -96,6 +96,17 @@ insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas,
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
 ('Felipe', 'Smith', '5541995655618', 'cabeleleilaleila@hotmail.com', 'Terrazza Almoço', 3, CURDATE(), '12:00', '1', 'Cancelado por solicitação do cliente', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
 
+/** testes de insert na waitingcostumers **/
+
+insert into waitingcostumers (Nome, Sobrenome, Telefone, Salao, Pessoas, Data, HoraChegada, HoraSentada, Mesa, Situacao, Observacao)
+values ('Felipe', 'Smith', '5541995655618', 'Terrazza Jantar', 2, CURDATE(), '19:00', null, null, 'Novo', 'nadegas a declaras');
+
+insert into waitingcostumers (Nome, Sobrenome, Telefone, Salao, Pessoas, Data, HoraChegada, HoraSentada, Mesa, Situacao, Observacao)
+values ('Cabeleleila', 'Leila', '5541995655618', 'Terrazza Jantar', 2, CURDATE(), '19:00', null, null, 'Novo', 'nadegas a declaras');
+
+insert into waitingcostumers (Nome, Sobrenome, Telefone, Salao, Pessoas, Data, HoraChegada, HoraSentada, Mesa, Situacao, Observacao)
+values ('Lohane', 'Vêkanandre Sthephany Smith Bueno de HA HA HA de Raio Laser bala de Icekiss', '5541995655618', 'Terrazza Jantar', 2, CURDATE(), '19:00', null, null, 'Novo', 'nadegas a declaras');
+
 /* testes de select */
 
 SELECT * FROM skycuritibacostumers.terrazzacostumers;
@@ -122,6 +133,11 @@ FROM skycuritibacostumers.terrazzacostumers
 WHERE DATE(Data) = CURDATE() AND Situacao != "Cancelado pelo cliente" AND Situacao != "Cancelado por solicitação do cliente"
 AND Situacao != "Cancelado por no-show do cliente" AND Situacao != "Cancelado por erro de cadastro";
 
+SELECT * FROM skycuritibacostumers.waitingcostumers;
+
+SELECT * FROM skycuritibacostumers.waitingcostumers
+WHERE DATE(Data) = CURDATE();
+
 /** updates a serem usados no nos costumer.dao.impl **/
 UPDATE terrazzacostumers
 SET Nome = ?, Sobrenome = ?, Telefone = ?, Email = ?, Salao = ?, Pessoas = ?, Data = ?, Hora = ?, Mesa = ?, Situacao = ?, Observacao = ?, Pagamento = ?
@@ -130,6 +146,11 @@ WHERE IdExterno = ? AND Situacao !=  'Cancelado por no-show' AND Situacao != 'Se
 UPDATE terrazzacostumers
 SET Pessoas = ?, Mesa = ?, Situacao = ?, Observacao = ?, Aguardando = ?
 WHERE IdExterno = ?;
+
+/** updates a serem usados no nos waitingcostumer.dao.impl **/
+UPDATE waitingcostumers
+SET Nome = ?, Sobrenome = ?, Telefone = ?, Salao = ?, Pessoas = ?, Data = ?, HoraChegada = ?, HoraSentada = ?, Mesa = ?, Situacao = ?, Observacao = ?, Aguardando = ?
+WHERE Id = ?;
 
 /** teste
 UPDATE terrazzacostumers
