@@ -14,7 +14,7 @@
    <children>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
          <items>
-            <Button fx:id="novaEsperaButton" mnemonicParsing="false" text="Nova Espera" />
+            <Button fx:id="novaEsperaButton" mnemonicParsing="false" onAction="#onButtonNovaEsperaAction" text="Nova Espera" />
             <Label text="Filtros:" />
             <CheckComboBox fx:id="filtroSituacaoCheckComboBox" title="Situação" />
             <Label text="Por Nome:" />

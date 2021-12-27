@@ -20,8 +20,11 @@ public class WaitingCostumerService {
 		if (obj.getId() == null) {
 			dao.insert(obj);
 		}
+		else if (obj.getSituacao() != "Sentado") {
+			dao.updateWithoutSitting(obj);
+		}
 		else {
-			dao.update(obj);
+			dao.updateWhenSitting(obj);
 		}
 	}
 }

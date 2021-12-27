@@ -2,7 +2,8 @@ package model.dao;
 
 import db.DB;
 import model.dao.impl.CostumerDaoImplJDBC;
-import model.dao.impl.WaitingCostumerDaoImplJDBC;
+import model.dao.impl.StandardMessageDaoJDBCImpl;
+import model.dao.impl.WaitingCostumerDaoJDBCImpl;
 
 public class DaoFactory {
 	
@@ -14,7 +15,11 @@ public class DaoFactory {
 	}
 	
 	public static WaitingCostumerDao createWaitingCostumerDao() {
-		return new WaitingCostumerDaoImplJDBC(DB.getConnection());
+		return new WaitingCostumerDaoJDBCImpl(DB.getConnection());
+	}
+	
+	public static StandardMessageDao createStandardMessageDao() {
+		return new StandardMessageDaoJDBCImpl(DB.getConnection());
 	}
 
 }

@@ -14,11 +14,11 @@ import db.DbException;
 import model.dao.WaitingCostumerDao;
 import model.entities.WaitingCostumer;
 
-public class WaitingCostumerDaoImplJDBC implements WaitingCostumerDao {
+public class WaitingCostumerDaoJDBCImpl implements WaitingCostumerDao {
 	
 	private Connection conn;
 	
-	public WaitingCostumerDaoImplJDBC(Connection conn) {
+	public WaitingCostumerDaoJDBCImpl(Connection conn) {
 		this.conn = conn;
 	}
 
@@ -27,7 +27,7 @@ public class WaitingCostumerDaoImplJDBC implements WaitingCostumerDao {
 		PreparedStatement st = null;
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
-			st = conn.prepareStatement("INSERT INTO waitingwaitingCostumers (Nome, Sobrenome, Telefone, Salao, Pessoas, Data, HoraChegada, HoraSentada, Mesa, Situacao, Observacao) "
+			st = conn.prepareStatement("INSERT INTO waitingcostumers (Nome, Sobrenome, Telefone, Salao, Pessoas, Data, HoraChegada, HoraSentada, Mesa, Situacao, Observacao) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, null, null, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, waitingCostumer.getNome());
@@ -61,11 +61,41 @@ public class WaitingCostumerDaoImplJDBC implements WaitingCostumerDao {
 	}
 
 	@Override
-	public void update(WaitingCostumer waitingCostumer) {
+	public void updateWithoutSitting(WaitingCostumer waitingCostumer) {
 		PreparedStatement st = null;
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
-			st = conn.prepareStatement("UPDATE waitingwaitingCostumers "
+			st = conn.prepareStatement("UPDATE waitingcostumers "
+					+ "SET Nome = ?, Sobrenome = ?, Telefone = ?, Salao = ?, Pessoas = ?, Data = ?, HoraChegada = ?, Situacao = ?, Observacao = ?, Aguardando = ? "
+					+ "WHERE Id = ?");
+
+			st.setString(1, waitingCostumer.getNome());
+			st.setString(2, waitingCostumer.getSobrenome());
+			st.setString(3, waitingCostumer.getTelefone());
+			st.setString(4, waitingCostumer.getSalao());
+			st.setInt(5, waitingCostumer.getPessoas());
+			st.setDate(6, new java.sql.Date(waitingCostumer.getData().getTime()));
+			st.setTime(7, new java.sql.Time(waitingCostumer.getHoraChegada().getTime()));
+			st.setString(8, waitingCostumer.getSituacao());
+			st.setString(9, waitingCostumer.getObservacao());
+			st.setBoolean(10, waitingCostumer.isAguardando());
+			st.setInt(11, waitingCostumer.getId());
+
+			st.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}		
+	}
+	
+	@Override
+	public void updateWhenSitting(WaitingCostumer waitingCostumer) {
+		PreparedStatement st = null;
+		try {
+			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+			st = conn.prepareStatement("UPDATE waitingcostumers "
 					+ "SET Nome = ?, Sobrenome = ?, Telefone = ?, Salao = ?, Pessoas = ?, Data = ?, HoraChegada = ?, HoraSentada = ?, Mesa = ?, Situacao = ?, Observacao = ?, Aguardando = ? "
 					+ "WHERE Id = ?");
 

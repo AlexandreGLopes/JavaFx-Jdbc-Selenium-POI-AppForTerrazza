@@ -48,6 +48,14 @@ create table waitingcostumers (
 ALTER TABLE waitingcostumers
 ADD COLUMN Aguardando boolean AFTER Observacao;
 
+create table standardmessages (
+	Id int(11) NOT NULL AUTO_INCREMENT,
+    Titulo varchar(60) NOT NULL,
+    Mensagem text,
+    MensagemPadrao text,
+    PRIMARY KEY (Id)
+);
+
 /** Não vamos usar mais duas tabelas. Apenas uma **/
 /*
 create table bistrocostumers (
@@ -107,6 +115,11 @@ values ('Cabeleleila', 'Leila', '5541995655618', 'Terrazza Jantar', 2, CURDATE()
 insert into waitingcostumers (Nome, Sobrenome, Telefone, Salao, Pessoas, Data, HoraChegada, HoraSentada, Mesa, Situacao, Observacao)
 values ('Lohane', 'Vêkanandre Sthephany Smith Bueno de HA HA HA de Raio Laser bala de Icekiss', '5541995655618', 'Terrazza Jantar', 2, CURDATE(), '19:00', null, null, 'Novo', 'nadegas a declaras');
 
+/** testes de insert do standardmessages **/
+
+insert into standardmessages (Titulo, Mensagem, MensagemPadrao)
+values ('Cliente adicionado à espera', 'Olá, %s. Aqui é do restaurante Terrazza 40. Você entrou em nossa fila de espera. Estamos agendando a chegada das pessoas da fila no restaurante. Seu horário de chegada é às %s. Ficaremos aguardando. Lembrando que pode ser que aguarde um pouco a mais por uma mesa quando você chegar.', 'Olá, %s. Aqui é do restaurante Terrazza 40. Você entrou em nossa fila de espera. Estamos agendando a chegada das pessoas da fila no restaurante. Seu horário de chegada é às %s. Ficaremos aguardando. Lembrando que pode ser que aguarde um pouco a mais por uma mesa quando você chegar.');
+
 /* testes de select */
 
 SELECT * FROM skycuritibacostumers.terrazzacostumers;
@@ -137,6 +150,9 @@ SELECT * FROM skycuritibacostumers.waitingcostumers;
 
 SELECT * FROM skycuritibacostumers.waitingcostumers
 WHERE DATE(Data) = CURDATE();
+
+SELECT * FROM skycuritibacostumers.standardmessages
+WHERE Titulo = 'Cliente adicionado à espera';
 
 /** updates a serem usados no nos costumer.dao.impl **/
 UPDATE terrazzacostumers

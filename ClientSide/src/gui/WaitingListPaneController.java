@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -13,6 +14,8 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import org.apache.http.client.utils.DateUtils;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.controlsfx.control.CheckComboBox;
 
 import application.Main;
@@ -26,6 +29,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -48,6 +52,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.entities.Costumer;
 import model.entities.WaitingCostumer;
+import model.services.StandardMessageService;
 import model.services.WaitingCostumerService;
 
 public class WaitingListPaneController implements Initializable, DataChangeListener {
@@ -149,7 +154,8 @@ public class WaitingListPaneController implements Initializable, DataChangeListe
 		}
 		// Convertendo o LocalDate do Datepicker para Date para poder passar como
 		// parâmetro no service
-		Date datePickerConveted = Date.from(dpDataListaEspera.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		Date datePickerConveted = Date
+				.from(dpDataListaEspera.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		// Pegando o o resultado da query do MySQL e colocando numa lista principal
 		List<WaitingCostumer> masterList = service.findAllofDatePickerDate(datePickerConveted);
 		// A partir daqui é uma mescla de coisas retiradas de:
@@ -193,7 +199,37 @@ public class WaitingListPaneController implements Initializable, DataChangeListe
 		initColumnEditButtons();
 
 	}
-	
+
+	public void onButtonNovaEsperaAction(ActionEvent event) {
+		// Instanciando um WaitingCostumer vazio para passar para o Formulário
+		// pratica comum no padrão MVC. Fazendo isso para usar o mesmo formulario para
+		// editar e criar uma nova espera. Vamos passar uma data de hoje para ele para
+		// que quando o seja reserva nova sempre abra o formulário na data atual para
+		// poupar tempo para o usuário. E também porque a data não pode ser nula
+		WaitingCostumer obj = new WaitingCostumer();
+		// Passando a data atual do sistema para a variavel hoje
+		LocalDate today = LocalDate.now();
+		// Convertendo a variável hoje para outro tipo de objeto de data do java.utils
+		// Iniciando ela no horário do inicio do dia e adicionando 19 horas para que
+		// seja mostrado o horário de 19:00 por padrão quando clicarmos em uma nova espera
+		Date data = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant().plus(Duration.ofHours(19)));
+		obj.setData(data);
+		obj.setHoraChegada(data);
+		// Setando para duas pessoas o padrão da nova espera
+		obj.setPessoas(2);
+		// Setando os status para novo sempre que for uma nova espera 
+		obj.setSituacao("Novo");
+		//  Setando o Salão para o Jantar por padrão
+		obj.setSalao("Jantar no Terrazza 40");
+		// Criando formulário
+		createForm("Editar Espera", obj, "/gui/EditWaitingForm.fxml", Utils.currentStage(event),
+				(EditWaitingFormController controller) -> {
+					controller.setWaitingCostumer(obj);
+					controller.setService(new WaitingCostumerService(), new StandardMessageService());
+					controller.updateFormData();
+				});
+	}
+
 	public void onDatePickerChangeValue() {
 		updateTableView();
 	}
@@ -213,7 +249,7 @@ public class WaitingListPaneController implements Initializable, DataChangeListe
 			// porque lá o "this" estava se referindo à célula e não à classe. ENtão tive
 			// que adicionar aqui para resolver o problema
 			if (title.equals("Editar Espera")) {
-				//((EditWaitingFormController) controller).subscribeDataChangeListener(this);
+				((EditWaitingFormController) controller).subscribeDataChangeListener(this);
 			}
 			// MessageFormController controller = loader.getController();
 			// controller.setCostumer(obj);
@@ -258,8 +294,8 @@ public class WaitingListPaneController implements Initializable, DataChangeListe
 					button.setPrefHeight(50);
 					view.setFitHeight(20);
 					view.setFitWidth(20);
-					button.setOnAction(event -> createForm("Mensagem para Whatsapp", obj,
-							"/gui/MessageForm.fxml", Utils.currentStage(event), (MessageFormController controller) -> {
+					button.setOnAction(event -> createForm("Mensagem para Whatsapp", obj, "/gui/MessageForm.fxml",
+							Utils.currentStage(event), (MessageFormController controller) -> {
 								controller.setCostumer(obj);
 								controller.updateFormData();
 							}));
@@ -292,8 +328,9 @@ public class WaitingListPaneController implements Initializable, DataChangeListe
 				view.setFitWidth(20);
 				button.setOnAction(event -> createForm("Editar Espera", obj, "/gui/EditWaitingForm.fxml",
 						Utils.currentStage(event), (EditWaitingFormController controller) -> {
-							//controller.setCostumer(obj);
-							//controller.updateFormData();
+							controller.setWaitingCostumer(obj);
+							controller.setService(new WaitingCostumerService(), new StandardMessageService());
+							controller.updateFormData();
 						}));
 			}
 		});
