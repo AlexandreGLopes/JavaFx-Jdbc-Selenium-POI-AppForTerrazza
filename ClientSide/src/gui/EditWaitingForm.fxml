@@ -39,11 +39,11 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Nome" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Nome*" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="textFieldNome" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label text="Sobrenome" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Sobrenome*" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="textFieldSobrenome" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Label text="Telefone" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Telefone*" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="textFieldTelefone" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <Label text="Pessoas" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <ComboBox fx:id="comboBoxPessoas" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />

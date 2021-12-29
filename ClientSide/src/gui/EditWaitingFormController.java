@@ -15,6 +15,7 @@ import db.DbException;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
+import gui.util.MyZapHandler;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +39,7 @@ public class EditWaitingFormController implements Initializable {
 	private WaitingCostumer entity;
 
 	private WaitingCostumerService service;
-	
+
 	private StandardMessageService messageService;
 
 	// Essa classe emite o evento e ela vai guardar uma lista de objetos
@@ -270,20 +271,28 @@ public class EditWaitingFormController implements Initializable {
 		if (entity == null) {
 			throw new IllegalStateException("Entity was null");
 		}
+		// booleano para testar se é uma adição de espera nova ou se é um update numa
+		// epsera para poder entrar na parte de enviar mensagem para a espera no finally
+		boolean novaEspera = false;
 		// Temos campos que não poderão estar vazios: Nome, sobrenome e telefone. Vamos
 		// setar o Label de Erro para uma mensagem caso o usuário deixe qualquer um
 		// deles vazio
 		if (textFieldNome.getText() == null || textFieldNome.getText().trim().equals("")
 				|| textFieldSobrenome.getText() == null || textFieldSobrenome.getText().trim().equals("")
-				|| textFieldTelefone.getText() == null || textFieldTelefone.getText().trim().equals("")
-				|| textFieldTelefone.getText().length() < 13) {
-			labelErrorEmptyFields.setText("Campos Nome, sobrenome e telefone não podem estar vazios");
+				|| textFieldTelefone.getText() == null || textFieldTelefone.getText().trim().equals("")) {
+			labelErrorEmptyFields.setText("Há campos com * vazios");
 		}
 		// Caso todos os campos estejam corretos:
 		else {
 			try {
 				// Entity recebendo os dados das caixinhas
 				entity = getFormData();
+				// se antes de adicionar no banco o entity não tiver um Id vamos setar a
+				// novaespera para true. Não podemos fazer isso depois porque ela vai ganhar um
+				// id do Banco de Dados
+				if (entity.getId() == null) {
+					novaEspera = true;
+				}
 				// Vamos salvar os dados no banco de dados no banco de dados
 				service.saveOrUpdate(entity);
 				// notificando os listeners
@@ -292,13 +301,33 @@ public class EditWaitingFormController implements Initializable {
 				Utils.currentStage(event).close();
 			} catch (ParseException e) {
 				Alerts.showAlert("Error", null, e.getMessage(), AlertType.ERROR);
-			}
-			catch (DbException e) {
+			} catch (DbException e) {
 				Alerts.showAlert("Error", null, e.getMessage(), AlertType.ERROR);
 			}
+			// Se tudo for finalizado corretamente vamos enviar uma mensagem para o cliente
+			// adicionado na espera
 			finally {
-				StandardMessage message = messageService.findByTitle("Cliente adicionado à espera");
-				System.out.println(String.format(message.getMensagem(), entity.getNome(), hr.format(entity.getHoraChegada()).toString()));
+				// Só vamos mandar mensagem para o cliente que for adicionado e não modificado.
+				// por isso vamos chamar o método de mandar mensagem apenas se o Id do entity
+				// for nulo
+				if (novaEspera == true) {
+					// Pegando a mensagm pelo título e passando para um objeto mensagem
+					StandardMessage message = messageService.findByTitle("Cliente adicionado à espera");
+					// Fazendo uma string dinamicamente com o nome e o horário do cliente para ser
+					// passada como parâmetro para o método que vai mandar a mensagem
+					String textMessage = String.format(message.getMensagem(), entity.getNome(),
+							hr.format(entity.getHoraChegada()).toString());
+					// Mandando a mensagem e recebendo o código de status da comunicação. Esse
+					// código é usado para saber se deu certo o envio da mensagem
+					Integer messageStatusCode = MyZapHandler.messageSender(entity.getTelefone(), textMessage);
+					// Verificando se o código está dentro da faixa de conclusão bem sucedida
+					// Desta vez vamos mostrar um alert apenas se der algo errado
+					if (messageStatusCode >= 300) {
+						Alerts.showAlert("Erro ao enviar mensagem!", null,
+								"Houve um erro ao tentar enviar a mensagem.\nContate o desenvolvedor para saber mais.",
+								AlertType.ERROR);
+					}
+				}
 			}
 		}
 	}

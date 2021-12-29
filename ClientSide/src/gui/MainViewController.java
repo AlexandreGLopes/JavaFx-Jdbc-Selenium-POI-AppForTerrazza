@@ -26,6 +26,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.services.CostumerService;
+import model.services.CostumerXStandardMessageService;
+import model.services.StandardMessageService;
 import model.services.WaitingCostumerService;
 
 public class MainViewController implements Initializable, DataChangeListener {

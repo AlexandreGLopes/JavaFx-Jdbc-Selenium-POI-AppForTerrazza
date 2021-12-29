@@ -3,6 +3,7 @@ package gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -15,6 +16,7 @@ import org.controlsfx.control.CheckComboBox;
 import application.Main;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
+import gui.util.MyZapHandler;
 import gui.util.Utils;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -23,6 +25,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -43,11 +46,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.entities.Costumer;
+import model.entities.CostumerXStandardMessage;
+import model.entities.StandardMessage;
 import model.services.CostumerService;
+import model.services.CostumerXStandardMessageService;
+import model.services.StandardMessageService;
 
 public class ReservationsListPaneController implements Initializable, DataChangeListener {
 
 	private CostumerService service;
+
+	//private CostumerXStandardMessageService costumerXmessageService;
+
+	//private StandardMessageService messageService;
 
 	@FXML
 	private CheckComboBox<String> filtrosSituacaoCheckComboBox;
@@ -57,6 +68,9 @@ public class ReservationsListPaneController implements Initializable, DataChange
 
 	@FXML
 	private TextField filtroNomeSobrenomeTextField;
+
+	@FXML
+	private Button mandarConfirmacoesButton;
 
 	// Iniciando as referências para a TableView
 
@@ -123,6 +137,15 @@ public class ReservationsListPaneController implements Initializable, DataChange
 	public void setCostumerService(CostumerService service) {
 		this.service = service;
 	}
+	/*
+	public void setCostumerXmessageService(CostumerXStandardMessageService costumerXmessageService) {
+		this.costumerXmessageService = costumerXmessageService;
+	}
+
+	public void setMessageService(StandardMessageService messageService) {
+		this.messageService = messageService;
+	}
+	*/
 
 	@Override
 	public void onDataChanged() {
@@ -272,6 +295,63 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		}
 	}
 
+	// Método do botão que utilizamos para mandar as mensagens padrão de confirmação
+	// da reserva. Vamos mandar apenas uma vez por cliente. Por isso vamos ter que
+	// adicionar no banco de dados a relação entre cliente e a mensagem para saber
+	// se ela foi ou não mandada.
+	public void onMandarConfirmacoesButtonAction(ActionEvent event) {
+		createForm("Mandar Confirmações", null, "/gui/SendConfirmationScreen.fxml",
+				Utils.currentStage(event), (SendConfirmationScreenController controller) -> {
+					controller.setCostumerXmessageService(new CostumerXStandardMessageService());
+					controller.setMessageService(new StandardMessageService());
+					controller.setObsList(obsList);
+				});
+		/*
+		try {
+			// Instanciando um novo objeto de relação entre o cliente e a mensagem padrão
+			CostumerXStandardMessage costumerXmessage = new CostumerXStandardMessage();
+			// SimpleDateFormat para formatar o campo de horário que vai para mensagem em
+			// string
+			SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
+			// loop para percorrer cada cliente da lista da tabela
+			for (Costumer costumer : obsList) {
+				// variável vai receber o retorno da relação entre o cliente e a mesangem padrão
+				// número 2, que será sempre a mesma mensagem de confirmação
+				costumerXmessage = costumerXmessageService.findIfRelationshipExists(costumer.getId(), 2);
+				// se o retorno do banco de dados sobre a relação for nulo:
+				if (costumerXmessage == null) {
+					// se for nulo e a situação for "Novo" ou "Confirmado" vamos mandar a mensagem
+					// no whats. Só nesses casos porque não vamos perguntar aos clientes se eles
+					// confirmam reservas já canceladas ou sentadas. Como o "confirmado" vem do
+					// sistema de fora vamos confirmar mais uma vez
+					if (costumer.getSituacao().equals("Novo") || costumer.getSituacao().equals("Confirmado")) {
+						// Pegando a mensagm pelo título e passando para um objeto mensagem
+						StandardMessage message = messageService.findByTitle("Confirmação de reserva");
+						// Variável que vai juntar o nome e sobrenome do cliente numa unica string
+						String nomeESobrenome = costumer.getNome() + " " + costumer.getSobrenome();
+						// Fazendo uma string dinamicamente com o nome, o horário e número de pessoas do
+						// cliente para ser passada como parâmetro para o método que vai mandar a
+						// mensagem
+						String textMessage = String.format(message.getMensagem(), nomeESobrenome,
+								hr.format(costumer.getHora()).toString(), costumer.getPessoas());
+						// Chamando o método que envia mensagem e retorna o código de status
+						Integer messageStatusCode = MyZapHandler.messageSender(costumer.getTelefone(), textMessage);
+						// Se o código de status confirmar o envio vamos criar uma linha no banco de
+						// dados para relacionar a mensagem com o cliente. Assim, nas próximas vezes não
+						// vamos mandar a mesma mensagem por conta da primeira decisão desse método
+						if (messageStatusCode >= 200 && messageStatusCode < 300) {
+							costumerXmessageService
+									.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		*/
+	}
+
 	// Método que coloca os botões do whatsapp nas linhas da tableview
 	private void initColumnWhatsButtons() {
 		Image img = new Image(new File("res/whatsIcon.png").toURI().toString());
@@ -298,8 +378,8 @@ public class ReservationsListPaneController implements Initializable, DataChange
 					button.setPrefHeight(50);
 					view.setFitHeight(20);
 					view.setFitWidth(20);
-					button.setOnAction(event -> createForm("Mensagem para Whatsapp", obj,
-							"/gui/MessageForm.fxml", Utils.currentStage(event), (MessageFormController controller) -> {
+					button.setOnAction(event -> createForm("Mensagem para Whatsapp", obj, "/gui/MessageForm.fxml",
+							Utils.currentStage(event), (MessageFormController controller) -> {
 								controller.setCostumer(obj);
 								controller.updateFormData();
 							}));
@@ -575,4 +655,5 @@ public class ReservationsListPaneController implements Initializable, DataChange
 			}
 		});
 	}
+
 }

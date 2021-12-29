@@ -56,6 +56,15 @@ create table standardmessages (
     PRIMARY KEY (Id)
 );
 
+create table costumer_x_standardmessage (
+	FK_idcostumer int,
+    FK_idstandardmessage int,
+    foreign key(FK_idcostumer)
+    references terrazzacostumers(Id),
+    foreign key(FK_idstandardmessage)
+    references standardmessages(Id)
+);
+
 /** Não vamos usar mais duas tabelas. Apenas uma **/
 /*
 create table bistrocostumers (
@@ -102,7 +111,16 @@ insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas,
 /** inserção com o novo campo booleano de aguardando mesa **/
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
-('Felipe', 'Smith', '5541995655618', 'cabeleleilaleila@hotmail.com', 'Terrazza Almoço', 3, CURDATE(), '12:00', '1', 'Cancelado por solicitação do cliente', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
+('Felipe', 'Smith', '5541998642881', 'cabeleleilaleila@hotmail.com', 'Almoço Terrazza 40', 3, CURDATE(), '12:00', '1', 'Cancelado por solicitação do cliente', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
+
+insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
+('Cabeleleila', 'Leila', '5541998642881', 'cabeleleilaleila@hotmail.com', 'Almoço Terrazza 40', 3, CURDATE(), '12:00', '1', 'Novo', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
+
+insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
+('Lohane', 'Vêkanandre Sthephany Smith Bueno de HA HA HA de Raio Laser bala de Icekiss', '5541998642881', 'cabeleleilaleila@hotmail.com', 'Almoço Terrazza 40', 3, CURDATE(), '12:00', '1', 'Novo', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
+
+insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
+('Policial', 'Desfarçado', '5541998642881', 'cabeleleilaleila@hotmail.com', 'Jantar no Terrazza 40', 3, CURDATE(), '12:00', '1', 'Novo', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
 
 /** testes de insert na waitingcostumers **/
 
@@ -113,12 +131,15 @@ insert into waitingcostumers (Nome, Sobrenome, Telefone, Salao, Pessoas, Data, H
 values ('Cabeleleila', 'Leila', '5541995655618', 'Terrazza Jantar', 2, CURDATE(), '19:00', null, null, 'Novo', 'nadegas a declaras');
 
 insert into waitingcostumers (Nome, Sobrenome, Telefone, Salao, Pessoas, Data, HoraChegada, HoraSentada, Mesa, Situacao, Observacao)
-values ('Lohane', 'Vêkanandre Sthephany Smith Bueno de HA HA HA de Raio Laser bala de Icekiss', '5541995655618', 'Terrazza Jantar', 2, CURDATE(), '19:00', null, null, 'Novo', 'nadegas a declaras');
+values ('Lohane', 'Vêkanandre Sthephany Smith Bueno de HA HA HA de Raio Laser bala de Icekiss', '5541998642881', 'Terrazza Jantar', 2, CURDATE(), '19:00', null, null, 'Novo', 'nadegas a declaras');
 
 /** testes de insert do standardmessages **/
 
 insert into standardmessages (Titulo, Mensagem, MensagemPadrao)
 values ('Cliente adicionado à espera', 'Olá, %s. Aqui é do restaurante Terrazza 40. Você entrou em nossa fila de espera. Estamos agendando a chegada das pessoas da fila no restaurante. Seu horário de chegada é às %s. Ficaremos aguardando. Lembrando que pode ser que aguarde um pouco a mais por uma mesa quando você chegar.', 'Olá, %s. Aqui é do restaurante Terrazza 40. Você entrou em nossa fila de espera. Estamos agendando a chegada das pessoas da fila no restaurante. Seu horário de chegada é às %s. Ficaremos aguardando. Lembrando que pode ser que aguarde um pouco a mais por uma mesa quando você chegar.');
+
+insert into standardmessages (Titulo, Mensagem, MensagemPadrao)
+values ('Confirmação de reserva', 'Olá, %s. Aqui é do restaurante Terrazza 40. Temos uma reserva sua hoje às %s para %d pessoas. Você confirma a reserva? Confirma também o númeo de pessoas? Ficamos no aguardo de sua resposta.', 'Olá, %s. Aqui é do restaurante Terrazza 40. Temos uma reserva sua hoje às %s para %d pessoas. Você confirma a reserva? Confirma também o númeo de pessoas? Ficamos no aguardo de sua resposta.');
 
 /* testes de select */
 
@@ -151,6 +172,8 @@ SELECT * FROM skycuritibacostumers.waitingcostumers;
 SELECT * FROM skycuritibacostumers.waitingcostumers
 WHERE DATE(Data) = CURDATE();
 
+SELECT * FROM skycuritibacostumers.standardmessages;
+
 SELECT * FROM skycuritibacostumers.standardmessages
 WHERE Titulo = 'Cliente adicionado à espera';
 
@@ -181,4 +204,11 @@ where DATE(Data) = '2021-12-18';
 /** só para limpar os dados para testes **/
 DELETE FROM skycuritibacostumers.terrazzacostumers;
 
+DELETE FROM skycuritibacostumers.waitingcostumers
+where Date(Data) = curdate();
+
+DELETE FROM skycuritibacostumers.costumer_x_standardmessage;
+
 DROP TABLE skycuritibacostumers.terrazzacostumers;
+
+drop table skycuritibacostumers.costumer_x_standardmessage;
