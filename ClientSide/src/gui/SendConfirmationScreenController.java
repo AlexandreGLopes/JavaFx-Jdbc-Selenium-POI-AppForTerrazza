@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import gui.util.Alerts;
 import gui.util.MyZapHandler;
 import gui.util.Utils;
 import javafx.collections.ObservableList;
@@ -13,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Alert.AlertType;
 import model.entities.Costumer;
 import model.entities.CostumerXStandardMessage;
 import model.entities.StandardMessage;
@@ -60,7 +62,7 @@ public class SendConfirmationScreenController {
 		this.obsList = obsList;
 	}
 
-	public void onButtonConfirmarAction() {
+	public void onButtonConfirmarAction(ActionEvent event) {
 		// Preparando a lista que será filtrada para passar para a parte do método que
 		// vai verificar o banco de dados e mandar as mensagens logo abaixo
 		List<Costumer> filteredList = new ArrayList<>();
@@ -131,6 +133,8 @@ public class SendConfirmationScreenController {
 						if (messageStatusCode >= 200 && messageStatusCode < 300) {
 							costumerXmessageService
 									.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
+							Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi enviada com sucesso!",
+									AlertType.INFORMATION);
 						}
 					}
 				}

@@ -56,10 +56,6 @@ public class ReservationsListPaneController implements Initializable, DataChange
 
 	private CostumerService service;
 
-	//private CostumerXStandardMessageService costumerXmessageService;
-
-	//private StandardMessageService messageService;
-
 	@FXML
 	private CheckComboBox<String> filtrosSituacaoCheckComboBox;
 
@@ -137,15 +133,6 @@ public class ReservationsListPaneController implements Initializable, DataChange
 	public void setCostumerService(CostumerService service) {
 		this.service = service;
 	}
-	/*
-	public void setCostumerXmessageService(CostumerXStandardMessageService costumerXmessageService) {
-		this.costumerXmessageService = costumerXmessageService;
-	}
-
-	public void setMessageService(StandardMessageService messageService) {
-		this.messageService = messageService;
-	}
-	*/
 
 	@Override
 	public void onDataChanged() {
@@ -306,50 +293,6 @@ public class ReservationsListPaneController implements Initializable, DataChange
 					controller.setMessageService(new StandardMessageService());
 					controller.setObsList(obsList);
 				});
-		/*
-		try {
-			// Instanciando um novo objeto de relação entre o cliente e a mensagem padrão
-			CostumerXStandardMessage costumerXmessage = new CostumerXStandardMessage();
-			// SimpleDateFormat para formatar o campo de horário que vai para mensagem em
-			// string
-			SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
-			// loop para percorrer cada cliente da lista da tabela
-			for (Costumer costumer : obsList) {
-				// variável vai receber o retorno da relação entre o cliente e a mesangem padrão
-				// número 2, que será sempre a mesma mensagem de confirmação
-				costumerXmessage = costumerXmessageService.findIfRelationshipExists(costumer.getId(), 2);
-				// se o retorno do banco de dados sobre a relação for nulo:
-				if (costumerXmessage == null) {
-					// se for nulo e a situação for "Novo" ou "Confirmado" vamos mandar a mensagem
-					// no whats. Só nesses casos porque não vamos perguntar aos clientes se eles
-					// confirmam reservas já canceladas ou sentadas. Como o "confirmado" vem do
-					// sistema de fora vamos confirmar mais uma vez
-					if (costumer.getSituacao().equals("Novo") || costumer.getSituacao().equals("Confirmado")) {
-						// Pegando a mensagm pelo título e passando para um objeto mensagem
-						StandardMessage message = messageService.findByTitle("Confirmação de reserva");
-						// Variável que vai juntar o nome e sobrenome do cliente numa unica string
-						String nomeESobrenome = costumer.getNome() + " " + costumer.getSobrenome();
-						// Fazendo uma string dinamicamente com o nome, o horário e número de pessoas do
-						// cliente para ser passada como parâmetro para o método que vai mandar a
-						// mensagem
-						String textMessage = String.format(message.getMensagem(), nomeESobrenome,
-								hr.format(costumer.getHora()).toString(), costumer.getPessoas());
-						// Chamando o método que envia mensagem e retorna o código de status
-						Integer messageStatusCode = MyZapHandler.messageSender(costumer.getTelefone(), textMessage);
-						// Se o código de status confirmar o envio vamos criar uma linha no banco de
-						// dados para relacionar a mensagem com o cliente. Assim, nas próximas vezes não
-						// vamos mandar a mesma mensagem por conta da primeira decisão desse método
-						if (messageStatusCode >= 200 && messageStatusCode < 300) {
-							costumerXmessageService
-									.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
 	}
 
 	// Método que coloca os botões do whatsapp nas linhas da tableview

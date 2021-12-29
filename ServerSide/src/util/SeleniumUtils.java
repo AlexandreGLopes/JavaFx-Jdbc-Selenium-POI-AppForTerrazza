@@ -102,10 +102,10 @@ public class SeleniumUtils {
 		//Configurando a espera explícita para agauradr os elementos aparecerem
 		WebDriverWait wait = new WebDriverWait(browser2, 20);
 		//Verificando com um booleando se o elemento de botão "Hotéis" se encontra na tela
-		if (browser2.findElement(By.xpath("/html/body/div[1]/div/div/div[1]/span/span/span/div/div/div[2]/div/div[1]/div[3]/a/button/span/span")).isDisplayed()) {
+		if (browser2.findElement(By.xpath("/html/body/div[1]/div/div[2]/div[1]/span/div/div/div[2]/div/div[1]/div[3]/a/button/span/span/span")).isDisplayed()) {
 			//Evento de clique em hotéis
 			browser2.findElement(By.xpath(
-					"/html/body/div[1]/div/div/div[1]/span/span/span/div/div/div[2]/div/div[1]/div[3]/a/button/span/span"))
+					"/html/body/div[1]/div/div[2]/div[1]/span/div/div/div[2]/div/div[1]/div[3]/a/button/span/span/span"))
 					.click();
 			//Verificando se o iframe dos hotéis já foi carregado 
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
