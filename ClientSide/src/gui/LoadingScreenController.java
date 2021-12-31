@@ -41,6 +41,9 @@ public class LoadingScreenController implements Initializable {
 
 	@FXML
 	private Label txtLabel;
+	
+	@FXML
+	private Label txtCarregando;
 
 	@FXML
 	private GridPane rootPane;
@@ -84,6 +87,7 @@ public class LoadingScreenController implements Initializable {
 		cancelButton.setVisible(false);
 		cancelButton.setDisable(true);
 		txtLabel.setVisible(false);
+		txtCarregando.setVisible(true);
 		makeFadeInTransition();
 		sendOptionToServer(event);
 	}
@@ -95,7 +99,7 @@ public class LoadingScreenController implements Initializable {
 		Task<String> serverCommunicationTask = new Task<>() {
 			@Override
 			protected String call() throws Exception {
-				try (Socket cliente = new Socket("localhost", 3322);
+				try (Socket cliente = new Socket("192.168.100.12", 3322);
 						PrintWriter pr = new PrintWriter(cliente.getOutputStream());
 						BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));) {
 					pr.println(option);

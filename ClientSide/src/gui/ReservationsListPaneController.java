@@ -151,8 +151,8 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		optionsSituacao.add("Sentado");
 		optionsSituacao.add("Cancelado pelo cliente");
 		optionsSituacao.add("Cancelado por solicitação do cliente");
-		optionsSituacao.add("Cancelado por no-show");
-		optionsSituacao.add("Cancelado por erro");
+		optionsSituacao.add("Cancelado por no-show do cliente");
+		optionsSituacao.add("Cancelado por erro de cadastro");
 		filtrosSituacaoCheckComboBox.getItems().addAll(optionsSituacao);
 		// Setando as opções do checkComboBox que vai ser o filtro pros salões
 		final ObservableList<String> optionsSalao = FXCollections.observableArrayList();

@@ -49,6 +49,9 @@ public class ManualUpdaterScreenController implements Initializable {
 
 	@FXML
 	private Label txtLabel;
+	
+	@FXML
+	private Label txtCarregando;
 
 	@FXML
 	private GridPane rootPane;
@@ -102,6 +105,7 @@ public class ManualUpdaterScreenController implements Initializable {
 		cancelButton.setVisible(false);
 		cancelButton.setDisable(true);
 		txtLabel.setVisible(false);
+		txtCarregando.setVisible(true);
 		makeFadeInTransition();
 
 		// Construindo uma Task que vai rodar em outro Thread para deixar a UI livre

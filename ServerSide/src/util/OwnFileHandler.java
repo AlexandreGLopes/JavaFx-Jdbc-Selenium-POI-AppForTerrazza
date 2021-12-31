@@ -80,6 +80,10 @@ public class OwnFileHandler {
 		List<Costumer> list = new ArrayList<>();
 		// Inicio do buffered reader
 		try (BufferedReader br = new BufferedReader(new FileReader(tempFile))) {
+			// Talvez pudesse mudar para um inputFilestream para poder colocar o encode de
+			// UTF para retirar a parte do comando de encode quando vamos rodar o programa
+			// antes dos módulos. Ver exemplo abaixo:
+			// try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(tempFile, "UTF-8"))) {
 
 			// Lendo a primeira linha e não usando porque ela é cabeçalho
 			br.readLine();
@@ -107,9 +111,9 @@ public class OwnFileHandler {
 				else {
 					array = fields;
 				}
-				list.add(
-						new Costumer(null, array[0], array[1], array[4], array[5], array[7], Integer.parseInt(array[8]),
-								dt.parse(array[9]), hr.parse(array[10]), array[17], array[13], array[15], false, 0.00, array[20]));
+				list.add(new Costumer(null, array[0], array[1], array[4], array[5], array[7],
+						Integer.parseInt(array[8]), dt.parse(array[9]), hr.parse(array[10]), array[17], array[13],
+						array[15], false, 0.00, array[20]));
 				line = br.readLine();
 			}
 		} catch (IOException e) {
@@ -149,36 +153,46 @@ public class OwnFileHandler {
 		String path = definePath();
 		String file = defineFile(option);
 		File tempFile = new File(path + file);
-		//Lista de Costumers que vamos retornar
+		// Lista de Costumers que vamos retornar
 		List<Costumer> list = new ArrayList<>();
-		
+
 		try {
-			//O primeiro passo é abrir o arquivo, com a classe FileInputStream, passando o PATH completo do arquivo.
+			// O primeiro passo é abrir o arquivo, com a classe FileInputStream, passando o
+			// PATH completo do arquivo.
 			FileInputStream arquivo = new FileInputStream(tempFile);
-			//Ajustando a configuração para contornar o Zip Bomb
+			// Ajustando a configuração para contornar o Zip Bomb
 			ZipSecureFile.setMinInflateRatio(0);
-			//Depois utilizando a classe XSSFWorkbook, o arquivo é validado se é ou não um arquivo Excel
+			// Depois utilizando a classe XSSFWorkbook, o arquivo é validado se é ou não um
+			// arquivo Excel
 			XSSFWorkbook workbook = new XSSFWorkbook(arquivo);
-			//A classe XSSFSheet abre uma planilha específica do arquivo
+			// A classe XSSFSheet abre uma planilha específica do arquivo
 			XSSFSheet sheetReservations = workbook.getSheetAt(0);
-			//Depois de aberto o arquivo, e com a planilha que será processado aberta, é necessário ler célula a célula do arquivo, para isso, é recuperado um iterator sobre todas as linhas do arquivo excel. 
+			// Depois de aberto o arquivo, e com a planilha que será processado aberta, é
+			// necessário ler célula a célula do arquivo, para isso, é recuperado um
+			// iterator sobre todas as linhas do arquivo excel.
 			Iterator<Row> rowIterator = sheetReservations.iterator();
-			//Lendo a primeira linha porque ela é cabeçalho
+			// Lendo a primeira linha porque ela é cabeçalho
 			Row row = rowIterator.next();
 			while (rowIterator.hasNext()) {
 				row = rowIterator.next();
-				//Dentro de cada linha, é recuperado outro iterator, agora para iterar sobre as colunas de cada linha. Para ler as linhas do arquivo, é utilizada a classe Row, e para a célula especifica é utilizada a classe Cell. 
+				// Dentro de cada linha, é recuperado outro iterator, agora para iterar sobre as
+				// colunas de cada linha. Para ler as linhas do arquivo, é utilizada a classe
+				// Row, e para a célula especifica é utilizada a classe Cell.
 				Iterator<Cell> cellIterator = row.cellIterator();
-				//Instanciando um costumer para receber os valores das células
+				// Instanciando um costumer para receber os valores das células
 				Costumer costumer = new Costumer();
-				//adicionando o costumer vazio na lista
+				// adicionando o costumer vazio na lista
 				list.add(costumer);
 				costumer.setAguardando(false);
-				while(cellIterator.hasNext()) {
+				while (cellIterator.hasNext()) {
 					Cell cell = cellIterator.next();
-					//A classe Cell possui diversos métodos para a manipulação dos dados do arquivo, por exemplo, é possível recuperar os dados que estão na célula com o tipo Java correto, por isso existem métodos para recuperar String, Números, Booleans entre outros.
-					//Switch/case para verificar qual o número da célula que o iterador está e usar o método set do Costumer para adicionar os parâmetros
-					switch(cell.getColumnIndex()) {
+					// A classe Cell possui diversos métodos para a manipulação dos dados do
+					// arquivo, por exemplo, é possível recuperar os dados que estão na célula com o
+					// tipo Java correto, por isso existem métodos para recuperar String, Números,
+					// Booleans entre outros.
+					// Switch/case para verificar qual o número da célula que o iterador está e usar
+					// o método set do Costumer para adicionar os parâmetros
+					switch (cell.getColumnIndex()) {
 					case 0:
 						costumer.setIdExterno(cell.getStringCellValue());
 						break;
@@ -196,18 +210,21 @@ public class OwnFileHandler {
 						break;
 					case 7:
 						costumer.setMesa(cell.getStringCellValue());
-						//Vários praâmetros que não temos na planilha por padrão serão adicionados no hardcod aqui
-						costumer.setTelefone("Wix não exporta");;
+						// Vários praâmetros que não temos na planilha por padrão serão adicionados no
+						// hardcod aqui
+						costumer.setTelefone("Wix não exporta");
+						;
 						costumer.setSalao("38 Floor");
 						costumer.setPessoas(2);
 						costumer.setSituacao("Novo");
 						costumer.setObservacao("");
-						String strInicial = cell.getStringCellValue().substring(cell.getStringCellValue().lastIndexOf("(") + 1);
+						String strInicial = cell.getStringCellValue()
+								.substring(cell.getStringCellValue().lastIndexOf("(") + 1);
 						String strFinal = strInicial.substring(0, 5);
 						try {
-						costumer.setHora(hr.parse(strFinal));
-						}catch (Exception e) {
-							//System.out.println("não deu");
+							costumer.setHora(hr.parse(strFinal));
+						} catch (Exception e) {
+							// System.out.println("não deu");
 						}
 						break;
 					case 10:
@@ -219,9 +236,9 @@ public class OwnFileHandler {
 				}
 			}
 		} catch (Exception e) {
-			//System.out.println(e.getMessage());
+			// System.out.println(e.getMessage());
 		}
-		//Pegando a data atual do sistema e colocando na variável today
+		// Pegando a data atual do sistema e colocando na variável today
 		SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
 		Date currDate = new Date();
 		Date today = null;
@@ -230,18 +247,19 @@ public class OwnFileHandler {
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
-		//Instanciando um iterator para poder percorrer a lista e poder remover os costumers com data diferente da atual
+		// Instanciando um iterator para poder percorrer a lista e poder remover os
+		// costumers com data diferente da atual
 		Iterator<Costumer> i = list.iterator();
 		while (i.hasNext()) {
-			//Lendo o próximo costumer
+			// Lendo o próximo costumer
 			Costumer c = i.next();
-			//Método para comparar as data do costumer com a atual
+			// Método para comparar as data do costumer com a atual
 			if (c.getData().compareTo(today) != 0) {
-				//Se for diferente remover
+				// Se for diferente remover
 				i.remove();
 			}
 		}
-		//retornando a lista
+		// retornando a lista
 		return list;
 	}
 }

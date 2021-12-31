@@ -154,7 +154,7 @@ public class WaitingCostumerDaoJDBCImpl implements WaitingCostumerDao {
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement("SELECT * FROM skycuritibacostumers.waitingcostumers "
-										+ "WHERE DATE(Data) = ?");
+										+ "WHERE DATE(Data) = ? ORDER BY HoraChegada");
 			
 			st.setDate(1, new java.sql.Date(date.getTime()));
 			rs = st.executeQuery();
