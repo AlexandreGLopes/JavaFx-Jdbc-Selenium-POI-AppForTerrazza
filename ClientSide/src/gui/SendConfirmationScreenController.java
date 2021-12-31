@@ -133,12 +133,12 @@ public class SendConfirmationScreenController {
 						if (messageStatusCode >= 200 && messageStatusCode < 300) {
 							costumerXmessageService
 									.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
-							Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi enviada com sucesso!",
-									AlertType.INFORMATION);
+							//Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi enviada com sucesso!", AlertType.INFORMATION);
 						}
 					}
 				}
 			}
+			Alerts.showAlert("Processo finalizado!", null, "O processo de envio das mensagens foi finalizado!", AlertType.INFORMATION);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

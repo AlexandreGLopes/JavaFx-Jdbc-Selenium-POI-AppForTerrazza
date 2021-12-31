@@ -113,7 +113,7 @@ insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas,
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
 ('Felipe', 'Smith', '5541998642881', 'cabeleleilaleila@hotmail.com', 'Almoço Terrazza 40', 3, CURDATE(), '12:00', '1', 'Cancelado por solicitação do cliente', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
 
-insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
+insert into skycuritibacostumers.terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
 ('Cabeleleila', 'Leila', '5541998642881', 'cabeleleilaleila@hotmail.com', 'Almoço Terrazza 40', 3, CURDATE(), '12:00', '1', 'Novo', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
@@ -195,6 +195,13 @@ WHERE Id = ?;
 UPDATE terrazzacostumers
 SET Nome = 'vamos ver se mudou', Sobrenome = 'a', Telefone = 'a', Email = 'a', Salao = 'Jantar no Terrazza 40', Pessoas = 1, Data = CURDATE(), Hora = '19:00', Mesa = '1', Situacao = 'Cancelado por no-show', Observacao = 'a', Pagamento = 0.00
 WHERE IdExterno = '2876444' AND Situacao !=  'Cancelado por no-show' AND Situacao != 'Sentado';
+**/
+
+/** update da mensagem padrão **/
+
+UPDATE skycuritibacostumers.standardmessages
+SET Mensagem = 'Olá, %s. Aqui é do restaurante Terrazza 40.\nTemos uma reserva sua hoje às %s para %d pessoas.\nVocê confirma a reserva? Confirma também o número de pessoas? Ficamos no aguardo de sua resposta.\n\nAcesse o link para mais informações sobre nosso estabelecimento:\nhttps://linktr.ee/terrazza40'
+WHERE Id = 2;
 
 /** update para colocar cientes na database no domingo para poder fazer testes **/
 update terrazzacostumers
