@@ -8,9 +8,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
+import gui.util.PreferencesManager;
 import gui.util.Utils;
 import javafx.animation.FadeTransition;
 import javafx.concurrent.Task;
@@ -25,6 +27,8 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 public class LoadingScreenController implements Initializable {
+	
+	Preferences preferences = PreferencesManager.getPreferences();
 
 	private String option;
 	
@@ -99,11 +103,13 @@ public class LoadingScreenController implements Initializable {
 		Task<String> serverCommunicationTask = new Task<>() {
 			@Override
 			protected String call() throws Exception {
-				try (Socket cliente = new Socket("192.168.100.12", 3322);
+				String ipOfServer = preferences.get(PreferencesManager.IP_TO_SERVERSIDE_MACHINE, null);
+				try (Socket cliente = new Socket(ipOfServer, 3322);
 						PrintWriter pr = new PrintWriter(cliente.getOutputStream());
 						BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));) {
 					pr.println(option);
 					pr.flush();
+					cliente.setSoTimeout(1000);
 					return bf.readLine();
 				}
 			}
@@ -136,8 +142,10 @@ public class LoadingScreenController implements Initializable {
 		});
 
 		serverCommunicationTask.setOnFailed((e) -> {
+			//Se não conseguirmos nos conectar com o servidor pelo Socket
 			serverCommunicationTask.getException().printStackTrace();
-			// handle exception...
+			Alerts.showAlert("Demora na resposta do servidor", null, "O servidor está demorando para responder. Pode ser que ele esteja trabalhando com lentidão. Pressione o botão RESERVAS para verificar se a lista será atualizada.\n\nCaso contrário, tente utilizar a opção: ATUALIZAR MANUALMENTE.\n\nContate o desenvolvedor para tentar resolver o problema.", AlertType.ERROR);
+			Utils.currentStage(event).close();
 		});
 
 		Thread thread = new Thread(serverCommunicationTask);

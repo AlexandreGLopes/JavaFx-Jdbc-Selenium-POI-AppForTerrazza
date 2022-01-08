@@ -173,7 +173,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-
+		loadPane("/gui/PreferencesPane.fxml", currentStage, false, (PreferencesPaneController controller) -> {
+			controller.getIPInPreferences();
+		});
 	}
 
 	@FXML
@@ -181,7 +183,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/About.fxml", currentStage, true, (x) -> {
+		loadPane("/gui/About.fxml", currentStage, false, (x) -> {
 		});
 	}
 
@@ -226,13 +228,12 @@ public class MainViewController implements Initializable, DataChangeListener {
 			// Ela será modal, enquanto você não fechar ela não poderá acessar a janela
 			// anterior
 			dialogStage.initModality(Modality.WINDOW_MODAL);
-			// verificando se a tela terá que ter regras para não aumentar e nao ter barra
-			// de título
+			// Não poderá ser redimensionada
+			dialogStage.setResizable(false);
+			// verificando se a tela terá que terá a regra de não tem a barra de título
 			if (staticScreen) {
 				// Retirando a barra de título do painel de loading
 				dialogStage.initStyle(StageStyle.UNDECORATED);
-				// Não poderá ser redimensionada
-				dialogStage.setResizable(false);
 			}
 			dialogStage.showAndWait();
 

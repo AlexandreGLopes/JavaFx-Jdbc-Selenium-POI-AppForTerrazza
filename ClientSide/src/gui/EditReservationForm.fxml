@@ -20,18 +20,18 @@
    <children>
       <GridPane prefHeight="397.0" prefWidth="402.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="10.0" prefWidth="25.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="362.0" minWidth="10.0" prefWidth="345.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="0.0" prefWidth="25.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="-Infinity" prefWidth="25.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="362.0" minWidth="-Infinity" prefWidth="345.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="-Infinity" prefWidth="25.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="180.0" minHeight="180.0" prefHeight="180.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="35.0" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="35.0" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="35.0" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="180.0" minHeight="-Infinity" prefHeight="180.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="50.0" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="0.0" prefHeight="20.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
