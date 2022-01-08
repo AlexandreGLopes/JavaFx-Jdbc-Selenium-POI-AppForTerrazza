@@ -51,6 +51,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 	private MenuItem menuItemManualRefreshHelp;
 
 	@FXML
+	private MenuItem menuItemPreferences;
+
+	@FXML
 	private Button tabelaPrincipalButton;
 
 	@FXML
@@ -164,6 +167,13 @@ public class MainViewController implements Initializable, DataChangeListener {
 			// switch/case para escolher os métodos de download usados
 			controller.subscribeDataChangeListener(this);
 		});
+	}
+
+	public void onMenuItemPreferencesAction() {
+		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
+		// Utils
+		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
+
 	}
 
 	@FXML
