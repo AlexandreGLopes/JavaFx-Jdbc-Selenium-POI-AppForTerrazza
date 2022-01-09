@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.PreferencesManager;
@@ -27,6 +30,8 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 public class LoadingScreenController implements Initializable {
+	
+	private Logger logger = LogManager.getLogger(LoadingScreenController.class);
 	
 	Preferences preferences = PreferencesManager.getPreferences();
 
@@ -109,7 +114,7 @@ public class LoadingScreenController implements Initializable {
 						BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));) {
 					pr.println(option);
 					pr.flush();
-					cliente.setSoTimeout(1000);
+					cliente.setSoTimeout(30000);
 					return bf.readLine();
 				}
 			}
@@ -145,6 +150,7 @@ public class LoadingScreenController implements Initializable {
 			//Se não conseguirmos nos conectar com o servidor pelo Socket
 			serverCommunicationTask.getException().printStackTrace();
 			Alerts.showAlert("Demora na resposta do servidor", null, "O servidor está demorando para responder. Pode ser que ele esteja trabalhando com lentidão. Pressione o botão RESERVAS para verificar se a lista será atualizada.\n\nCaso contrário, tente utilizar a opção: ATUALIZAR MANUALMENTE.\n\nContate o desenvolvedor para tentar resolver o problema.", AlertType.ERROR);
+			logger.error(serverCommunicationTask.getException());
 			Utils.currentStage(event).close();
 		});
 

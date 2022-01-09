@@ -197,7 +197,7 @@ public class OwnFileHandler {
 				// Removendo aspas indesejadas da linha
 				line = line.replace("\"", "");
 				// Formando um array dividindo a linha nos ";"
-				String[] fields = line.split(";");
+				String[] fields = line.split(",");
 				// Se o array acima, lido de uma linha específica no meio do loop,
 				// ficar menor que 21 elementos é porque temos uma quebra de linha não esperada
 				// e temos que trabalhar ela
@@ -235,7 +235,7 @@ public class OwnFileHandler {
 		String[] array = new String[21];
 		line = br.readLine();
 		line = line.replace("\"", "");
-		String[] fields2 = line.split(";");
+		String[] fields2 = line.split(",");
 		for (int i = 0; i < fields.length; i++) {
 			array[i] = fields[i];
 		}

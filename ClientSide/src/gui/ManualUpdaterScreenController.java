@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.OwnFileHandler;
@@ -28,6 +31,8 @@ import model.entities.Costumer;
 import model.services.CostumerService;
 
 public class ManualUpdaterScreenController implements Initializable {
+	
+	private Logger logger = LogManager.getLogger(ManualUpdaterHelpController.class);
 
 	CostumerService service = new CostumerService();
 
@@ -110,7 +115,7 @@ public class ManualUpdaterScreenController implements Initializable {
 
 		// Construindo uma Task que vai rodar em outro Thread para deixar a UI livre
 		// para mostrar os FadeTransitions
-		Task<String> test = new Task<>() {
+		Task<String> task = new Task<>() {
 			@Override
 			protected String call() throws Exception {
 				// String que receberá o valor a ser retornado para verificar se é para fechar o
@@ -156,7 +161,7 @@ public class ManualUpdaterScreenController implements Initializable {
 						// Método que insere a lista no banco de dados. Foi feito em método separado
 						// para economizar linhas de código e deixar mais fácil de ler
 						// Os parâmetros list e event seguem aqui mas estão com sua utilização comentada
-						// no método, pois ainda preciso testar se não vamos mesmo precisar mais deles
+						// no método, pois ainda preciso taskar se não vamos mesmo precisar mais deles
 						takeListInsertInDBAndClose(list, event);
 						retorno = "close";
 						break;
@@ -173,7 +178,7 @@ public class ManualUpdaterScreenController implements Initializable {
 						// Método que insere a lista no banco de dados. Foi feito em método separado
 						// para economizar linhas de código e deixar mais fácil de ler
 						// Os parâmetros list e event seguem aqui mas estão com sua utilização comentada
-						// no método, pois ainda preciso testar se não vamos mesmo precisar mais deles
+						// no método, pois ainda preciso taskar se não vamos mesmo precisar mais deles
 						takeListInsertInDBAndClose(list, event);
 						retorno = "close";
 						break;
@@ -186,14 +191,14 @@ public class ManualUpdaterScreenController implements Initializable {
 			}
 		};
 
-		// Ao final testando se a string tem o valor close para notificar os listener e
+		// Ao final taskando se a string tem o valor close para notificar os listener e
 		// fechar o painel e também tratar erros e mostrar alerts
-		test.setOnSucceeded((e) -> {
-			if ("close".equals(test.getValue())) {
+		task.setOnSucceeded((e) -> {
+			if ("close".equals(task.getValue())) {
 				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 			}
-			if ("erroxls".equals(test.getValue())) {
+			if ("erroxls".equals(task.getValue())) {
 				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 				Alerts.showAlert("Problema no arquivo", "O arquivo pode estar corrompido",
@@ -203,9 +208,16 @@ public class ManualUpdaterScreenController implements Initializable {
 						AlertType.ERROR);
 			}
 		});
+		
+		task.setOnFailed((e) -> {
+			notifyDataChangeListeners();
+			logger.error(task.getException());
+			Utils.currentStage(event).close();
+			Alerts.showAlert("Erro", null, "Para mais informações verificar o arquivo de log da aplicação", AlertType.ERROR);
+		});
 
 		// Iniciando subthread para fazer a Task
-		Thread thread = new Thread(test);
+		Thread thread = new Thread(task);
 		thread.setDaemon(true);
 		thread.start();
 	}
