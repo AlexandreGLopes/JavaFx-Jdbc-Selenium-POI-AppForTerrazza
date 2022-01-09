@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
 			<attribute name="module" value="true"/>
@@ -21,5 +22,6 @@
 	<classpathentry kind="lib" path="res/POI/poi-ooxml-5.1.0.jar"/>
 	<classpathentry kind="lib" path="res/POI/poi-ooxml-full-5.1.0.jar"/>
 	<classpathentry kind="lib" path="res/POI/xmlbeans-5.0.2.jar"/>
+	<classpathentry kind="lib" path="res/POI/log4j-core-2.14.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

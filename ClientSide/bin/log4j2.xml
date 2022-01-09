@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Adicionei este xml na pasta resources e depois adicionei a pasta resources como
+uma source folder clicando no projeto com o botão direito e indo em properties -->
 <Configuration status="WARN">
 	<Appenders>
 		<RollingFile name="RollingFile" fileName="app.log"

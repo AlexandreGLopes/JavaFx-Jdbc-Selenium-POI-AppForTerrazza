@@ -13,7 +13,7 @@ public class OSValidator {
 		} else if (isMac()) {
 			return "Seu sistema operacional não é suportado por esta aplicação";
 		} else if (isUnix()) {
-			return "chromedriver97";
+			return "chromedriver";
 		} else if (isSolaris()) {
 			return "Seu sistema operacional não é suportado por esta aplicação";
 		} else {

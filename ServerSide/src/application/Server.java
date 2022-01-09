@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.text.ParseException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
 import model.entities.Costumer;
@@ -17,6 +19,8 @@ import util.OwnFileHandler;
 import util.SeleniumUtils;
 
 public class Server {
+	
+	private static Logger logger = LogManager.getLogger(Server.class);
 
 	public static void main(String[] args) {
 		try {
@@ -68,9 +72,11 @@ public class Server {
 					try {
 						list = OwnFileHandler.waitlistReaderInstantiator("a");
 					} catch (NumberFormatException e) {
+						logger.error(e.getMessage());
 						// e.printStackTrace();
 						sendToClient(cliente, "erroServer");
 					} catch (ParseException e) {
+						logger.error(e.getMessage());
 						// e.printStackTrace();
 						sendToClient(cliente, "erroServer");
 					}
@@ -78,6 +84,7 @@ public class Server {
 						try {
 						service.insertIfExternalIdNotExists(obj);
 						} catch (Exception e) {
+							logger.error(e.getMessage());
 							sendToClient(cliente, "erroDB");
 						}
 					}
@@ -99,6 +106,7 @@ public class Server {
 					try {
 						list = OwnFileHandler.wixReaderInstantiator("b");
 					} catch (NumberFormatException e) {
+						logger.error(e.getMessage());
 						// e.printStackTrace();
 						sendToClient(cliente, "erroServer");
 					}
@@ -106,6 +114,7 @@ public class Server {
 						try {
 						service.insertIfExternalIdNotExists(obj);
 						} catch (Exception e) {
+							logger.error(e.getMessage());
 							sendToClient(cliente, "erroDB");
 						}
 					}
@@ -123,6 +132,7 @@ public class Server {
 			} while (continuar == 1);
 
 		} catch (IOException ex) {
+			logger.error(ex.getMessage());
 			ex.printStackTrace();
 		}
 	}

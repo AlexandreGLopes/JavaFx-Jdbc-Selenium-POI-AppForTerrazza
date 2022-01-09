@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WindowType;
@@ -13,6 +15,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SeleniumUtils {
+	
+	private static Logger logger = LogManager.getLogger(SeleniumUtils.class);
 	
 	//Método para ser utilizado para economizar linhas de código.
 	//Sempre que estivermos usando um sistema operacional diferente vir aqui e
@@ -27,6 +31,7 @@ public class SeleniumUtils {
 		try {
 			System.setProperty("webdriver.chrome.driver", "res/" + os);
 		} catch (IllegalStateException e) {
+			logger.error(e.getMessage());
 			System.out.println(os + "\n" + e);
 		}
 		
@@ -70,6 +75,7 @@ public class SeleniumUtils {
 			Thread.sleep(5000);
 			browser.close();
 		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
 			PrintWriter pr = new PrintWriter(cliente.getOutputStream());
 			pr.println("erro");
 			pr.flush();
@@ -131,6 +137,7 @@ public class SeleniumUtils {
 		}
 		//Excessão para o caso der algo errado e notificar o cliente
 		catch (Exception e) {
+			logger.error(e.getMessage());
 			PrintWriter pr = new PrintWriter(cliente.getOutputStream());
 			pr.println("erro");
 			pr.flush();
