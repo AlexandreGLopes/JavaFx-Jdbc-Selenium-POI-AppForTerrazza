@@ -149,8 +149,10 @@ public class ManualUpdaterScreenController implements Initializable {
 								// Colocando costumers na lista com o método que le o arquivo xls
 								list = OwnFileHandler.waitlistXlsReaderInstantiator(selectedFile.getAbsolutePath());
 							} catch (NumberFormatException e) {
+								logger.error(e.getMessage());
 								return "erroxls";
 							} catch (Exception e) {
+								logger.error(e.getMessage());
 								return "erroxls";
 							}
 							break;
@@ -172,6 +174,7 @@ public class ManualUpdaterScreenController implements Initializable {
 							// Colocando costumers na lista com o método que le o arquivo xlsx
 							list = OwnFileHandler.wixReaderInstantiator(selectedFile.getAbsolutePath());
 						} catch (NumberFormatException e) {
+							logger.error(e.getMessage());
 							Alerts.showAlert("Erro", null, e.getMessage(), AlertType.ERROR);
 							e.printStackTrace();
 						}
@@ -229,6 +232,7 @@ public class ManualUpdaterScreenController implements Initializable {
 			try {
 				service.insertIfExternalIdNotExists(obj);
 			} catch (Exception e) {
+				logger.error(e.getMessage());
 				Alerts.showAlert("Erro", null, e.getMessage(), AlertType.ERROR);
 			}
 		}

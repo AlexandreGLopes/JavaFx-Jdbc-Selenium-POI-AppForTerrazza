@@ -20,6 +20,9 @@ public class PreferencesPaneController implements Initializable {
 
 	@FXML
 	private TextField textFieldIPServidor;
+	
+	@FXML
+	private TextField textFieldSeparadorCsv;
 
 	@FXML
 	private Button buttonSalvar;
@@ -40,12 +43,18 @@ public class PreferencesPaneController implements Initializable {
 		String ipOfServer = preferences.get(PreferencesManager.IP_TO_SERVERSIDE_MACHINE, null);
 		// Jogando a variável no TextField
 		textFieldIPServidor.setText(ipOfServer);
+		// Colocando a preferência de separador do CSV
+		String separadorCsv = preferences.get(PreferencesManager.SEPARADOR_DO_CSV, null);
+		// Jogando a variável no TextField
+		textFieldSeparadorCsv.setText(separadorCsv);
 	}
 
 	// Método que salva o conteúdo das TextFields nas preferências
 	public void onButtonSalvarAction(ActionEvent event) {
 		// Colocando o IP nas preferências conforme a string dentro do TextField
 		preferences.put(PreferencesManager.IP_TO_SERVERSIDE_MACHINE, textFieldIPServidor.getText());
+		// Colocando o separador nas preferências conforme a string dentro do TextField
+		preferences.put(PreferencesManager.SEPARADOR_DO_CSV, textFieldSeparadorCsv.getText());
 		Utils.currentStage(event).close();
 	}
 

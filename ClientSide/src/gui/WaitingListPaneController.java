@@ -15,6 +15,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.apache.http.client.utils.DateUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.controlsfx.control.CheckComboBox;
 
@@ -56,6 +58,8 @@ import model.services.StandardMessageService;
 import model.services.WaitingCostumerService;
 
 public class WaitingListPaneController implements Initializable, DataChangeListener {
+	
+	private Logger logger = LogManager.getLogger(WaitingListPaneController.class);
 
 	private WaitingCostumerService service;
 
@@ -150,6 +154,7 @@ public class WaitingListPaneController implements Initializable, DataChangeListe
 
 	public void updateTableView() {
 		if (service == null) {
+			logger.error("Service was null");
 			throw new IllegalStateException("Service was null");
 		}
 		// Convertendo o LocalDate do Datepicker para Date para poder passar como
@@ -264,6 +269,7 @@ public class WaitingListPaneController implements Initializable, DataChangeListe
 			dialogStage.showAndWait();
 
 		} catch (IOException e) {
+			logger.error(e.getMessage());
 			Alerts.showAlert("IOException", "Erro carregando o painel", e.getMessage(), AlertType.ERROR);
 		}
 	}

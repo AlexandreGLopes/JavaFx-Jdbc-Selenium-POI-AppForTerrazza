@@ -3,6 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -12,6 +15,8 @@ import javafx.stage.Stage;
 import model.entities.Costumer;
 
 public class NotesFormController implements Initializable {
+	
+	private Logger logger = LogManager.getLogger(NotesFormController.class);
 	
 	private Costumer entity;
 	
@@ -38,6 +43,7 @@ public class NotesFormController implements Initializable {
 	
 	public void updateFormData() {
 		if (entity == null) {
+			logger.error("Entity was null");
 			throw new IllegalStateException("Entity was null");
 		}
 		labelCostumerName.setText("Cliente: " + entity.getNome() + " " + entity.getSobrenome());

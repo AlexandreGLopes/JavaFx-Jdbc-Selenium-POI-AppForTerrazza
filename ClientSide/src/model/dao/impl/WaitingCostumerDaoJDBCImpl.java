@@ -9,12 +9,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import db.DB;
 import db.DbException;
 import model.dao.WaitingCostumerDao;
 import model.entities.WaitingCostumer;
 
 public class WaitingCostumerDaoJDBCImpl implements WaitingCostumerDao {
+	
+	private Logger logger = LogManager.getLogger(WaitingCostumerDaoJDBCImpl.class);
 	
 	private Connection conn;
 	
@@ -51,9 +56,11 @@ public class WaitingCostumerDaoJDBCImpl implements WaitingCostumerDao {
 				}
 				DB.closeResultSet(rs);
 			} else {
+				logger.error("Erro inesperado: nenhuma linha foi alterada");
 				throw new DbException("Erro inesperado: nenhuma linha foi alterada");
 			}
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -84,6 +91,7 @@ public class WaitingCostumerDaoJDBCImpl implements WaitingCostumerDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -116,6 +124,7 @@ public class WaitingCostumerDaoJDBCImpl implements WaitingCostumerDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -166,6 +175,7 @@ public class WaitingCostumerDaoJDBCImpl implements WaitingCostumerDao {
 			}
 			return list;
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);

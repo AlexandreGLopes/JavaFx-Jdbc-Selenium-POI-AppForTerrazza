@@ -11,6 +11,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import db.DbException;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
@@ -35,6 +38,8 @@ import model.services.StandardMessageService;
 import model.services.WaitingCostumerService;
 
 public class EditWaitingFormController implements Initializable {
+	
+	private Logger logger = LogManager.getLogger(EditReservationFormController.class);
 
 	private WaitingCostumer entity;
 
@@ -203,6 +208,7 @@ public class EditWaitingFormController implements Initializable {
 	public void updateFormData() {
 		// Programação defensiva
 		if (entity == null) {
+			logger.error("Entity was null");
 			throw new IllegalStateException("Entity was null");
 		}
 		// Setando os elementos
@@ -269,6 +275,7 @@ public class EditWaitingFormController implements Initializable {
 	public void onButtonSalvarAction(ActionEvent event) {
 		// Programação defensiva
 		if (entity == null) {
+			logger.error("Entity was null");
 			throw new IllegalStateException("Entity was null");
 		}
 		// booleano para testar se é uma adição de espera nova ou se é um update numa
@@ -300,8 +307,10 @@ public class EditWaitingFormController implements Initializable {
 				// Fechando a janela. Pegando o palco atual por meio do evento ocorrido
 				Utils.currentStage(event).close();
 			} catch (ParseException e) {
+				logger.error(e.getMessage());
 				Alerts.showAlert("Error", null, e.getMessage(), AlertType.ERROR);
 			} catch (DbException e) {
+				logger.error(e.getMessage());
 				Alerts.showAlert("Error", null, e.getMessage(), AlertType.ERROR);
 			}
 			// Se tudo for finalizado corretamente vamos enviar uma mensagem para o cliente

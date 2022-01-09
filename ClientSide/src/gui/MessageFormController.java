@@ -8,6 +8,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import gui.util.Alerts;
 import gui.util.Utils;
@@ -21,6 +23,8 @@ import javafx.scene.control.TextArea;
 import model.entities.Costumer;
 
 public class MessageFormController implements Initializable {
+	
+	private Logger logger = LogManager.getLogger(MessageFormController.class);
 
 	private Costumer entity;
 
@@ -60,6 +64,7 @@ public class MessageFormController implements Initializable {
 	// Método para mostrar dados do cliente no cabeçalho
 	public void updateFormData() {
 		if (entity == null) {
+			logger.error("Entity was null");
 			throw new IllegalStateException("Entity was null");
 		}
 		labelCostumerInfo.setText("Cliente: " + entity.getNome() + " " + entity.getSobrenome());
@@ -109,6 +114,7 @@ public class MessageFormController implements Initializable {
 						AlertType.ERROR);
 			}
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			Alerts.showAlert("Erro ao enviar mensagem!", null,
 					"Houve um erro ao tentar enviar a mensagem.\nContate o desenvolvedor para saber mais.\nCódigo do erro: "
 							+ e.getMessage(),

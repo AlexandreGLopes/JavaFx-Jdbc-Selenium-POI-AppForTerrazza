@@ -5,10 +5,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.scene.control.Alert.AlertType;
 
 public class MyZapHandler {
+	
+	private static Logger logger = LogManager.getLogger(MyZapHandler.class);
 
 	public static Integer messageSender(String telefone, String message) {
 		// Iniciando o uso do HttpClient da Apache
@@ -39,6 +43,7 @@ public class MyZapHandler {
 			Integer statusCode = response.getStatusLine().getStatusCode();
 			return statusCode;
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			Alerts.showAlert("Erro ao enviar mensagem!", null,
 					"Houve um erro ao tentar enviar a mensagem.\nContate o desenvolvedor para saber mais.\nCódigo do erro: "
 							+ e.getMessage(),

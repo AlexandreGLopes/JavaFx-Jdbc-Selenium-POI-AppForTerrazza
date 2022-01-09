@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
@@ -25,6 +28,8 @@ import model.entities.Costumer;
 import model.services.CostumerService;
 
 public class EditReservationFormController implements Initializable {
+	
+	private Logger logger = LogManager.getLogger(EditReservationFormController.class);
 
 	CostumerService service = new CostumerService();
 
@@ -91,6 +96,7 @@ public class EditReservationFormController implements Initializable {
 	// abrimos o formulário
 	public void updateFormData() {
 		if (entity == null) {
+			logger.error("Entity was null");
 			throw new IllegalStateException("Entity was null");
 		}
 		comboBoxSituacao.setValue(entity.getSituacao());
@@ -127,9 +133,11 @@ public class EditReservationFormController implements Initializable {
 		// programação defensiva. Se o programador tiver esquecido de injetar
 		// vamos fazer isso pois estamos fazendo uma injeção de dependecias manual
 		if (entity == null) {
+			logger.error("Entity was null");
 			throw new IllegalStateException("Entity was null");
 		}
 		if (service == null) {
+			logger.error("Service was null");
 			throw new IllegalStateException("Service was null");
 		}
 		// Entity recebendo os dados das caixinhas

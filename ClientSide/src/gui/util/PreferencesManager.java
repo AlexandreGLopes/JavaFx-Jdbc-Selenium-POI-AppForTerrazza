@@ -12,6 +12,9 @@ public class PreferencesManager {
 
 	// preferência que salvará o IP no qual estará funcionando o ServerSide
 	public static final String IP_TO_SERVERSIDE_MACHINE = "IPOfServerSide";
+	
+	// preferência que salvará o separador usado para ler o arquivo csv
+	public static final String SEPARADOR_DO_CSV = "SeparadorDoCsv";
 
 	// método que retorna as preferências todas. Aqui estamos usando a preferência
 	// do usuário Root específico.

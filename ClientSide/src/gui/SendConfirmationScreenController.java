@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import gui.util.Alerts;
 import gui.util.MyZapHandler;
 import gui.util.Utils;
@@ -22,6 +25,8 @@ import model.services.CostumerXStandardMessageService;
 import model.services.StandardMessageService;
 
 public class SendConfirmationScreenController {
+	
+	private Logger logger = LogManager.getLogger(SendConfirmationScreenController.class);
 
 	private CostumerXStandardMessageService costumerXmessageService;
 
@@ -140,6 +145,7 @@ public class SendConfirmationScreenController {
 			}
 			Alerts.showAlert("Processo finalizado!", null, "O processo de envio das mensagens foi finalizado!", AlertType.INFORMATION);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 	}

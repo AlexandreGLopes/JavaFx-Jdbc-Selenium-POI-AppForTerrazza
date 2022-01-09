@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.prefs.Preferences;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
@@ -24,6 +27,10 @@ import javafx.scene.control.Alert.AlertType;
 import model.entities.Costumer;
 
 public class OwnFileHandler {
+	
+	private static Logger logger = LogManager.getLogger(OwnFileHandler.class);
+	
+	static Preferences preferences = PreferencesManager.getPreferences();
 
 	// Método que verifica o sistema operacional (com a auda de OSValidator) e monta
 	// um String com o início do path até o arquivo do sistema das reservas
@@ -161,6 +168,7 @@ public class OwnFileHandler {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			throw new Exception(e);
 		}
 		// retornando a lista
@@ -197,7 +205,8 @@ public class OwnFileHandler {
 				// Removendo aspas indesejadas da linha
 				line = line.replace("\"", "");
 				// Formando um array dividindo a linha nos ";"
-				String[] fields = line.split(",");
+				String separador = preferences.get(PreferencesManager.SEPARADOR_DO_CSV, null);
+				String[] fields = line.split(separador);
 				// Se o array acima, lido de uma linha específica no meio do loop,
 				// ficar menor que 21 elementos é porque temos uma quebra de linha não esperada
 				// e temos que trabalhar ela
@@ -217,7 +226,8 @@ public class OwnFileHandler {
 				line = br.readLine();
 			}
 		} catch (IOException e) {
-			System.out.println("Error: " + e.getMessage());
+			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 		return list;
 	}
@@ -235,7 +245,8 @@ public class OwnFileHandler {
 		String[] array = new String[21];
 		line = br.readLine();
 		line = line.replace("\"", "");
-		String[] fields2 = line.split(",");
+		String separador = preferences.get(PreferencesManager.SEPARADOR_DO_CSV, null);
+		String[] fields2 = line.split(separador);
 		for (int i = 0; i < fields.length; i++) {
 			array[i] = fields[i];
 		}
@@ -333,9 +344,10 @@ public class OwnFileHandler {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			Alerts.showAlert("Erro ao ler arquivo", null,
 					"Erro inesperado ao tentar ler aquivo XLSX.\n\nCódigo do erro: " + e.getMessage(), AlertType.ERROR);
-			// System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		// Pegando a data atual do sistema e colocando na variável today
 		SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
@@ -344,6 +356,7 @@ public class OwnFileHandler {
 		try {
 			today = dt.parse(dt.format(currDate));
 		} catch (ParseException e1) {
+			logger.error(e1.getMessage());
 			e1.printStackTrace();
 		}
 		// Instanciando um iterator para poder percorrer a lista e poder remover os

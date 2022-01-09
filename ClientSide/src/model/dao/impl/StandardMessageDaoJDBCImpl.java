@@ -5,12 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import db.DB;
 import db.DbException;
 import model.dao.StandardMessageDao;
 import model.entities.StandardMessage;
 
 public class StandardMessageDaoJDBCImpl implements StandardMessageDao {
+	
+	private Logger logger = LogManager.getLogger(StandardMessageDaoJDBCImpl.class);
 	
 	private Connection conn;
 	
@@ -66,6 +71,7 @@ public class StandardMessageDaoJDBCImpl implements StandardMessageDao {
 			}
 		return null;
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);

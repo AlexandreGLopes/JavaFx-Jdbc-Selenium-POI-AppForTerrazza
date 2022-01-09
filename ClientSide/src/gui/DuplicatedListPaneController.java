@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import application.Main;
 import gui.util.Alerts;
 import gui.util.CheckDuplicacatesMethods;
@@ -38,6 +41,8 @@ import model.entities.Costumer;
 import model.services.CostumerService;
 
 public class DuplicatedListPaneController implements Initializable {
+	
+	private Logger logger = LogManager.getLogger(DuplicatedListPaneController.class);
 
 	SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
 
@@ -175,6 +180,7 @@ public class DuplicatedListPaneController implements Initializable {
 	// um método para pegar os dados do Banco já filtrados para ficar melhor de trabalhar
 	public void updateTableView(String option) {
 		if (service == null) {
+			logger.error("Service was null");
 			throw new IllegalStateException("Service was null");
 		}
 
@@ -256,6 +262,7 @@ public class DuplicatedListPaneController implements Initializable {
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.showAndWait();
 		} catch (IOException e) {
+			logger.error(e.getMessage());
 			Alerts.showAlert("IOException", "Erro carregando o painel", e.getMessage(), AlertType.ERROR);
 		}
 	}

@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.hemf.record.emf.HemfText.SetTextJustification;
 import org.controlsfx.control.CheckComboBox;
 
@@ -53,6 +55,8 @@ import model.services.CostumerXStandardMessageService;
 import model.services.StandardMessageService;
 
 public class ReservationsListPaneController implements Initializable, DataChangeListener {
+	
+	private Logger logger = LogManager.getLogger(ReservationsListPaneController.class);
 
 	private CostumerService service;
 
@@ -191,6 +195,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 	// data de hoje
 	public void updateTableView() {
 		if (service == null) {
+			logger.error("Service was null");
 			throw new IllegalStateException("Service was null");
 		}
 		// Pegando o o resultado da query do MySQL e colocando numa lista principal
@@ -278,6 +283,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 			dialogStage.showAndWait();
 
 		} catch (IOException e) {
+			logger.error(e.getMessage());
 			Alerts.showAlert("IOException", "Erro carregando o painel", e.getMessage(), AlertType.ERROR);
 		}
 	}

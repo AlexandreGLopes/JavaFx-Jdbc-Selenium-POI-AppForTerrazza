@@ -89,6 +89,7 @@ public class LoadingScreenController implements Initializable {
 	private void onRefreshButtonAction(ActionEvent event) {
 		if (option == null) {
 			Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nOpção (option) estava nula", AlertType.ERROR);
+			logger.error("Option was null");
 			throw new IllegalStateException("Option was null");
 		}
 		refreshButton.setVisible(false);

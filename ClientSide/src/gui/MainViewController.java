@@ -6,6 +6,9 @@ import java.text.ParseException;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import application.Main;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
@@ -31,6 +34,8 @@ import model.services.StandardMessageService;
 import model.services.WaitingCostumerService;
 
 public class MainViewController implements Initializable, DataChangeListener {
+	
+	private Logger logger = LogManager.getLogger(MainViewController.class);
 
 	@FXML
 	private VBox rootVBox;
@@ -238,6 +243,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 			dialogStage.showAndWait();
 
 		} catch (IOException e) {
+			logger.error(e.getMessage());
 			Alerts.showAlert("Erro ao carregar tela", null, "Erro ao carregar: " + absoluteName, AlertType.ERROR);
 			e.printStackTrace();
 		}
@@ -281,7 +287,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 			T controller = loader.getController();
 			initializingAction.accept(controller);
 		} catch (IOException e) {
+			logger.error(e.getMessage());
 			Alerts.showAlert("IOException", "Error loading view", e.getMessage(), AlertType.ERROR);
+			e.printStackTrace();
 		}
 	}
 
