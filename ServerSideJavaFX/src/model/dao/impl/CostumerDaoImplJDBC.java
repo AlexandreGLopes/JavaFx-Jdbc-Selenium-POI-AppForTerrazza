@@ -10,12 +10,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import db.DB;
 import db.DbException;
 import model.dao.CostumerDao;
 import model.entities.Costumer;
 
 public class CostumerDaoImplJDBC implements CostumerDao {
+	
+	private Logger logger = LogManager.getLogger(CostumerDaoImplJDBC.class);
 
 	private Connection conn;
 
@@ -58,9 +63,11 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 				}
 				DB.closeResultSet(rs);
 			} else {
+				logger.error("Erro inesperado: nenhuma linha foi alterada");
 				throw new DbException("Erro inesperado: nenhuma linha foi alterada");
 			}
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -93,6 +100,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -109,6 +117,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 
 			st.executeUpdate();
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -131,6 +140,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 
 			st.executeUpdate();
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -151,6 +161,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			}
 			return null;
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -195,6 +206,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			}
 			return list;
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -216,6 +228,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			}
 			return null;
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
@@ -241,6 +254,7 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 			}
 			return list;
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);

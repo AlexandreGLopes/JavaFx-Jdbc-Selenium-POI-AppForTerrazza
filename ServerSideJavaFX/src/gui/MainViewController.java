@@ -11,6 +11,8 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
 import javafx.fxml.FXML;
@@ -23,6 +25,8 @@ import util.OwnFileHandler;
 import util.SeleniumUtils;
 
 public class MainViewController implements Initializable {
+	
+	private Logger logger = LogManager.getLogger(MainViewController.class);
 	
 	@FXML
 	private Label statusLabel;
@@ -90,16 +94,20 @@ public class MainViewController implements Initializable {
 					try {
 						list = OwnFileHandler.waitlistReaderInstantiator("a");
 					} catch (NumberFormatException e) {
-						// e.printStackTrace();
+						logger.error(e.getMessage());
+						e.printStackTrace();
 						sendToClient(cliente, "erroServer");
 					} catch (ParseException e) {
-						// e.printStackTrace();
+						logger.error(e.getMessage());
+						e.printStackTrace();
 						sendToClient(cliente, "erroServer");
 					}
 					for (Costumer obj : list) {
 						try {
 							service.insertIfExternalIdNotExists(obj);
 						} catch (Exception e) {
+							logger.error(e.getMessage());
+							e.printStackTrace();
 							sendToClient(cliente, "erroDB");
 						}
 					}
@@ -121,13 +129,16 @@ public class MainViewController implements Initializable {
 					try {
 						list = OwnFileHandler.wixReaderInstantiator("b");
 					} catch (NumberFormatException e) {
-						// e.printStackTrace();
+						logger.error(e.getMessage());
+						e.printStackTrace();
 						sendToClient(cliente, "erroServer");
 					}
 					for (Costumer obj : list) {
 						try {
 							service.insertIfExternalIdNotExists(obj);
 						} catch (Exception e) {
+							logger.error(e.getMessage());
+							e.printStackTrace();
 							sendToClient(cliente, "erroDB");
 						}
 					}
@@ -145,6 +156,7 @@ public class MainViewController implements Initializable {
 			} while (continuar == 1);
 
 		} catch (IOException ex) {
+			logger.error(ex.getMessage());
 			ex.printStackTrace();
 		}
 	}

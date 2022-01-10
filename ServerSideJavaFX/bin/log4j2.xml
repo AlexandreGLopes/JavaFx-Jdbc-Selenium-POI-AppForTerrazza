@@ -21,10 +21,7 @@ uma source folder clicando no projeto com o botão direito e indo em properties 
 		<Logger name="gui" level="trace" additivity="false">
 			<AppenderRef ref="RollingFile" />
 		</Logger>
-		<Logger name="gui.listeners" level="trace" additivity="false">
-			<AppenderRef ref="RollingFile" />
-		</Logger>
-		<Logger name="gui.util" level="trace" additivity="false">
+		<Logger name="util" level="trace" additivity="false">
 			<AppenderRef ref="RollingFile" />
 		</Logger>
 		<Logger name="model.dao.impl" level="trace" additivity="false">
