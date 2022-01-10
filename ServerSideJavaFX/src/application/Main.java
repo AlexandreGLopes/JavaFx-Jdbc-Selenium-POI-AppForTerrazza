@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -19,21 +20,16 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/MainView.fxml"));
-			ScrollPane scrollPane = loader.load();
+			VBox vbox = loader.load();
 
-			// Ajustando o ScrollPane para ficar ajustado a janela por meio de código
-			scrollPane.setFitToHeight(true);
-			scrollPane.setFitToWidth(true);
-
-			mainScene = new Scene(scrollPane);
+			mainScene = new Scene(vbox);
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("Servidor da Mesa de Trabalho de Reservas");
 
-			// Pegando o controller da MainView para poder chamar o método que inicializa o
-			// trabalho do servidor
-			//MainViewController controller = loader.getController();
-			// iniciando o loop do servidor
-			//controller.initializeServer();
+			// Pegando o controller da MainView para poder chamar o método que faz o bind
+			// das propriedades de height e width do gridPane
+			MainViewController controller = loader.getController();
+			controller.initializeNodes();
 
 			primaryStage.show();
 		} catch (IOException e) {

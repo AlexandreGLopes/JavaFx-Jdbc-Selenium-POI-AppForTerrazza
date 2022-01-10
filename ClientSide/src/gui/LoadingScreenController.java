@@ -30,18 +30,18 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 public class LoadingScreenController implements Initializable {
-	
+
 	private Logger logger = LogManager.getLogger(LoadingScreenController.class);
-	
+
 	Preferences preferences = PreferencesManager.getPreferences();
 
 	private String option;
-	
+
 	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
 	@FXML
 	private Button refreshButton;
-	
+
 	@FXML
 	private Button cancelButton;
 
@@ -50,13 +50,13 @@ public class LoadingScreenController implements Initializable {
 
 	@FXML
 	private Label txtLabel;
-	
+
 	@FXML
 	private Label txtCarregando;
 
 	@FXML
 	private GridPane rootPane;
-	
+
 	public String getOption() {
 		return option;
 	}
@@ -64,18 +64,18 @@ public class LoadingScreenController implements Initializable {
 	public void setOption(String option) {
 		this.option = option;
 	}
-	
+
 	public void setLabel(String option) {
 		this.txtLabel.setText(option);
 	}
-	
+
 	public void subscribeDataChangeListener(DataChangeListener listener) {
 		dataChangeListeners.add(listener);
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		
+
 	}
 
 	private void makeFadeInTransition() {
@@ -109,48 +109,59 @@ public class LoadingScreenController implements Initializable {
 		Task<String> serverCommunicationTask = new Task<>() {
 			@Override
 			protected String call() throws Exception {
+				// Buscado a preferência que guarda o IP e colocando ela numa variável string
+				// que será utilizada para iniciar a comunicação
 				String ipOfServer = preferences.get(PreferencesManager.IP_TO_SERVERSIDE_MACHINE, null);
 				try (Socket cliente = new Socket(ipOfServer, 3322);
 						PrintWriter pr = new PrintWriter(cliente.getOutputStream());
 						BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));) {
 					pr.println(option);
 					pr.flush();
-					cliente.setSoTimeout(30000);
+					// Estabelecendo 35 segundos de timeout para realizar a tarefa toda
+					cliente.setSoTimeout(35000);
 					return bf.readLine();
 				}
 			}
 		};
 
 		serverCommunicationTask.setOnSucceeded((e) -> {
-			//Se o servidor concluir tudo corretamente
+			// Se o servidor concluir tudo corretamente
 			if ("close".equals(serverCommunicationTask.getValue())) {
 				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 			}
-			//Se der erro na parte do selenium
+			// Se der erro na parte do selenium
 			if ("erro".equals(serverCommunicationTask.getValue())) {
-				Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nAlgo deu errado ao acessar o site de reservas terceiro.\n\nVocê pode contornar o problema adicionando as reservas manualmente.\nPara saber mais clique em Ajuda", AlertType.ERROR);
+				Alerts.showAlert("Erro", null,
+						"Informe o desenvolvedor:\nAlgo deu errado ao acessar o site de reservas terceiro.\n\nVocê pode contornar o problema adicionando as reservas manualmente.\nPara saber mais clique em Ajuda",
+						AlertType.ERROR);
 				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 			}
-			//Se der erro em algum processo interno no servidor
+			// Se der erro em algum processo interno no servidor
 			if ("erroServer".equals(serverCommunicationTask.getValue())) {
-				Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nAlgo deu errado com nosso servidor interno.\n\nVocê pode contornar o problema adicionando as reservas manualmente.\nPara saber mais clique em Ajuda", AlertType.ERROR);
+				Alerts.showAlert("Erro", null,
+						"Informe o desenvolvedor:\nAlgo deu errado com nosso servidor interno.\n\nVocê pode contornar o problema adicionando as reservas manualmente.\nPara saber mais clique em Ajuda",
+						AlertType.ERROR);
 				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 			}
-			//Se der erro em algum processo interno no banco de dados
+			// Se der erro em algum processo interno no banco de dados
 			if ("erroDB".equals(serverCommunicationTask.getValue())) {
-				Alerts.showAlert("Erro", null, "Informe o desenvolvedor:\nAlgo deu errado com nosso Banco de Dados.\n\nVocê pode contornar o problema adicionando as reservas manualmente.\nPara saber mais clique em Ajuda", AlertType.ERROR);
+				Alerts.showAlert("Erro", null,
+						"Informe o desenvolvedor:\nAlgo deu errado com nosso Banco de Dados.\n\nVocê pode contornar o problema adicionando as reservas manualmente.\nPara saber mais clique em Ajuda",
+						AlertType.ERROR);
 				notifyDataChangeListeners();
 				Utils.currentStage(event).close();
 			}
 		});
 
 		serverCommunicationTask.setOnFailed((e) -> {
-			//Se não conseguirmos nos conectar com o servidor pelo Socket
+			// Se não conseguirmos nos conectar com o servidor pelo Socket
 			serverCommunicationTask.getException().printStackTrace();
-			Alerts.showAlert("Demora na resposta do servidor", null, "O servidor está demorando para responder. Pode ser que ele esteja trabalhando com lentidão. Pressione o botão RESERVAS para verificar se a lista será atualizada.\n\nCaso contrário, tente utilizar a opção: ATUALIZAR MANUALMENTE.\n\nContate o desenvolvedor para tentar resolver o problema.", AlertType.ERROR);
+			Alerts.showAlert("Demora na resposta do servidor", null,
+					"O servidor está demorando para responder. Pode ser que ele esteja trabalhando com lentidão. Aguarde poucos segundos e pressione o botão RESERVAS para verificar se a lista será atualizada.\n\nCaso contrário, tente utilizar a opção: ATUALIZAR MANUALMENTE.\n\nContate o desenvolvedor para tentar resolver o problema.",
+					AlertType.WARNING);
 			logger.error(serverCommunicationTask.getException());
 			Utils.currentStage(event).close();
 		});
@@ -160,14 +171,14 @@ public class LoadingScreenController implements Initializable {
 		thread.start();
 
 	}
-	
+
 	private void notifyDataChangeListeners() {
 		for (DataChangeListener listener : dataChangeListeners) {
 			listener.onDataChanged();
 		}
 	}
 
-	//Botão de cancelamento para fechar o painel, pois ele não tem barra superior
+	// Botão de cancelamento para fechar o painel, pois ele não tem barra superior
 	@FXML
 	private void onCancelButtonAction(ActionEvent event) {
 		Utils.currentStage(event).close();
