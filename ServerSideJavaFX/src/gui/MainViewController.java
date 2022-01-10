@@ -74,7 +74,7 @@ public class MainViewController implements Initializable {
 
 	public void initializeServer() {
 		// Construindo uma Task que vai rodar em outro Thread para deixar a UI livre
-		// para mostrar os FadeTransitions
+		// para outras ações do usuário
 		Task<String> task = new Task<>() {
 			@Override
 			protected String call() throws Exception {
