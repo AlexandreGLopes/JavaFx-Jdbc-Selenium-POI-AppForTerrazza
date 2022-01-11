@@ -23,7 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import model.entities.Costumer;
 
 public class OwnFileHandler {
-	
+
 	private static Logger logger = LogManager.getLogger(OwnFileHandler.class);
 
 	// Método que verifica o sistema operacional (com a auda de OSValidator) e monta
@@ -87,7 +87,8 @@ public class OwnFileHandler {
 			// Talvez pudesse mudar para um inputFilestream para poder colocar o encode de
 			// UTF para retirar a parte do comando de encode quando vamos rodar o programa
 			// antes dos módulos. Ver exemplo abaixo:
-			// try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(tempFile, "UTF-8"))) {
+			// try (BufferedReader br = new BufferedReader(new InputStreamReader(new
+			// FileInputStream(tempFile, "UTF-8"))) {
 
 			// Lendo a primeira linha e não usando porque ela é cabeçalho
 			br.readLine();
@@ -137,15 +138,76 @@ public class OwnFileHandler {
 	// fazer um array com elas
 	public static String[] ifFieldsLengthMinorThan21(String line, String[] fields, BufferedReader br)
 			throws IOException {
+		// Fazendo um array de 21 posições que será retornado após receber a junção das
+		// leituras de linhas. Teremos que juntar as leituras de linha em diferentes
+		// vetores e listas para poder trabalhar com eles e ir montando este Array final
 		String[] array = new String[21];
+		// A lista abaixo vai receber os valores de um vetor temporário (temp).
+		// Utilizamos ela para juntar todas as leituras de linha da observação da
+		// reserva que tem as quebras de linha, e que, a princípio, entrarão no vetor
+		// temp.
+		List<String> fields2 = new ArrayList<String>();
+		// Esse booleano vai marcar se o loop deve continuar
+		boolean loopDeLeitura = true;
+		// loop que vai ler a linha seguinte e jogar no vetor temporário e depois na
+		// lista
+		while (loopDeLeitura) {
+			// Marcando o bufferedReader para poder voltar à mesma posição. Teremos que
+			// voltar porque quando o loop for marcado para finalizar teremos que ler a
+			// linha novamente e joga-la em outro vetor
+			br.mark(0);
+			// lendo a próxima linha
+			line = br.readLine();
+			line = line.replace("\"", "");
+			// vetor temporário que vai receber a linha dividida pelo separador
+			String[] temp = line.split(";");
+			// Utilizamos um vetor temporário porque usando o método .length sabemos que a
+			// divisão resultou em apenas um ou vários termos. Se, neste caso, resultar em
+			// apenas 1 termo ainda há mais quebras de linha para serem lidas, e o loop deve
+			// continuar (iremos para o else). Se resultar em MAIS de um 1 termo quer dizer
+			// que atingimos a última linha da reserva no CSV.
+			if (temp.length > 1) {
+				// neste caso setamos o loop para terminar
+				loopDeLeitura = false;
+				// E resetamos o BufferedReader. Ou seja, voltamos à linha marcada no br.mark()
+				br.reset();
+			} else {
+				// No caso de ser apenas 1 termo (ou menos, mas sempre será um termo, a
+				// principio) vamos adicionar os termos do temp na lista fields2
+				for (String str : temp) {
+					fields2.add(str);
+				}
+			}
+		}
+		// Em seguida vamos ler novamente a última linha da reserva no CSV e colocá-la
+		// num outro vetor chamado de fields3 e vamos dividir a linha de acordo com o
+		// separador das preferências
 		line = br.readLine();
 		line = line.replace("\"", "");
-		String[] fields2 = line.split(";");
+		String[] fields3 = line.split(";");
+		// Agora vamos percorrer cada termo da lista fields2 e vamos adicionar cada um
+		// desses termos na última posição do array fields (que foi passado como
+		// parâmetro para este método)
+		for (String str : fields2) {
+			// No caso aqui "fields.length - 1" significa a última posição pois o termo
+			// começa no zero, mas o tamanho do array é contado a partir do 1.
+			fields[fields.length - 1] = fields[fields.length - 1] + ". " + str;
+		}
+		// O Array que será retornado vai receber agora cada um dos termos do fields
 		for (int i = 0; i < fields.length; i++) {
 			array[i] = fields[i];
 		}
-		for (int i = 1; i < fields2.length; i++) {
-			array[fields.length - 1 + i] = fields2[i];
+		// Juntando o conteúdo da primeira posição do Fields3 no conteúdo da última
+		// posião do Array. Ou seja, aqui estamos juntando o final da observação que
+		// será lido no último br.readLine que vai dar conta de ler o final da
+		// observação e o restante dos dados da reserva
+		array[fields.length - 1] = array[fields.length - 1] + fields3[0];
+		// depois de adicionar o primeiro termo do fields3, para cada termo no fields3
+		// (após o primeiro) vamos adicionar este termo na próxima posição vazia do
+		// array. Sabemos qual é a próxima posição vazia do array porque ela é a última
+		// posição do fields mais 1, e depois que esta estiver ocupada será a próxima
+		for (int i = 1; i < fields3.length; i++) {
+			array[fields.length - 1 + i] = fields3[i];
 		}
 		return array;
 	}
