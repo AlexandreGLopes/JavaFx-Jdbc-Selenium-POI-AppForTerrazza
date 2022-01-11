@@ -139,7 +139,8 @@ public class ManualUpdaterScreenController implements Initializable {
 							try {
 								// Colocando costumers na lista com o método que le o arquivo csv
 								list = OwnFileHandler.waitlistCsvReaderInstantiator(selectedFile.getAbsolutePath());
-							} catch (NumberFormatException | ParseException e) {
+							} catch (Exception e) {
+								logger.error(e.getMessage());
 								Alerts.showAlert("Erro", null, e.getMessage(), AlertType.ERROR);
 								e.printStackTrace();
 							}
