@@ -15,6 +15,9 @@ public class PreferencesManager {
 	
 	// preferência que salvará o separador usado para ler o arquivo csv
 	public static final String SEPARADOR_DO_CSV = "SeparadorDoCsv";
+	
+	// preferência que salvará o tempo de espera que daremos para o servidor concluir as tarefas
+	public static final String ESPERA_POR_TAREFA_DO_SERVIDOR = "EsperaServidor";
 
 	// método que retorna as preferências todas. Aqui estamos usando a preferência
 	// do usuário Root específico.

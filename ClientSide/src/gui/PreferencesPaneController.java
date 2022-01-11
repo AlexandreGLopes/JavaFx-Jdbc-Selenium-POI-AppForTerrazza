@@ -23,6 +23,9 @@ public class PreferencesPaneController implements Initializable {
 	
 	@FXML
 	private TextField textFieldSeparadorCsv;
+	
+	@FXML
+	private TextField textFieldEsperaServidor;
 
 	@FXML
 	private Button buttonSalvar;
@@ -47,6 +50,10 @@ public class PreferencesPaneController implements Initializable {
 		String separadorCsv = preferences.get(PreferencesManager.SEPARADOR_DO_CSV, null);
 		// Jogando a variável no TextField
 		textFieldSeparadorCsv.setText(separadorCsv);
+		// Colocando a preferência de tempo de espera pelo servidor
+		String esperaServidor = preferences.get(PreferencesManager.ESPERA_POR_TAREFA_DO_SERVIDOR, null);
+		// Jogando a variável no TextField
+		textFieldEsperaServidor.setText(esperaServidor);
 	}
 
 	// Método que salva o conteúdo das TextFields nas preferências
@@ -55,6 +62,8 @@ public class PreferencesPaneController implements Initializable {
 		preferences.put(PreferencesManager.IP_TO_SERVERSIDE_MACHINE, textFieldIPServidor.getText());
 		// Colocando o separador nas preferências conforme a string dentro do TextField
 		preferences.put(PreferencesManager.SEPARADOR_DO_CSV, textFieldSeparadorCsv.getText());
+		// Colocando o tempo de espera nas preferências conforme a string dentro do TextField
+		preferences.put(PreferencesManager.ESPERA_POR_TAREFA_DO_SERVIDOR, textFieldEsperaServidor.getText());
 		Utils.currentStage(event).close();
 	}
 

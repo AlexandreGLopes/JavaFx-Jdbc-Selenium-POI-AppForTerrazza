@@ -117,8 +117,10 @@ public class LoadingScreenController implements Initializable {
 						BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));) {
 					pr.println(option);
 					pr.flush();
-					// Estabelecendo 35 segundos de timeout para realizar a tarefa toda
-					cliente.setSoTimeout(35000);
+					// Estabelecendo um timeout de acordo com as preferências 
+					String esperaServidor = preferences.get(PreferencesManager.ESPERA_POR_TAREFA_DO_SERVIDOR, null);
+					Integer timeout = Integer.parseInt(esperaServidor);
+					cliente.setSoTimeout(timeout);
 					return bf.readLine();
 				}
 			}
