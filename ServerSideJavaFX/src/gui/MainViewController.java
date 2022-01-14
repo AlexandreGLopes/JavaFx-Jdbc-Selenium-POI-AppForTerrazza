@@ -115,8 +115,6 @@ public class MainViewController implements Initializable {
 
 	public void initializeServer() {
 		try {
-			// serviço de para trabalhar o cliente no banco de dados
-			CostumerService service = new CostumerService();
 			// Instanciando o socket para receber a conexão
 			ServerSocket server = new ServerSocket(3322);
 			System.out.println("Servidor iniciado na porta 3322");
@@ -134,6 +132,8 @@ public class MainViewController implements Initializable {
 			do {
 				Socket cliente = server.accept();
 				System.out.println("Cliente conectado do IP " + cliente.getInetAddress().getHostAddress());
+				// serviço de para trabalhar o cliente no banco de dados
+				CostumerService service = new CostumerService();
 				// Instâncias que recebem o stream do cliente e vão convertê-lo em string para
 				// usar no switch/case
 				InputStreamReader in = new InputStreamReader(cliente.getInputStream());

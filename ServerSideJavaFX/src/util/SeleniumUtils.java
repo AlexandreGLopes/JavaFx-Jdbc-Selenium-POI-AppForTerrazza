@@ -1,8 +1,10 @@
 package util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +14,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SeleniumUtils {
@@ -134,6 +137,11 @@ public class SeleniumUtils {
 				.click();
 		//Na página principal saindo do iframe e voltando ao html principal
 		browser2.switchTo().defaultContent();
+		String path = OwnFileHandler.definePath();
+		String file = OwnFileHandler.defineFile("b");
+		File tempFile = new File(path + file);
+		FluentWait<WebDriver> waitForFile = new FluentWait<WebDriver>(browser2).withTimeout(Duration.ofSeconds(25)).pollingEvery(Duration.ofMillis(100));
+		waitForFile.until( x -> tempFile.exists());
 		}
 		//Excessão para o caso der algo errado e notificar o cliente
 		catch (Exception e) {
