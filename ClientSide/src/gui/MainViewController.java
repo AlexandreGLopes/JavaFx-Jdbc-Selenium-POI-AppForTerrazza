@@ -197,7 +197,8 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/ManualUpdaterHelp.fxml", currentStage, true, (x) -> {
+		loadPane("/gui/ManualUpdaterHelp.fxml", currentStage, true, (ManualUpdaterHelpController controller) -> {
+			controller.setGifs();
 		});
 	}
 

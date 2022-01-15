@@ -1,6 +1,7 @@
 package gui;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -25,6 +26,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
@@ -80,6 +82,8 @@ public class LoadingScreenController implements Initializable {
 
 	private void makeFadeInTransition() {
 		FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), loadingGif);
+		Image gif = new Image(new File("res/loading.gif").toURI().toString());
+		loadingGif.setImage(gif);
 		fadeTransition.setFromValue(0.0);
 		fadeTransition.setToValue(1.0);
 		fadeTransition.play();

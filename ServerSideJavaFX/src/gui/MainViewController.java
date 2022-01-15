@@ -117,6 +117,8 @@ public class MainViewController implements Initializable {
 		try {
 			// Instanciando o socket para receber a conexão
 			ServerSocket server = new ServerSocket(3322);
+			//timeout de 0 para ser infinito o tempo do servidor ficar de pé
+			server.setSoTimeout(0);
 			System.out.println("Servidor iniciado na porta 3322");
 			// Abrindo um navegador ao iniciar o servidor. Usaremos este para abrir o Wix
 			// Pois o wix tem Recaptcha e vamos deixar aberto para não cair na verificação
