@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<VBox prefHeight="269.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ReservationsListPaneController">
+   <children>
+      <ToolBar prefHeight="40.0" prefWidth="200.0">
+         <items>
+            <Label text="Filtros:" />
+            <CheckComboBox fx:id="filtrosSituacaoCheckComboBox" prefWidth="110.0" title="Situação" />
+            <CheckComboBox fx:id="filtrosSalaoCheckComboBox" prefWidth="110.0" title="Salão" />
+            <Label text="Por Nome:" />
+            <TextField fx:id="filtroNomeSobrenomeTextField" />
+            <Button fx:id="mandarConfirmacoesButton" mnemonicParsing="false" onAction="#onMandarConfirmacoesButtonAction" text="Mandar Confirmações" />
+         </items></ToolBar>
+      <TableView fx:id="tableViewCostumer" prefHeight="224.0" prefWidth="708.0">
+         <columns>
+            <TableColumn fx:id="tableColumnWhats" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" />
+                  <TableColumn fx:id="tableColumnNome" prefWidth="250.0" resizable="false" text="Nome" />
+                  <TableColumn fx:id="tableColumnHora" prefWidth="75.0" resizable="false" style="-fx-alignment: CENTER; -fx-font-weight: bold;" text="Hora" />
+                  <TableColumn fx:id="tableColumnPessoas" prefWidth="75.0" resizable="false" style="-fx-alignment: CENTER-LEFT; -fx-font-weight: bold;" text="Pessoas" />
+            <TableColumn fx:id="tableColumnSituacao" maxWidth="100.0" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER-LEFT; -fx-font-weight: bold;" text="Situação" />
+                  <TableColumn fx:id="tableColumnSalao" prefWidth="120.0" resizable="false" style="-fx-alignment: CENTER-LEFT; -fx-font-weight: bold;" text="Salao" />
+            <TableColumn fx:id="tableColumnObservacoes" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" text="Obs." />
+                  <TableColumn fx:id="tableColumnMesa" prefWidth="120.0" resizable="false" style="-fx-alignment: CENTER;" text="Mesa" />
+                  <TableColumn fx:id="tableColumnPagamento" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER-LEFT;" text="Pagamento" />
+            <TableColumn fx:id="tableColumnEdit" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" />
+         </columns>
+      </TableView>
+   </children>
+</VBox>

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="592.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ManualUpdaterHelpController">
+<AnchorPane prefHeight="700.0" prefWidth="592.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ManualUpdaterHelpController">
    <children>
       <Label layoutX="182.0" layoutY="14.0" text="Ajuda da Atualização Manual">
          <font>
@@ -25,7 +25,7 @@
                   <Label layoutX="20.0" layoutY="19.0" prefHeight="65.0" prefWidth="528.0" text="Caso o sistema automático de atualização de reservas não esteja funcionando por qualquer motivo é possivel fazer essa atualização de forma manual. Podemos fazer isso entrando no site de cada sistema de reservas e baixando o arquivo com as reservas para ser carregado neste programa depois." textAlignment="JUSTIFY" wrapText="true" />
                   <Label layoutX="20.0" layoutY="517.0" prefHeight="144.0" prefWidth="528.0" text="Entre no site https://waitlist.tagme.com.br e faça o login. Na barra superior encontre a opção &quot;Relatórios&quot; e clique nela. Em seguida uma nova opção &quot;Relatórios&quot; vai aparecer na &quot;bandeja&quot;, clique nela. Uma página com várias opções vai aparecer. Na primeira caixa de Relatorio escolha a opção &quot;Lista Geral de Reservas&quot;. Em seguida verifique se a Data de Inicio corresponde a data de hoje. Se sim, aperte o botão &quot;Filtrar&quot;. As reservas serão carregadas no site. Depois, clique no botão ao lado do de Filtrar (é um botão com uma flecha apontando para baixo) e escolha a opção &quot;Exportar para CSV&quot; e faça o download do arquivo." textAlignment="JUSTIFY" wrapText="true" />
                   <Label layoutX="20.0" layoutY="181.0" prefHeight="16.0" prefWidth="528.0" text="Abaixo é exibido um gif mostrando como baixar o arquivo:" textAlignment="JUSTIFY" wrapText="true" />
-                  <ImageView fx:id="imageViewWaitlistGif" fitHeight="324.0" fitWidth="528.0" layoutX="19.0" layoutY="209.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="324.0" fitWidth="528.0" layoutX="19.0" layoutY="209.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../res/waitlisthelp.gif" />
                      </image>
@@ -34,7 +34,7 @@
                   <Label layoutX="195.0" layoutY="821.0" text="Atualização Manual do Wix" />
                   <Label layoutX="178.0" layoutY="837.0" prefHeight="16.0" prefWidth="212.0" text="para reservas do 38 Floor Bistrô" />
                   <Label layoutX="19.0" layoutY="874.0" prefHeight="16.0" prefWidth="528.0" text="Abaixo é exibido um gif mostrando como baixar o arquivo:" textAlignment="JUSTIFY" wrapText="true" />
-                  <ImageView fx:id="imageViewWixGif" fitHeight="324.0" fitWidth="528.0" layoutX="17.0" layoutY="902.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="324.0" fitWidth="528.0" layoutX="17.0" layoutY="902.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../res/wixhelp.gif" />
                      </image>
