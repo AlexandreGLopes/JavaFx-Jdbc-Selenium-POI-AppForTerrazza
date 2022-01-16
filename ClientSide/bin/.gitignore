@@ -1,2 +1,5 @@
-/log4j2.xml
+/application/
+/db/
 /gui/
+/log4j2.xml
+/model/

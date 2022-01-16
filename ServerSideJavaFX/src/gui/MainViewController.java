@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -17,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
 import application.Main;
+import db.DB;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +34,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.dao.CostumerDao;
+import model.dao.impl.CostumerDaoImplJDBC;
 import model.entities.Costumer;
 import model.services.CostumerService;
 import util.OwnFileHandler;
@@ -67,64 +72,41 @@ public class MainViewController implements Initializable {
 	}
 
 	public void onIniciarButtonAction() {
-		// Construindo uma Task que vai rodar em outro Thread para deixar a UI livre
-		// para outras ações do usuário
-		// 11/01/2022 troquei: Antes a task estava fazendo a conexão rodar. Mas ao
-		// testar o programa percebi que acontecia uma falha. O log do programa
-		// apresentava o seguinte erro:
+		// comentando a task para utilizar um Runnable que não retorna nada
 		/*
-		 * 12/01/2022 - 00:27:38 ERROR impl.CostumerDaoImplJDBC [Thread-3] - No
-		 * operations allowed after connection closed. 12/01/2022 - 00:27:38 ERROR
-		 * gui.MainViewController [Thread-3] - No operations allowed after connection
-		 * closed.
+		 * Task<String> task = new Task<>() {
+		 * 
+		 * @Override protected String call() throws Exception {
+		 * 
+		 * // mudando o texto do label para mostrar que o servidor foi iniciado
+		 * 
+		 * // é obrigatório retornar algo nesta task porque ela é do tipo string return
+		 * null; } }; // no caso de dar tudo certo task.setOnSucceeded(null); // no caso
+		 * de ter algum erro na task task.setOnFailed((e) -> {
+		 * task.getException().printStackTrace(); logger.error(task.getException()); });
+		 * // Iniciando subthread para fazer a Task Thread thread = new Thread(task);
+		 * thread.setDaemon(true); thread.start();
 		 */
-		// Pesquisando verifiquei que se trata mesmo de um erro no MySQL, como se a
-		// conexão tivesse fechado antes de executar a ação. Antes de adicionar a task,
-		// quando deixava a Interface Gráfica travada, o servidor ficava de pé
-		// executando seu loop e nenhum erro ocorria. Então, acredito que erro estava
-		// sendo que a task tem um tempo para finalizar sua ação e não pode ficar de pé
-		// por muito tempo executando um loop indefinido, por exemplo. A solução foi
-		// testar fazer as mudanças nos elemntos da inteface gráfica em uma task
-		// separada do loop. Por enquanto, a task está chamando o loop mas se mais algum
-		// erro ocorrer vou deixar marcado para fazer alteração
-		/*
-		Task<String> task = new Task<>() {
-			@Override
-			protected String call() throws Exception {
-				
-				// mudando o texto do label para mostrar que o servidor foi iniciado
-				
-				// é obrigatório retornar algo nesta task porque ela é do tipo string
-				return null;
-			}
-		};
-		// no caso de dar tudo certo
-		task.setOnSucceeded(null);
-		// no caso de ter algum erro na task
-		task.setOnFailed((e) -> {
-			task.getException().printStackTrace();
-			logger.error(task.getException());
-		});
-		// Iniciando subthread para fazer a Task
-		Thread thread = new Thread(task);
-		thread.setDaemon(true);
-		thread.start();
-		*/
+		// Mudando label para marcar que o servidor foi iniciado
 		statusLabel.setText("Servidor Iniciado");
-		//deixando o botão desabilitado para iniciar a ação do servidor novamente
+		// deixando o botão desabilitado para iniciar a ação do servidor novamente
 		iniciarButton.setDisable(true);
-		if (iniciarButton.isDisable()) {
-			System.out.println("succeeded");
-		// iniciando o loop do servidor
-		initializeServer();
-		}
+		// Como a operação de esperar por uma resposta do cliente é uma operação
+		// bloqueadora vamos iniciá-la em um outro Thread para poder deixar o Therad do
+		// JavaFX liberado para o usuário poder fazer outras ações
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				initializeServer();
+			}
+		}).start();
 	}
 
 	public void initializeServer() {
 		try {
 			// Instanciando o socket para receber a conexão
 			ServerSocket server = new ServerSocket(3322);
-			//timeout de 0 para ser infinito o tempo do servidor ficar de pé
+			// timeout de 0 para ser infinito o tempo do servidor ficar de pé
 			server.setSoTimeout(0);
 			System.out.println("Servidor iniciado na porta 3322");
 			// Abrindo um navegador ao iniciar o servidor. Usaremos este para abrir o Wix
@@ -227,6 +209,7 @@ public class MainViewController implements Initializable {
 
 				// Fechando conexão
 				cliente.close();
+				DB.closeConnection();
 			} while (continuar == 1);
 		} catch (IOException ex) {
 			logger.error(ex.getMessage());

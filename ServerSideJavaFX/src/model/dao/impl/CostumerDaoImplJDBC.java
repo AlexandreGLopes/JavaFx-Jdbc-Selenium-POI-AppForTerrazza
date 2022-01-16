@@ -19,7 +19,7 @@ import model.dao.CostumerDao;
 import model.entities.Costumer;
 
 public class CostumerDaoImplJDBC implements CostumerDao {
-	
+
 	private Logger logger = LogManager.getLogger(CostumerDaoImplJDBC.class);
 
 	private Connection conn;
@@ -28,8 +28,27 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 		this.conn = conn;
 	}
 
+	// Método adicionado para checar se a conexão está nula ou fechada antes de
+	// fazer qualquer operação no banco de dados. Estava recebendo uma exception por
+	// conta da conexão ser fechada, talvez por conta do servidor rodar
+	// ininterruptamente. Agora vamos testar para ver se não temos mais nenhum erro.
+	public void checkingConnection() {
+		try {
+			// Se a conexão estiver nula ou fechada vamos a reestabelecer
+			if (this.conn.isClosed() || this.conn == null) {
+				conn = DB.getConnection();
+			}
+		} catch (SQLException e1) {
+			logger.error(e1.getMessage());
+			e1.printStackTrace();
+		}
+	}
+
 	@Override
 	public void insert(Costumer costumer) {
+		// checando conexão nula ou fechada
+		checkingConnection();
+		// iniciando as operações no banco
 		PreparedStatement st = null;
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
@@ -76,6 +95,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 
 	@Override
 	public void updateByExternalIdExceptNoshowAndSited(Costumer costumer) {
+		// checando conexão nula ou fechada
+		checkingConnection();
+		// iniciando as operações no banco
 		PreparedStatement st = null;
 		try {
 			// SimpleDateFormat hr = new SimpleDateFormat("HH:mm");
@@ -109,6 +131,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 
 	@Override
 	public void deleteById(Integer id) {
+		// checando conexão nula ou fechada
+		checkingConnection();
+		// iniciando as operações no banco
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement("DELETE FROM skycuritibacostumers.terrazzacostumers WHERE Id = ?");
@@ -133,6 +158,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 	// implementação diferente disso ou retirá-lo completamente
 	@Override
 	public void deleteOlderThan30Days() {
+		// checando conexão nula ou fechada
+		checkingConnection();
+		// iniciando as operações no banco
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
@@ -149,6 +177,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 
 	@Override
 	public Costumer findById(Integer id) {
+		// checando conexão nula ou fechada
+		checkingConnection();
+		// iniciando as operações no banco
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
@@ -192,6 +223,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 
 	@Override
 	public List<Costumer> findAll() {
+		// checando conexão nula ou fechada
+		checkingConnection();
+		// iniciando as operações no banco
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
@@ -216,6 +250,9 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 
 	@Override
 	public Costumer findByExternalId(String idExterno) {
+		// checando conexão nula ou fechada
+		checkingConnection();
+		// iniciando as operações no banco
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
@@ -238,12 +275,16 @@ public class CostumerDaoImplJDBC implements CostumerDao {
 
 	@Override
 	public List<Costumer> findTodayCostumers() {
+		// checando conexão nula ou fechada
+		checkingConnection();
+		// iniciando as operações no banco
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
 					"SELECT Id, Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Pagamento, IdExterno "
-							+ "FROM skycuritibacostumers.terrazzacostumers " + "WHERE DATE(Data) = CURDATE() ORDER BY Hora");
+							+ "FROM skycuritibacostumers.terrazzacostumers "
+							+ "WHERE DATE(Data) = CURDATE() ORDER BY Hora");
 
 			rs = st.executeQuery();
 
