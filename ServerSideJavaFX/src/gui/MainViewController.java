@@ -67,8 +67,6 @@ public class MainViewController implements Initializable {
 	}
 
 	public void onIniciarButtonAction() {
-		// mudando o texto do label para mostrar que o servidor foi iniciado
-		statusLabel.setText("Servidor Iniciado");
 		// Construindo uma Task que vai rodar em outro Thread para deixar a UI livre
 		// para outras ações do usuário
 		// 11/01/2022 troquei: Antes a task estava fazendo a conexão rodar. Mas ao
@@ -89,13 +87,13 @@ public class MainViewController implements Initializable {
 		// testar fazer as mudanças nos elemntos da inteface gráfica em uma task
 		// separada do loop. Por enquanto, a task está chamando o loop mas se mais algum
 		// erro ocorrer vou deixar marcado para fazer alteração
+		/*
 		Task<String> task = new Task<>() {
 			@Override
 			protected String call() throws Exception {
-				//deixando o botão desabilitado para iniciar a ação do servidor novamente
-				iniciarButton.setDisable(true);
-				// iniciando o loop do servidor
-				initializeServer();
+				
+				// mudando o texto do label para mostrar que o servidor foi iniciado
+				
 				// é obrigatório retornar algo nesta task porque ela é do tipo string
 				return null;
 			}
@@ -111,6 +109,15 @@ public class MainViewController implements Initializable {
 		Thread thread = new Thread(task);
 		thread.setDaemon(true);
 		thread.start();
+		*/
+		statusLabel.setText("Servidor Iniciado");
+		//deixando o botão desabilitado para iniciar a ação do servidor novamente
+		iniciarButton.setDisable(true);
+		if (iniciarButton.isDisable()) {
+			System.out.println("succeeded");
+		// iniciando o loop do servidor
+		initializeServer();
+		}
 	}
 
 	public void initializeServer() {
