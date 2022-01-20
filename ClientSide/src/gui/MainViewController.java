@@ -29,12 +29,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.services.CostumerService;
-import model.services.CostumerXStandardMessageService;
 import model.services.StandardMessageService;
 import model.services.WaitingCostumerService;
 
 public class MainViewController implements Initializable, DataChangeListener {
-	
+
 	private Logger logger = LogManager.getLogger(MainViewController.class);
 
 	@FXML
@@ -54,6 +53,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 
 	@FXML
 	private MenuItem menuItemManualRefreshHelp;
+
+	@FXML
+	private MenuItem menuItemMensagensPadrao;
 
 	@FXML
 	private MenuItem menuItemPreferences;
@@ -171,6 +173,16 @@ public class MainViewController implements Initializable, DataChangeListener {
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
 			controller.subscribeDataChangeListener(this);
+		});
+	}
+
+	public void onMenuItemMensagensPadraoAction() {
+		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
+		// Utils
+		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
+		loadPane("/gui/MensagensPadraoListPane.fxml", currentStage, false, (MensagensPadraoListPaneController controller) -> {
+			controller.setStandardMessageService(new StandardMessageService());
+			controller.updateTableView();
 		});
 	}
 
