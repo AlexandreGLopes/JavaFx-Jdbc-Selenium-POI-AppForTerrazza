@@ -1,7 +1,5 @@
 package gui.util;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.prefs.Preferences;
 
 // Classe que controla as preferências do aplicativo. Estas preferências são definições 
@@ -23,6 +21,9 @@ public class PreferencesManager {
 	
 	// preferência que salvará quais os itens da checkcombobox de salão estão marcados
 	public static final String SALOES_MARCADOS = "SaloesMarcados";
+	
+	// preferência que salvará quais os itens da checkcombobox de salão estão marcados
+	public static final String STATUS_MARCADOS = "StatusMarcados";
 
 	// método que retorna as preferências todas. Aqui estamos usando a preferência
 	// do usuário Root específico.

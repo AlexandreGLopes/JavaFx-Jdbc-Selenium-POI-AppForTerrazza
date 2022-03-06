@@ -174,6 +174,41 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		filtrosSalaoCheckComboBox.getItems().addAll(optionsSalao);
 
 		// pegando a preferência gravada anteriormente que lista os filtros prveiamente
+		// selecionados para o checkcombobox das situações
+		String statusGravados = preferences.get(PreferencesManager.STATUS_MARCADOS, null);
+		// Verificando se a preferência está ou não nula. Se não estiver nula vai entrar
+		// na parte que pega as prefências do filtro e marca esses filtros previamente
+		// salvos
+		if (statusGravados != null) {
+			// Como é uma observablelist quando usamos o toString ele virá com colchetes no
+			// início e no fim, aqui vamos retirar esses colchetes
+			statusGravados = statusGravados.replace("[", "");
+			statusGravados = statusGravados.replace("]", "");
+			// Vamos dividir o String usando os caracteres ", " e colocaremos dentro de um
+			// array
+			String[] statusGravadosArray = statusGravados.split(", ");
+			// loop que vai pegar os valores dentro do array e vai marcar como checked os
+			// devidos campos previamente marcados na checkComboBox
+			for (int i = 0; i < statusGravadosArray.length; i++) {
+				filtrosSituacaoCheckComboBox.getCheckModel().check(statusGravadosArray[i]);
+			}
+		}
+		
+		// Adicionando um listener ao checkComboBox que vai verificar e fazer uma ação
+		// toda vez que um campo for marcado ou desmarcado nele
+		filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+			@Override
+			public void onChanged(Change<? extends String> arg0) {
+				// montando uma String com os campos da observableList dos filtrosSituação
+				String checkedOptions = filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().toString();
+				// Passando a String para as preferências e salvando esses filtros. Essa ação é
+				// chamado aqui no listener toda vez que o usuário mudar as opções selecionadas
+				// no checkComboBox
+				preferences.put(PreferencesManager.STATUS_MARCADOS, checkedOptions);
+			}
+		});
+
+		// pegando a preferência gravada anteriormente que lista os filtros prveiamente
 		// selecionados para o checkcombobox dos salões
 		String saloesGravados = preferences.get(PreferencesManager.SALOES_MARCADOS, null);
 		// Verificando se a preferência está ou não nula. Se não estiver nula vai entrar
@@ -206,7 +241,6 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				// no checkComboBox
 				preferences.put(PreferencesManager.SALOES_MARCADOS, checkedOptions);
 			}
-
 		});
 
 	}
