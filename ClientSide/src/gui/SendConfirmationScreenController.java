@@ -25,7 +25,7 @@ import model.services.CostumerXStandardMessageService;
 import model.services.StandardMessageService;
 
 public class SendConfirmationScreenController {
-	
+
 	private Logger logger = LogManager.getLogger(SendConfirmationScreenController.class);
 
 	private CostumerXStandardMessageService costumerXmessageService;
@@ -104,6 +104,9 @@ public class SendConfirmationScreenController {
 		}
 		// Começando a parte de verificar no banco de dados e mandar as mensagens
 		try {
+			// variável que vai contar quantas mensagens foram enviadas a partir do
+			// recebimento do código 200 do servidor
+			int quantidadeMensagensEnviadas = 0;
 			// Instanciando um novo objeto de relação entre o cliente e a mensagem padrão
 			CostumerXStandardMessage costumerXmessage = new CostumerXStandardMessage();
 			// SimpleDateFormat para formatar o campo de horário que vai para mensagem em
@@ -138,14 +141,22 @@ public class SendConfirmationScreenController {
 						if (messageStatusCode >= 200 && messageStatusCode < 300) {
 							costumerXmessageService
 									.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
-							//Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi enviada com sucesso!", AlertType.INFORMATION);
+							// incrementando a quantidade de mensagens enviadas para mostrar ao usuário no
+							// Alert do "Processo finalizado"
+							quantidadeMensagensEnviadas++;
+							// Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi
+							// enviada com sucesso!", AlertType.INFORMATION);
 						}
+						// Colocando um tempo de delay forçado para evitar que o sistema tente mandar
+						// mais mensagens do que o servidor consegue processar
+						Thread.sleep(500);
 					}
 				}
 			}
-			Alerts.showAlert("Processo finalizado!", null, "O processo de envio das mensagens foi finalizado!", AlertType.INFORMATION);
+			Alerts.showAlert("Processo finalizado!", null, "O processo de envio das mensagens foi finalizado!\n"
+					+ quantidadeMensagensEnviadas + " mensagens enviadas.", AlertType.INFORMATION);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage() + e);
 			e.printStackTrace();
 		}
 	}

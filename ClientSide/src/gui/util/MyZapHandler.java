@@ -43,7 +43,7 @@ public class MyZapHandler {
 			Integer statusCode = response.getStatusLine().getStatusCode();
 			return statusCode;
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage() + e);
 			Alerts.showAlert("Erro ao enviar mensagem!", null,
 					"Houve um erro ao tentar enviar a mensagem.\nContate o desenvolvedor para saber mais.\nCódigo do erro: "
 							+ e.getMessage(),

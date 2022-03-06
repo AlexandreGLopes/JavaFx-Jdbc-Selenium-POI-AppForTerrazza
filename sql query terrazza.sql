@@ -86,22 +86,22 @@ create table bistrocostumers (
 */
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) values
-('Thiago', 'Guimaraes', '5541995655618', 'thiagoaguimaraes@hotmail.com', 'Terrazza 40', 3, '2021-11-13', '12:00', '1', 'Confirmado', 300.00, '61894688acfaa40012fd6306');
+('Thiago', 'Guimaraes', '5541998642881', 'thiagoaguimaraes@hotmail.com', 'Jantar no Terrazza 40', 3, '2021-11-13', '12:00', '1', 'Confirmado', 300.00, '61894688acfaa40012fd6306');
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) values
-('Alex', 'Lopes', '5541995655618', 'alex@hotmail.com', '38 Floor', 3, '2021-11-13', '12:00', '1', 'Confirmado', 300.00, '61894688acfaa40012fd6306');
+('Alex', 'Lopes', '5541998642881', 'alex@hotmail.com', '38 Floor', 3, '2021-11-13', '12:00', '1', 'Confirmado', 300.00, '61894688acfaa40012fd6306');
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) values
-('Helena', 'Lopes', '5541995655618', 'helena@hotmail.com', 'Terrazza Almoço', 3, '2021-11-13', '12:00', '1', 'Confirmado', 0.00, '267345367');
+('Helena', 'Lopes', '5541998642881', 'helena@hotmail.com', 'Almoço Terrazza 40', 3, '2021-11-13', '12:00', '1', 'Confirmado', 0.00, '267345367');
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) values
-('Lohane', 'Vêkanandre Sthephany Smith Bueno de HA HA HA de Raio Laser bala de Icekiss', '5541995655618', 'robert@hotmail.com', 'Terrazza Almoço', 3, '2021-09-16', '12:00', '1', 'Confirmado', 0.00, '2876444');
+('Lohane', 'Vêkanandre Sthephany Smith Bueno de HA HA HA de Raio Laser bala de Icekiss', '5541998642881', 'robert@hotmail.com', 'Almoço Terrazza 40', 3, '2021-09-16', '12:00', '1', 'Confirmado', 0.00, '2876444');
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) values
-('Robert', 'Smith', '5541995655618', 'robert@hotmail.com', 'Terrazza Almoço', 3, '2021-11-16', '12:00', '1', 'Confirmado', 0.00, '2876444');
+('Robert', 'Smith', '5541998642881', 'robert@hotmail.com', 'Almoço Terrazza 40', 3, '2021-11-16', '12:00', '1', 'Confirmado', 0.00, '2876444');
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Pagamento, IdExterno) values
-('Robert', 'Smith', '5541995655618', 'robert@hotmail.com', 'Terrazza Almoço', 3, '2021-11-16', '12:00', '1', 'Cancelado por solicitação do cliente', 0.00, '2876444');
+('Robert', 'Smith', '5541998642881', 'robert@hotmail.com', 'Almoço Terrazza 40', 3, '2021-11-16', '12:00', '1', 'Cancelado por solicitação do cliente', 0.00, '2876444');
 
 /** inserção com o novo campo de texto **/
 
@@ -120,7 +120,7 @@ insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas,
 ('Lohane', 'Vêkanandre Sthephany Smith Bueno de HA HA HA de Raio Laser bala de Icekiss', '5541998642881', 'cabeleleilaleila@hotmail.com', 'Almoço Terrazza 40', 3, CURDATE(), '12:00', '1', 'Novo', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
 
 insert into terrazzacostumers (Nome, Sobrenome, Telefone, Email, Salao, Pessoas, Data, Hora, Mesa, Situacao, Observacao, Aguardando, Pagamento, IdExterno) values
-('Policial', 'Desfarçado', '5541998642881', 'cabeleleilaleila@hotmail.com', 'Jantar no Terrazza 40', 3, CURDATE(), '12:00', '1', 'Novo', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
+('Policial', 'Desfarçado', '5541998642881', 'cabeleleilaleila@hotmail.com', 'Jantar no Terrazza 40', 3, CURDATE(), '19:00', '1', 'Novo', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec augue id lectus lacinia tristique quis sed elit. In lorem diam, posuere vel nisl nec, sodales ullamcorper diam. Nulla sollicitudin tincidunt massa, a vehicula leo aliquet et. In in iaculis ipsum. Donec iaculis ante eget nibh efficitur rhoncus. Donec ipsum metus, porta ut eleifend sit amet, commodo vel nisl. Donec sit amet tortor sed ipsum sagittis faucibus. Integer tincidunt, erat eget volutpat lobortis, eros erat accumsan lorem, et volutpat est ex a turpis. Fusce at ante a est iaculis rutrum. Ut nunc est, maximus id tellus ut, semper consequat mi. Vivamus est massa, maximus vel orci sit amet, laoreet finibus massa. Morbi a urna vitae leo eleifend iaculis et ac ante. ', true, 0.00, '2876444');
 
 /** testes de insert na waitingcostumers **/
 
@@ -216,6 +216,10 @@ where Date(Data) = curdate();
 
 DELETE FROM skycuritibacostumers.costumer_x_standardmessage;
 
+DELETE FROM skycuritibacostumers.standardmessages;
+
 DROP TABLE skycuritibacostumers.terrazzacostumers;
+
+DROP TABLE skycuritibacostumers.standardmessages;
 
 drop table skycuritibacostumers.costumer_x_standardmessage;

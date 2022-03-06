@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.prefs.Preferences;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,12 +21,14 @@ import application.Main;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.MyZapHandler;
+import gui.util.PreferencesManager;
 import gui.util.Utils;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -55,8 +59,10 @@ import model.services.CostumerXStandardMessageService;
 import model.services.StandardMessageService;
 
 public class ReservationsListPaneController implements Initializable, DataChangeListener {
-	
+
 	private Logger logger = LogManager.getLogger(ReservationsListPaneController.class);
+
+	Preferences preferences = PreferencesManager.getPreferences();
 
 	private CostumerService service;
 
@@ -166,6 +172,43 @@ public class ReservationsListPaneController implements Initializable, DataChange
 		optionsSalao.add("Jantar no Terrazza 40");
 		optionsSalao.add("38 Floor");
 		filtrosSalaoCheckComboBox.getItems().addAll(optionsSalao);
+
+		// pegando a preferência gravada anteriormente que lista os filtros prveiamente
+		// selecionados para o checkcombobox dos salões
+		String saloesGravados = preferences.get(PreferencesManager.SALOES_MARCADOS, null);
+		// Verificando se a preferência está ou não nula. Se não estiver nula vai entrar
+		// na parte que pega as prefências do filtro e marca esses filtros previamente
+		// salvos
+		if (saloesGravados != null) {
+			// Como é uma observablelist quando usamos o toString ele virá com colchetes no
+			// início e no fim, aqui vamos retirar esses colchetes
+			saloesGravados = saloesGravados.replace("[", "");
+			saloesGravados = saloesGravados.replace("]", "");
+			// Vamos dividir o String usando os caracteres ", " e colocaremos dentro de um
+			// array
+			String[] saloesGravadosArray = saloesGravados.split(", ");
+			// loop que vai pegar os valores dentro do array e vai marcar como checked os
+			// devidos campos previamente marcados na checkComboBox
+			for (int i = 0; i < saloesGravadosArray.length; i++) {
+				filtrosSalaoCheckComboBox.getCheckModel().check(saloesGravadosArray[i]);
+			}
+		}
+
+		// Adicionando um listener ao checkComboBox que vai verificar e fazer uma ação
+		// toda vez que um campo for marcado ou desmarcado nele
+		filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+			@Override
+			public void onChanged(Change<? extends String> arg0) {
+				// montando uma String com os campos da observableList dos filtrosSalao
+				String checkedOptions = filtrosSalaoCheckComboBox.getCheckModel().getCheckedItems().toString();
+				// Passando a String para as preferências e salvando esses filtros. Essa ação é
+				// chamado aqui no listener toda vez que o usuário mudar as opções selecionadas
+				// no checkComboBox
+				preferences.put(PreferencesManager.SALOES_MARCADOS, checkedOptions);
+			}
+
+		});
+
 	}
 
 	private void initializeNodes() {
@@ -293,8 +336,8 @@ public class ReservationsListPaneController implements Initializable, DataChange
 	// adicionar no banco de dados a relação entre cliente e a mensagem para saber
 	// se ela foi ou não mandada.
 	public void onMandarConfirmacoesButtonAction(ActionEvent event) {
-		createForm("Mandar Confirmações", null, "/gui/SendConfirmationScreen.fxml",
-				Utils.currentStage(event), (SendConfirmationScreenController controller) -> {
+		createForm("Mandar Confirmações", null, "/gui/SendConfirmationScreen.fxml", Utils.currentStage(event),
+				(SendConfirmationScreenController controller) -> {
 					controller.setCostumerXmessageService(new CostumerXStandardMessageService());
 					controller.setMessageService(new StandardMessageService());
 					controller.setObsList(obsList);

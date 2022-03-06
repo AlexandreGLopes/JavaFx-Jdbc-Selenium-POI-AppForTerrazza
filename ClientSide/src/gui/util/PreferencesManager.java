@@ -1,5 +1,7 @@
 package gui.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 // Classe que controla as preferências do aplicativo. Estas preferências são definições 
@@ -18,6 +20,9 @@ public class PreferencesManager {
 	
 	// preferência que salvará o tempo de espera que daremos para o servidor concluir as tarefas
 	public static final String ESPERA_POR_TAREFA_DO_SERVIDOR = "EsperaServidor";
+	
+	// preferência que salvará quais os itens da checkcombobox de salão estão marcados
+	public static final String SALOES_MARCADOS = "SaloesMarcados";
 
 	// método que retorna as preferências todas. Aqui estamos usando a preferência
 	// do usuário Root específico.
