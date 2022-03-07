@@ -96,6 +96,9 @@ public class WaitingListPaneController implements Initializable, DataChangeListe
 
 	@FXML
 	private TableColumn<WaitingCostumer, String> tableColumnSituacao;
+	
+	@FXML
+	private TableColumn<WaitingCostumer, String> tableColumnMesa;
 
 	@FXML
 	private TableColumn<WaitingCostumer, String> tableColumnObservacoes;
@@ -137,6 +140,7 @@ public class WaitingListPaneController implements Initializable, DataChangeListe
 		tableColumnHora.setCellValueFactory(new PropertyValueFactory<>("horaChegada"));
 		Utils.formatTableColumnDate(tableColumnHora, "HH:mm");
 		tableColumnSituacao.setCellValueFactory(new PropertyValueFactory<>("situacao"));
+		tableColumnMesa.setCellValueFactory(new PropertyValueFactory<>("mesa"));
 		tableColumnObservacoes.setCellValueFactory(new PropertyValueFactory<>("observacao"));
 		// Arrumando largura e altura da tabela
 		// Window é uma superclasse do stage então teremos que fazer um downcasting pro

@@ -30,6 +30,7 @@
             <TableColumn fx:id="tableColumnPessoas" prefWidth="75.0" resizable="false" text="Pessoas" />
             <TableColumn fx:id="tableColumnHora" prefWidth="75.0" resizable="false" text="Hora" />
             <TableColumn fx:id="tableColumnSituacao" prefWidth="100.0" resizable="false" text="Situação" />
+            <TableColumn fx:id="tableColumnMesa" prefWidth="75.0" style="-fx-alignment: CENTER; -fx-font-weight: bold;" text="Mesa" />
             <TableColumn fx:id="tableColumnObservacoes" minWidth="250.0" prefWidth="250.0" resizable="false" text="Observações" />
             <TableColumn fx:id="tableColumnEdit" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" />
          </columns>
