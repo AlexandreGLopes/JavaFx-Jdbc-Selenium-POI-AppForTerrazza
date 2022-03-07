@@ -71,7 +71,7 @@ public class EditReservationFormController implements Initializable {
 	public void subscribeDataChangeListener(DataChangeListener listener) {
 		dataChangeListeners.add(listener);
 	}
-
+	
 	private void notifyDataChangeListeners() {
 		for (DataChangeListener listener : dataChangeListeners) {
 			listener.onDataChanged();
@@ -87,8 +87,8 @@ public class EditReservationFormController implements Initializable {
 		optionsSituacao.add("Sentado");
 		optionsSituacao.add("Cancelado pelo cliente");
 		optionsSituacao.add("Cancelado por solicitação do cliente");
-		optionsSituacao.add("Cancelado por no-show");
-		optionsSituacao.add("Cancelado por erro");
+		optionsSituacao.add("Cancelado por no-show do cliente");
+		optionsSituacao.add("Cancelado por erro de cadastro");
 		comboBoxSituacao.getItems().addAll(optionsSituacao);
 	}
 

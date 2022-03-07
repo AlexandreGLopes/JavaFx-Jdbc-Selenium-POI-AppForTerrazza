@@ -67,6 +67,7 @@ public class ManualUpdaterScreenController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rs) {
+		refreshButton.setDisable(true);
 	}
 
 	// Método para clicar no botão de escolher arquivo para selecionar o arquivo
@@ -86,6 +87,7 @@ public class ManualUpdaterScreenController implements Initializable {
 		if (selectedFile != null) {
 			// Mostrando o nome do arquivo no Label do painel no momento da seleção
 			txtLabel.setText(selectedFile.getName());
+			refreshButton.setDisable(false);
 		} else {
 			Alerts.showAlert("Alerta", null, "Nenhum arquivo selecionado", AlertType.WARNING);
 		}

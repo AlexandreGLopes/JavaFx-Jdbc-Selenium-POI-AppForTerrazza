@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<VBox prefHeight="269.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ReservationsListPaneController">
+<VBox prefHeight="269.0" prefWidth="1064.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ReservationsListPaneController">
    <children>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
          <items>
@@ -31,6 +31,7 @@
             <TableColumn fx:id="tableColumnObservacoes" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" text="Obs." />
                   <TableColumn fx:id="tableColumnMesa" prefWidth="120.0" resizable="false" style="-fx-alignment: CENTER;" text="Mesa" />
                   <TableColumn fx:id="tableColumnPagamento" prefWidth="100.0" resizable="false" style="-fx-alignment: CENTER-LEFT;" text="Pagamento" />
+            <TableColumn fx:id="tableColumnConfirmacoes" prefWidth="110.0" style="-fx-alignment: CENTER; -fx-font-weight: bold;" text="Confirmações" />
             <TableColumn fx:id="tableColumnEdit" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" style="-fx-alignment: CENTER;" />
          </columns>
       </TableView>

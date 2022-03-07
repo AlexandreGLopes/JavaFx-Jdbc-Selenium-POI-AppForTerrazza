@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.MyZapHandler;
 import gui.util.Utils;
@@ -31,6 +32,8 @@ public class SendConfirmationScreenController {
 	private CostumerXStandardMessageService costumerXmessageService;
 
 	private StandardMessageService messageService;
+	
+	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
 	private ObservableList<Costumer> obsList;
 
@@ -65,6 +68,16 @@ public class SendConfirmationScreenController {
 
 	public void setObsList(ObservableList<Costumer> obsList) {
 		this.obsList = obsList;
+	}
+	
+	public void subscribeDataChangeListener(DataChangeListener listener) {
+		dataChangeListeners.add(listener);
+	}
+	
+	private void notifyDataChangeListeners() {
+		for (DataChangeListener listener : dataChangeListeners) {
+			listener.onDataChanged();
+		}
 	}
 
 	public void onButtonConfirmarAction(ActionEvent event) {
@@ -153,11 +166,13 @@ public class SendConfirmationScreenController {
 					}
 				}
 			}
+			notifyDataChangeListeners();
 			Alerts.showAlert("Processo finalizado!", null, "O processo de envio das mensagens foi finalizado!\n"
 					+ quantidadeMensagensEnviadas + " mensagens enviadas.", AlertType.INFORMATION);
 		} catch (Exception e) {
 			logger.error(e.getMessage() + e);
 			e.printStackTrace();
+			notifyDataChangeListeners();
 		}
 	}
 

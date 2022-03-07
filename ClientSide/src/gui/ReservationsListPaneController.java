@@ -2,8 +2,8 @@ package gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ModuleLayer.Controller;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +20,6 @@ import org.controlsfx.control.CheckComboBox;
 import application.Main;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
-import gui.util.MyZapHandler;
 import gui.util.PreferencesManager;
 import gui.util.Utils;
 import javafx.beans.binding.Bindings;
@@ -53,7 +52,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.entities.Costumer;
 import model.entities.CostumerXStandardMessage;
-import model.entities.StandardMessage;
 import model.services.CostumerService;
 import model.services.CostumerXStandardMessageService;
 import model.services.StandardMessageService;
@@ -127,6 +125,9 @@ public class ReservationsListPaneController implements Initializable, DataChange
 	private TableColumn<Costumer, Double> tableColumnPagamento;
 
 	@FXML
+	private TableColumn<Costumer, Costumer> tableColumnConfirmacoes;
+
+	@FXML
 	private TableColumn<Costumer, Costumer> tableColumnEdit;
 
 	@FXML
@@ -139,6 +140,8 @@ public class ReservationsListPaneController implements Initializable, DataChange
 	// Final das referências do TableView
 
 	private ObservableList<Costumer> obsList;
+
+	private List<Integer> idsComConfirmacoes = new ArrayList<Integer>();
 
 	public void setCostumerService(CostumerService service) {
 		this.service = service;
@@ -193,7 +196,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				filtrosSituacaoCheckComboBox.getCheckModel().check(statusGravadosArray[i]);
 			}
 		}
-		
+
 		// Adicionando um listener ao checkComboBox que vai verificar e fazer uma ação
 		// toda vez que um campo for marcado ou desmarcado nele
 		filtrosSituacaoCheckComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
@@ -323,10 +326,27 @@ public class ReservationsListPaneController implements Initializable, DataChange
 						() -> statusFilter.get().and(saloonFilter.get().and(nameSurnameFilter.get())), statusFilter,
 						saloonFilter, nameSurnameFilter));
 
+		// Verificando se as mensagens de confirmação foram enviadas para poder colocar
+		// na coluna das confirmações
+		CostumerXStandardMessageService costumerXmessageService = new CostumerXStandardMessageService();
+		for (Costumer costumer : masterList) {
+			CostumerXStandardMessage costumerXmessage = costumerXmessageService
+					.findIfRelationshipExists(costumer.getId(), 2);
+			if (costumerXmessage != null) {
+				// Se o id do cliente na masterList estiver associado a um envio de mensagem de
+				// confirmação no banco de dados esse id vai ser adicionado na lista
+				// idsComConfirmação. Essa lista será utilizada para comparar com o id do
+				// cliente no momento em que as linhas da tabelas estiverem sendo construídas
+				// para poder mostrar ao usuário se a mensagem foi enviada ou não
+				idsComConfirmacoes.add(costumer.getId());
+			}
+		}
+
 		// iniciando os botões nas linhas dos clientes
 		initColumnWhatsButtons();
 		initColumnObsButtons();
 		initColumnEditButtons();
+		initConfirmacoesColumn();
 		// Utils.autoResizeColumns(tableViewCostumer);
 	}
 
@@ -375,6 +395,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 					controller.setCostumerXmessageService(new CostumerXStandardMessageService());
 					controller.setMessageService(new StandardMessageService());
 					controller.setObsList(obsList);
+					controller.subscribeDataChangeListener(this);
 				});
 	}
 
@@ -473,6 +494,33 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							controller.setCostumer(obj);
 							controller.updateFormData();
 						}));
+			}
+		});
+	}
+
+	// Método que compara a lista de idsComConfirmacoes com cada linha de cliente e
+	// mostra se a mensagem foi enviada para este cliente ou não
+	private void initConfirmacoesColumn() {
+		tableColumnConfirmacoes.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnConfirmacoes.setCellFactory(param -> new TableCell<Costumer, Costumer>() {
+
+			@Override
+			protected void updateItem(Costumer obj, boolean empty) {
+				super.updateItem(obj, empty);
+
+				if (!empty) {
+					setText("Não");
+					setStyle("-fx-alignment: CENTER; -fx-text-alignment: CENTER; -fx-font-weight: bold;");
+					setTextFill(Color.DARKRED);
+					for (Integer id : idsComConfirmacoes) {
+						if (obj.getId().equals(id)) {
+							setText("Enviada");
+							setTextFill(Color.valueOf("#6e8003"));
+						}
+					}
+				} else {
+					setText(null);
+				}
 			}
 		});
 	}
@@ -597,6 +645,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 							}
 						} else {
 							setText(null);
+							setGraphic(null);
 						}
 					}
 				};
