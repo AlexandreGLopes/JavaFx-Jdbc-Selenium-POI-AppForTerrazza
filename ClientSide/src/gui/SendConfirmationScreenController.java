@@ -32,7 +32,7 @@ public class SendConfirmationScreenController {
 	private CostumerXStandardMessageService costumerXmessageService;
 
 	private StandardMessageService messageService;
-	
+
 	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
 	private ObservableList<Costumer> obsList;
@@ -69,16 +69,18 @@ public class SendConfirmationScreenController {
 	public void setObsList(ObservableList<Costumer> obsList) {
 		this.obsList = obsList;
 	}
-	
+
 	public void subscribeDataChangeListener(DataChangeListener listener) {
 		dataChangeListeners.add(listener);
 	}
-	
+
 	private void notifyDataChangeListeners() {
 		for (DataChangeListener listener : dataChangeListeners) {
 			listener.onDataChanged();
 		}
 	}
+
+	private Integer idCostumerSeDerErro;
 
 	public void onButtonConfirmarAction(ActionEvent event) {
 		// Preparando a lista que será filtrada para passar para a parte do método que
@@ -137,32 +139,45 @@ public class SendConfirmationScreenController {
 					// confirmam reservas já canceladas ou sentadas. Como o "confirmado" vem do
 					// sistema de fora vamos confirmar mais uma vez
 					if (costumer.getSituacao().equals("Novo") || costumer.getSituacao().equals("Confirmado")) {
-						// Pegando a mensagm pelo título e passando para um objeto mensagem
-						StandardMessage message = messageService.findByTitle("Confirmação de reserva");
-						// Variável que vai juntar o nome e sobrenome do cliente numa unica string
-						String nomeESobrenome = costumer.getNome() + " " + costumer.getSobrenome();
-						// Fazendo uma string dinamicamente com o nome, o horário e número de pessoas do
-						// cliente para ser passada como parâmetro para o método que vai mandar a
-						// mensagem
-						String textMessage = String.format(message.getMensagem(), nomeESobrenome,
-								hr.format(costumer.getHora()).toString(), costumer.getPessoas());
-						// Chamando o método que envia mensagem e retorna o código de status
-						Integer messageStatusCode = MyZapHandler.messageSender(costumer.getTelefone(), textMessage);
-						// Se o código de status confirmar o envio vamos criar uma linha no banco de
-						// dados para relacionar a mensagem com o cliente. Assim, nas próximas vezes não
-						// vamos mandar a mesma mensagem por conta da primeira decisão desse método
-						if (messageStatusCode >= 200 && messageStatusCode < 300) {
-							costumerXmessageService
-									.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
-							// incrementando a quantidade de mensagens enviadas para mostrar ao usuário no
-							// Alert do "Processo finalizado"
-							quantidadeMensagensEnviadas++;
-							// Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi
-							// enviada com sucesso!", AlertType.INFORMATION);
+						// Verificando se o número possui extamente 13 dígitos
+						if (costumer.getTelefone().length() == 13) {
+							// verificando se o número do cliente é um número possível no Brasil
+							if (costumer.getTelefone().charAt(0) == '5' && costumer.getTelefone().charAt(1) == '5'
+									&& costumer.getTelefone().charAt(4) == '9'
+									|| costumer.getTelefone().charAt(4) == '8'
+									|| costumer.getTelefone().charAt(4) == '7') {
+								// Colocando o id do cliente numa varável para se der errado colocar no banco de
+								// dados e pular na próxima confirmação
+								idCostumerSeDerErro = costumer.getId();
+								// Pegando a mensagm pelo título e passando para um objeto mensagem
+								StandardMessage message = messageService.findByTitle("Confirmação de reserva");
+								// Variável que vai juntar o nome e sobrenome do cliente numa unica string
+								String nomeESobrenome = costumer.getNome() + " " + costumer.getSobrenome();
+								// Fazendo uma string dinamicamente com o nome, o horário e número de pessoas do
+								// cliente para ser passada como parâmetro para o método que vai mandar a
+								// mensagem
+								String textMessage = String.format(message.getMensagem(), nomeESobrenome,
+										hr.format(costumer.getHora()).toString(), costumer.getPessoas());
+								// Chamando o método que envia mensagem e retorna o código de status
+								Integer messageStatusCode = MyZapHandler.messageSender(costumer.getTelefone(),
+										textMessage);
+								// Se o código de status confirmar o envio vamos criar uma linha no banco de
+								// dados para relacionar a mensagem com o cliente. Assim, nas próximas vezes não
+								// vamos mandar a mesma mensagem por conta da primeira decisão desse método
+								if (messageStatusCode >= 200 && messageStatusCode < 300) {
+									costumerXmessageService
+											.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
+									// incrementando a quantidade de mensagens enviadas para mostrar ao usuário no
+									// Alert do "Processo finalizado"
+									quantidadeMensagensEnviadas++;
+									// Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi
+									// enviada com sucesso!", AlertType.INFORMATION);
+								}
+								// Colocando um tempo de delay forçado para evitar que o sistema tente mandar
+								// mais mensagens do que o servidor consegue processar
+								Thread.sleep(500);
+							}
 						}
-						// Colocando um tempo de delay forçado para evitar que o sistema tente mandar
-						// mais mensagens do que o servidor consegue processar
-						Thread.sleep(500);
 					}
 				}
 			}
@@ -170,7 +185,8 @@ public class SendConfirmationScreenController {
 			Alerts.showAlert("Processo finalizado!", null, "O processo de envio das mensagens foi finalizado!\n"
 					+ quantidadeMensagensEnviadas + " mensagens enviadas.", AlertType.INFORMATION);
 		} catch (Exception e) {
-			logger.error(e.getMessage() + e);
+			logger.error(e.getMessage() + e.getStackTrace());
+			System.out.println("O cliente de id: " + idCostumerSeDerErro + " Está com o Telefone errado.");
 			e.printStackTrace();
 			notifyDataChangeListeners();
 		}
