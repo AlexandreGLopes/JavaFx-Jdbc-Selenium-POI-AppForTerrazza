@@ -54,6 +54,7 @@ import model.entities.Costumer;
 import model.entities.CostumerXStandardMessage;
 import model.services.CostumerService;
 import model.services.CostumerXStandardMessageService;
+import model.services.NonExistentPhoneService;
 import model.services.StandardMessageService;
 
 public class ReservationsListPaneController implements Initializable, DataChangeListener {
@@ -394,6 +395,7 @@ public class ReservationsListPaneController implements Initializable, DataChange
 				(SendConfirmationScreenController controller) -> {
 					controller.setCostumerXmessageService(new CostumerXStandardMessageService());
 					controller.setMessageService(new StandardMessageService());
+					controller.setNonExistentPhoneService(new NonExistentPhoneService());
 					controller.setObsList(obsList);
 					controller.subscribeDataChangeListener(this);
 				});

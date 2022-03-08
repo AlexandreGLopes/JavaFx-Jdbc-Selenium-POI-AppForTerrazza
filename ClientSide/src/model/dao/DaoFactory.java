@@ -3,6 +3,7 @@ package model.dao;
 import db.DB;
 import model.dao.impl.CostumerDaoImplJDBC;
 import model.dao.impl.CostumerXStandardMessageDaoJDBCimpl;
+import model.dao.impl.NonExistentPhoneDaoJDBCimpl;
 import model.dao.impl.StandardMessageDaoJDBCImpl;
 import model.dao.impl.WaitingCostumerDaoJDBCImpl;
 
@@ -25,6 +26,10 @@ public class DaoFactory {
 	
 	public static CostumerXStandardMessageDao createCostumerXStandardMessageDao() {
 		return new CostumerXStandardMessageDaoJDBCimpl(DB.getConnection());
+	}
+	
+	public static NonExistentPhoneDao createNonExistentPhoneDao() {
+		return new NonExistentPhoneDaoJDBCimpl(DB.getConnection());
 	}
 
 }

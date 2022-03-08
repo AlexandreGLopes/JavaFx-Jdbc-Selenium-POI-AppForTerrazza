@@ -2,6 +2,7 @@ package gui;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,8 +22,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Alert.AlertType;
 import model.entities.Costumer;
 import model.entities.CostumerXStandardMessage;
+import model.entities.NonExistentPhone;
 import model.entities.StandardMessage;
 import model.services.CostumerXStandardMessageService;
+import model.services.NonExistentPhoneService;
 import model.services.StandardMessageService;
 
 public class SendConfirmationScreenController {
@@ -32,6 +35,8 @@ public class SendConfirmationScreenController {
 	private CostumerXStandardMessageService costumerXmessageService;
 
 	private StandardMessageService messageService;
+
+	private NonExistentPhoneService nonExistentPhoneService;
 
 	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
@@ -64,6 +69,10 @@ public class SendConfirmationScreenController {
 
 	public void setMessageService(StandardMessageService messageService) {
 		this.messageService = messageService;
+	}
+
+	public void setNonExistentPhoneService(NonExistentPhoneService nonExistentPhoneService) {
+		this.nonExistentPhoneService = nonExistentPhoneService;
 	}
 
 	public void setObsList(ObservableList<Costumer> obsList) {
@@ -119,6 +128,12 @@ public class SendConfirmationScreenController {
 		}
 		// Começando a parte de verificar no banco de dados e mandar as mensagens
 		try {
+			// Puxando a lista dos ids de clientes que têm o número inexistente. Essa lista
+			// é composta por dados do banco que são inseridos quando o loop abaixo de
+			// confirmações é iniciado e recebe uma exception de falha de conexão. Ao
+			// iniciar o loop de novo este select vai verificar os ids que deram erro de
+			// conexão na hora de mandar as mensagens e vai pular eles ali abaixo
+			List<NonExistentPhone> todayNonExistentPhonesList = nonExistentPhoneService.findAllTodayNonExistentPhones();
 			// variável que vai contar quantas mensagens foram enviadas a partir do
 			// recebimento do código 200 do servidor
 			int quantidadeMensagensEnviadas = 0;
@@ -146,36 +161,44 @@ public class SendConfirmationScreenController {
 									&& costumer.getTelefone().charAt(4) == '9'
 									|| costumer.getTelefone().charAt(4) == '8'
 									|| costumer.getTelefone().charAt(4) == '7') {
-								// Colocando o id do cliente numa varável para se der errado colocar no banco de
-								// dados e pular na próxima confirmação
-								idCostumerSeDerErro = costumer.getId();
-								// Pegando a mensagm pelo título e passando para um objeto mensagem
-								StandardMessage message = messageService.findByTitle("Confirmação de reserva");
-								// Variável que vai juntar o nome e sobrenome do cliente numa unica string
-								String nomeESobrenome = costumer.getNome() + " " + costumer.getSobrenome();
-								// Fazendo uma string dinamicamente com o nome, o horário e número de pessoas do
-								// cliente para ser passada como parâmetro para o método que vai mandar a
-								// mensagem
-								String textMessage = String.format(message.getMensagem(), nomeESobrenome,
-										hr.format(costumer.getHora()).toString(), costumer.getPessoas());
-								// Chamando o método que envia mensagem e retorna o código de status
-								Integer messageStatusCode = MyZapHandler.messageSender(costumer.getTelefone(),
-										textMessage);
-								// Se o código de status confirmar o envio vamos criar uma linha no banco de
-								// dados para relacionar a mensagem com o cliente. Assim, nas próximas vezes não
-								// vamos mandar a mesma mensagem por conta da primeira decisão desse método
-								if (messageStatusCode >= 200 && messageStatusCode < 300) {
-									costumerXmessageService
-											.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
-									// incrementando a quantidade de mensagens enviadas para mostrar ao usuário no
-									// Alert do "Processo finalizado"
-									quantidadeMensagensEnviadas++;
-									// Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi
-									// enviada com sucesso!", AlertType.INFORMATION);
+								// objeto temporário para usar o equals para comparar e ver se a lista contém o
+								// id do cliente atual do loop
+								NonExistentPhone temp = new NonExistentPhone(null, costumer.getId(), null);
+								// Para que o processo continue, o id do cliente atual tem que ser diferente dos
+								// ids dentro da lista, se não, vai pular
+								if (!todayNonExistentPhonesList.contains(temp)) {
+									// Colocando o id do cliente numa varável para se der errado colocar no banco de
+									// dados e pular na próxima confirmação. Será usado no catch expection se for
+									// necessário
+									idCostumerSeDerErro = costumer.getId();
+									// Pegando a mensagm pelo título e passando para um objeto mensagem
+									StandardMessage message = messageService.findByTitle("Confirmação de reserva");
+									// Variável que vai juntar o nome e sobrenome do cliente numa unica string
+									String nomeESobrenome = costumer.getNome() + " " + costumer.getSobrenome();
+									// Fazendo uma string dinamicamente com o nome, o horário e número de pessoas do
+									// cliente para ser passada como parâmetro para o método que vai mandar a
+									// mensagem
+									String textMessage = String.format(message.getMensagem(), nomeESobrenome,
+											hr.format(costumer.getHora()).toString(), costumer.getPessoas());
+									// Chamando o método que envia mensagem e retorna o código de status
+									Integer messageStatusCode = MyZapHandler.messageSender(costumer.getTelefone(),
+											textMessage);
+									// Se o código de status confirmar o envio vamos criar uma linha no banco de
+									// dados para relacionar a mensagem com o cliente. Assim, nas próximas vezes não
+									// vamos mandar a mesma mensagem por conta da primeira decisão desse método
+									if (messageStatusCode >= 200 && messageStatusCode < 300) {
+										costumerXmessageService
+												.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
+										// incrementando a quantidade de mensagens enviadas para mostrar ao usuário no
+										// Alert do "Processo finalizado"
+										quantidadeMensagensEnviadas++;
+										// Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi
+										// enviada com sucesso!", AlertType.INFORMATION);
+									}
+									// Colocando um tempo de delay forçado para evitar que o sistema tente mandar
+									// mais mensagens do que o servidor consegue processar
+									Thread.sleep(500);
 								}
-								// Colocando um tempo de delay forçado para evitar que o sistema tente mandar
-								// mais mensagens do que o servidor consegue processar
-								Thread.sleep(500);
 							}
 						}
 					}
@@ -186,7 +209,8 @@ public class SendConfirmationScreenController {
 					+ quantidadeMensagensEnviadas + " mensagens enviadas.", AlertType.INFORMATION);
 		} catch (Exception e) {
 			logger.error(e.getMessage() + e.getStackTrace());
-			System.out.println("O cliente de id: " + idCostumerSeDerErro + " Está com o Telefone errado.");
+			// inserindo o id do cliente atual no
+			nonExistentPhoneService.insertNonExistentPhone(idCostumerSeDerErro);
 			e.printStackTrace();
 			notifyDataChangeListeners();
 		}
