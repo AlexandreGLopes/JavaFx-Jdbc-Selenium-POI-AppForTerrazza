@@ -3,12 +3,18 @@ package application;
 import java.io.IOException;
 import java.text.ParseException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import db.DbException;
 import gui.MainViewController;
+import gui.util.Alerts;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import model.services.CostumerService;
 
@@ -18,6 +24,8 @@ public class Main extends Application {
 	// Assim vamos poder fazer um método para passar ela para o MainViewController
 	// Passando ela poderemos carregar novas views dentro da tela principal
 	private static Scene mainScene;
+	
+	private Logger logger = LogManager.getLogger(MainViewController.class);
 
 	@Override
 	public void start(Stage primaryStage) throws ParseException {
@@ -41,6 +49,15 @@ public class Main extends Application {
 			primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (DbException e) {
+			logger.error(e.getMessage());
+			Alerts.showAlert("Erro ao carregar Aplicativo",
+					null,
+					"Houve um erro ao acessar o banco de dados do aplicativo."
+					+ "\n Verifique se o servidor está ligado e"
+					+ "\nse a instância do banco de dados está iniciada."
+					+ "\n\nMensagem de erro: " + e.getMessage(),
+					AlertType.ERROR);
 		}
 	}
 
