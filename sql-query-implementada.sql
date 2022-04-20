@@ -73,3 +73,7 @@ WHERE Id = 2;
 
 
 DELETE FROM skycuritibacostumers.terrazzacostumers;
+
+CREATE USER 'developer'@'localhost' IDENTIFIED BY '123456';
+GRANT ALL PRIVILEGES ON * . * TO 'developer'@'localhost';
+FLUSH PRIVILEGES;
