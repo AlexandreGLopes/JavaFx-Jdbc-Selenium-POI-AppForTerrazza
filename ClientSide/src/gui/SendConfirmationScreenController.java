@@ -43,7 +43,7 @@ public class SendConfirmationScreenController {
 	private ObservableList<Costumer> obsList;
 
 	@FXML
-	private CheckBox checkBoxAlmoço;
+	private CheckBox checkBoxAlmoco;
 
 	@FXML
 	private CheckBox checkBoxCafeDaTarde;
@@ -96,9 +96,9 @@ public class SendConfirmationScreenController {
 		// vai verificar o banco de dados e mandar as mensagens logo abaixo
 		List<Costumer> filteredList = new ArrayList<>();
 		// checando as checkboxes escolhidas pelo usuário para montar a lista
-		if (checkBoxAlmoço.isSelected()) {
+		if (checkBoxAlmoco.isSelected()) {
 			List<Costumer> tempList = obsList.stream()
-					.filter(costumer -> checkBoxAlmoço.getText().contains(costumer.getSalao()))
+					.filter(costumer -> checkBoxAlmoco.getText().contains(costumer.getSalao()))
 					.collect(Collectors.toList());
 			filteredList = Stream.of(filteredList, tempList).flatMap(x -> x.stream()).collect(Collectors.toList());
 		}
