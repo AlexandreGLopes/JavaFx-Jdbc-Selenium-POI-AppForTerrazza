@@ -38,7 +38,7 @@
          <children>
             <VBox prefHeight="131.0" prefWidth="133.0" spacing="10.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <children>
-                  <CheckBox fx:id="checkBoxAlmoço" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Almoço Terrazza 40" />
+                  <CheckBox fx:id="checkBoxAlmoco" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Almoço Terrazza 40" />
                   <CheckBox fx:id="checkBoxCafeDaTarde" alignment="CENTER" mnemonicParsing="false" text="Café da Tarde na Confeitaria" />
                   <CheckBox fx:id="checkBoxPorDoSol" mnemonicParsing="false" text="Pôr do Sol na Confeitaria" />
                   <CheckBox fx:id="checkBoxJantar" mnemonicParsing="false" text="Jantar no Terrazza 40" />
