@@ -26,6 +26,15 @@ public class PreferencesPaneController implements Initializable {
 	
 	@FXML
 	private TextField textFieldEsperaServidor;
+	
+	@FXML
+	private TextField textFieldIPofAPI;
+	
+	@FXML
+	private TextField textFieldSessionName;
+	
+	@FXML
+	private TextField textFieldSessionKey;
 
 	@FXML
 	private Button buttonSalvar;
@@ -54,6 +63,18 @@ public class PreferencesPaneController implements Initializable {
 		String esperaServidor = preferences.get(PreferencesManager.ESPERA_POR_TAREFA_DO_SERVIDOR, null);
 		// Jogando a variável no TextField
 		textFieldEsperaServidor.setText(esperaServidor);
+		// Colocando a preferência de IP da API de whatsapp
+		String ipOfAPI = preferences.get(PreferencesManager.IP_TO_WHATSAPP_API, null);
+		// Jogando a variável no TextField
+		textFieldIPofAPI.setText(ipOfAPI);
+		// Colocando a preferência de Nome da Sessão
+		String sessionName = preferences.get(PreferencesManager.SESSION_NAME, null);
+		// Jogando a variável no TextField
+		textFieldSessionName.setText(sessionName);
+		// Colocando a preferência de Key da Sessão
+		String sessionKey = preferences.get(PreferencesManager.SESSION_KEY, null);
+		// Jogando a variável no TextField
+		textFieldSessionKey.setText(sessionKey);
 	}
 
 	// Método que salva o conteúdo das TextFields nas preferências
@@ -64,6 +85,12 @@ public class PreferencesPaneController implements Initializable {
 		preferences.put(PreferencesManager.SEPARADOR_DO_CSV, textFieldSeparadorCsv.getText());
 		// Colocando o tempo de espera nas preferências conforme a string dentro do TextField
 		preferences.put(PreferencesManager.ESPERA_POR_TAREFA_DO_SERVIDOR, textFieldEsperaServidor.getText());
+		// Colocando o IP e a porta da API nas preferências conforme a string dentro do TextField
+		preferences.put(PreferencesManager.IP_TO_WHATSAPP_API, textFieldIPofAPI.getText());
+		// Colocando o nome da sessão nas preferências conforme a string dentro do TextField
+		preferences.put(PreferencesManager.SESSION_NAME, textFieldSessionName.getText());
+		// Colocando a chave da sessão nas preferências conforme a string dentro do TextField
+		preferences.put(PreferencesManager.SESSION_KEY, textFieldSessionKey.getText());
 		Utils.currentStage(event).close();
 	}
 

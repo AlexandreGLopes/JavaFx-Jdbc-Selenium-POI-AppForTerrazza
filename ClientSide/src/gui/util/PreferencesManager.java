@@ -24,6 +24,15 @@ public class PreferencesManager {
 	
 	// preferência que salvará quais os itens da checkcombobox de salão estão marcados
 	public static final String STATUS_MARCADOS = "StatusMarcados";
+	
+	// preferência que salvará o IP da API do whatsapp
+	public static final String IP_TO_WHATSAPP_API = "IPOfWhatsappAPI";
+	
+	// preferência que salvará o nome da sessão da API do whatsapp
+	public static final String SESSION_NAME = "SessionName";
+	
+	// preferência que salvará a key da sessão da API do whatsapp
+	public static final String SESSION_KEY = "SessionKey";
 
 	// método que retorna as preferências todas. Aqui estamos usando a preferência
 	// do usuário Root específico.
