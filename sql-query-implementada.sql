@@ -61,6 +61,15 @@ create table costumer_x_standardmessage (
     references standardmessages(Id)
 );
 
+create table telefonesinexistentes (
+	Id int(11) NOT NULL AUTO_INCREMENT,
+	FK_idcostumer int,
+    Data date NOT NULL,
+    foreign key(FK_idcostumer)
+    references terrazzacostumers(Id),
+    PRIMARY KEY (Id)
+);
+
 insert into standardmessages (Titulo, Mensagem, MensagemPadrao)
 values ('Cliente adicionado à espera', 'Olá, %s. Aqui é do restaurante Terrazza 40. Você entrou em nossa fila de espera. Estamos agendando a chegada das pessoas da fila no restaurante. Seu horário de chegada é às %s. Ficaremos aguardando. Lembrando que pode ser que aguarde um pouco a mais por uma mesa quando você chegar.', 'Olá, %s. Aqui é do restaurante Terrazza 40. Você entrou em nossa fila de espera. Estamos agendando a chegada das pessoas da fila no restaurante. Seu horário de chegada é às %s. Ficaremos aguardando. Lembrando que pode ser que aguarde um pouco a mais por uma mesa quando você chegar.');
 
