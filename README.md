@@ -155,6 +155,8 @@ Inside this folder it will be created a file named "settings.json". This file wi
 }
 ```
 OBS.: The "res" is a folder in the root of the project. VsCode build it automatically with "/". Other folders are automatically builded with "\\".
+OBS2.: Maybe if we create a folder "lib" in the root and put our libraries files in it, all of those libs will be automatically referenced to project.
+I think this because of the line: "lib/**/*.jar",
 
 - When you try to run the project VsCode will ask to create the "launch.json" file inside ".vscode" folder.
 - If it won't create the "launch.json" file automatically you can create it like this:
@@ -189,7 +191,7 @@ OBS.: The "res" is a folder in the root of the project. VsCode build it automati
 
 - IMPORTANT 2! VSCODE accept the "/" to build the path between directories even in Windows. 
 
--IMPORTANT 3! It seems to have some difference between write the code to add modules with and without the "=":
+- IMPORTANT 3! It seems to have some difference between write the code to add modules with and without the "=":
 --module-path C:\java-libs\javafx-sdk\lib --add-modules=javafx.fxml,javafx.controls
 --module-path C:\java-libs\javafx-sdk\lib --add-modules javafx.fxml,javafx.controls
 Eclipse and Spring Boot Suite 4 accepts only with the "=" and VSCode accept both.
