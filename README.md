@@ -102,8 +102,61 @@ C:\appfolde
 CHANGING PROJECT TO OPEN AND RUN IN VSCODE
 
 - Just delete some folders and files: ".settings", ".classpath" and ".project".
-- After it, add the jar files to the referenced libraries in the project side bar.
-- When you try to run the project VsCode will ask to create the "launch.json" file.
+- After it, add the jar files to the referenced libraries in the project side bar. It will create a folder in the root of project called ".vscode".
+Inside this folder it will be created a file named "settings.json". This file will set the path to the libraries needed. It will be like this:
+
+```
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\java-libs\\javafx-sdk\\lib\\javafx.base.jar",
+        "c:\\java-libs\\javafx-sdk\\lib\\javafx.controls.jar",
+        "c:\\java-libs\\javafx-sdk\\lib\\javafx.fxml.jar",
+        "c:\\java-libs\\javafx-sdk\\lib\\javafx.graphics.jar",
+        "c:\\java-libs\\javafx-sdk\\lib\\javafx.media.jar",
+        "c:\\java-libs\\javafx-sdk\\lib\\javafx.swing.jar",
+        "c:\\java-libs\\javafx-sdk\\lib\\javafx.web.jar",
+        "c:\\java-libs\\javafx-sdk\\lib\\javafx-swt.jar",
+        "res/controlsfx-11.1.1.jar",
+        "res/gson-2.8.5.jar",
+        "res/POI/commons-codec-1.15.jar",
+        "res/POI/commons-collections4-4.4.jar",
+        "res/POI/commons-compress-1.21.jar",
+        "res/POI/commons-io-2.11.0.jar",
+        "res/POI/commons-logging-1.2.jar",
+        "res/POI/commons-math3-3.6.1.jar",
+        "res/POI/curvesapi-1.06.jar",
+        "res/POI/log4j-api-2.14.1.jar",
+        "res/POI/log4j-core-2.14.1.jar",
+        "res/POI/poi-5.1.0.jar",
+        "res/POI/poi-examples-5.1.0.jar",
+        "res/POI/poi-excelant-5.1.0.jar",
+        "res/POI/poi-javadoc-5.1.0.jar",
+        "res/POI/poi-ooxml-5.1.0.jar",
+        "res/POI/poi-ooxml-full-5.1.0.jar",
+        "res/POI/poi-ooxml-lite-5.1.0.jar",
+        "res/POI/poi-scratchpad-5.1.0.jar",
+        "res/POI/slf4j-api-1.7.32.jar",
+        "res/POI/SparseBitSet-1.2.jar",
+        "res/POI/xmlbeans-5.0.2.jar",
+        "res/HttpClient4.5/commons-codec-1.11.jar",
+        "res/HttpClient4.5/commons-logging-1.2.jar",
+        "res/HttpClient4.5/fluent-hc-4.5.13.jar",
+        "res/HttpClient4.5/httpclient-4.5.13.jar",
+        "res/HttpClient4.5/httpclient-cache-4.5.13.jar",
+        "res/HttpClient4.5/httpclient-osgi-4.5.13.jar",
+        "res/HttpClient4.5/httpclient-win-4.5.13.jar",
+        "res/HttpClient4.5/httpcore-4.4.13.jar",
+        "res/HttpClient4.5/httpmime-4.5.13.jar",
+        "res/HttpClient4.5/jna-4.5.2.jar",
+        "res/HttpClient4.5/jna-platform-4.5.2.jar",
+        "c:\\java-libs\\jdbc-connectors\\mysql-connector-java-8.0.26.jar"
+    ]
+}
+```
+OBS.: The "res" is a folder in the root of the project. VsCode build it automatically with "/". Other folders are automatically builded with "\\".
+
+- When you try to run the project VsCode will ask to create the "launch.json" file inside ".vscode" folder.
 - If it won't create the "launch.json" file automatically you can create it like this:
 
 ```
