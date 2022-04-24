@@ -133,3 +133,10 @@ CHANGING PROJECT TO OPEN AND RUN IN VSCODE
 ```
 
 - IMPORTANT! When vscode creates the "launch.json" automatically the "vmArgs" line won't be created and you'll get an error. Just add it to the file and run it again.
+
+- IMPORTANT 2! VSCODE accept the "/" to build the path between directories even in Windows. 
+
+-IMPORTANT 3! It seems to have some difference between write the code to add modules with and without the "=":
+--module-path C:\java-libs\javafx-sdk\lib --add-modules=javafx.fxml,javafx.controls
+--module-path C:\java-libs\javafx-sdk\lib --add-modules javafx.fxml,javafx.controls
+Eclipse and Spring Boot Suite 4 accepts only with the "=" and VSCode accept both.
