@@ -30,6 +30,7 @@
 !controlsfx-*
 !javafx*.jar
 !mysql-connector-java*
+launch.json
 *.war
 *.nar
 *.ear
