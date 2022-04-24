@@ -101,9 +101,9 @@ C:\appfolde
 
 CHANGING PROJECT TO OPEN AND RUN IN VSCODE
 
-- Just delete some folders and files: ".settings", ".classpath" and ".project".
-- After it, add the jar files to the referenced libraries in the project side bar. It will create a folder in the root of project called ".vscode".
-Inside this folder it will be created a file named "settings.json". This file will set the path to the libraries needed. It will be like this:
+- Just delete some folders and files: ".settings", ".classpath" and ".project". These files are exclusively used by Eclipse and STS.
+- After it, add the jar files to the referenced libraries in the project side bar. To do that, create a folder in the root of project called ".vscode", if it doesn't exists.
+Inside this folder it is needed to be created a file named "settings.json". This file will set the path to the libraries needed. It'll must like this:
 
 ```
 {
@@ -154,9 +154,10 @@ Inside this folder it will be created a file named "settings.json". This file wi
     ]
 }
 ```
+
+IMPORTANT! There is a folder "lib" in the root, all of those libs will be automatically referenced to project. Due to line "lib/**/*.jar", in "settings.json".
+If you need to add more libs just add it like example above. Or, do it pressing the "plus" button on IDE VSCode inthe Project Sidebar.
 OBS.: The "res" is a folder in the root of the project. VsCode build it automatically with "/". Other folders are automatically builded with "\\".
-OBS2.: Maybe if we create a folder "lib" in the root and put our libraries files in it, all of those libs will be automatically referenced to project.
-I think this because of the line: "lib/**/*.jar",
 
 - When you try to run the project VsCode will ask to create the "launch.json" file inside ".vscode" folder.
 - If it won't create the "launch.json" file automatically you can create it like this:
