@@ -97,3 +97,37 @@ javafx.controls,javafx.fxml -cp myapp.jar application.Main
 
 Start in: 
 C:\appfolde
+
+
+CHANGING PROJECT TO OPEN AND RUN IN VSCODE
+
+- Just delete some folders and files: ".settings", ".classpath" and ".project".
+- After it, add the jar files to the referenced libraries in the project side bar.
+- When you try to run the project VsCode will ask to create the "launch.json" file.
+- If it won't create the "launch.json" file automatically you can create it like this:
+
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "application.Main",
+            "projectName": "ClientSide_4f407b8",
+            "vmArgs": "--module-path PATH/TO/FX --add-modules javafx.controls,javafx.fxml"
+
+        }
+    ]
+}
+
+- IMPORTANT! When vscode creates the "launch.json" automatically the "vmArgs" line won't be created and you'll get an error. Just add it to the file and run it again.
