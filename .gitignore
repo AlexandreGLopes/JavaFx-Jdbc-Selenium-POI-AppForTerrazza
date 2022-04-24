@@ -29,6 +29,7 @@
 !fluent-hc-*
 !controlsfx-*
 !javafx*.jar
+!mysql-connector-java*
 *.war
 *.nar
 *.ear
