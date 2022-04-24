@@ -196,6 +196,7 @@ OBS.: The "res" is a folder in the root of the project. VsCode build it automati
 - IMPORTANT 3! It seems to have some difference between write the code to add modules with and without the "=":
 
 --module-path C:\java-libs\javafx-sdk\lib --add-modules=javafx.fxml,javafx.controls
+
 --module-path C:\java-libs\javafx-sdk\lib --add-modules javafx.fxml,javafx.controls
 
 Eclipse and Spring Boot Suite 4 accepts only with the "=" and VSCode accept both.
