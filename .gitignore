@@ -28,6 +28,7 @@
 !jna-*
 !fluent-hc-*
 !controlsfx-*
+!javafx*.jar
 *.war
 *.nar
 *.ear
