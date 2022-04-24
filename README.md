@@ -159,8 +159,9 @@ IMPORTANT! There is a folder "lib" in the root, all of those libs will be automa
 If you need to add more libs just add it like example above. Or, do it pressing the "plus" button on IDE VSCode inthe Project Sidebar.
 OBS.: The "res" is a folder in the root of the project. VsCode build it automatically with "/". Other folders are automatically builded with "\\".
 
-- When you try to run the project VsCode will ask to create the "launch.json" file inside ".vscode" folder.
-- If it won't create the "launch.json" file automatically you can create it like this:
+- If there is a file called "launch.json" delete it. You will have to create another one.
+- When you try to run the project VsCode will ask to create the "launch.json" file inside ".vscode" folder. If it doesn't create the file go to run and Debug and click in "create launch.json" hyperlink.
+- If it won't create the "launch.json" file automatically maybe you can create it like this, but I haven't tested it yet:
 
 ```
 {
@@ -180,7 +181,7 @@ OBS.: The "res" is a folder in the root of the project. VsCode build it automati
             "name": "Launch Main",
             "request": "launch",
             "mainClass": "application.Main",
-            "projectName": "ClientSide_4f407b8",
+            "projectName": "ClientSide",
             "vmArgs": "--module-path PATH/TO/FX --add-modules javafx.controls,javafx.fxml"
 
         }
