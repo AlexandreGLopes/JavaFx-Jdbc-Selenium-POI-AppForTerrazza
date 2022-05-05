@@ -407,6 +407,7 @@ public class OwnFileHandler {
 					}
 				}
 			}
+			workbook.close();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			Alerts.showAlert("Erro ao ler arquivo", null,
