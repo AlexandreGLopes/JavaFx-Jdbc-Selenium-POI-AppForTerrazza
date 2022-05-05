@@ -2,7 +2,6 @@ package gui;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ModuleLayer.Controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +13,6 @@ import java.util.prefs.Preferences;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.hemf.record.emf.HemfText.SetTextJustification;
 import org.controlsfx.control.CheckComboBox;
 
 import application.Main;

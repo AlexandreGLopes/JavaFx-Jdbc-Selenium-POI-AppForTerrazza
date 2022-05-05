@@ -12,10 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import db.DB;
 import db.DbException;
-import model.dao.CostumerXStandardMessageDao;
 import model.dao.NonExistentPhoneDao;
-import model.entities.Costumer;
-import model.entities.CostumerXStandardMessage;
 import model.entities.NonExistentPhone;
 
 public class NonExistentPhoneDaoJDBCimpl implements NonExistentPhoneDao {
