@@ -6,10 +6,13 @@ import java.util.prefs.Preferences;
 
 import gui.util.PreferencesManager;
 import gui.util.Utils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 public class PreferencesPaneController implements Initializable {
@@ -37,6 +40,9 @@ public class PreferencesPaneController implements Initializable {
 	private TextField textFieldSessionKey;
 
 	@FXML
+	private ComboBox<String> comboBoxWichApi;
+
+	@FXML
 	private Button buttonSalvar;
 
 	@FXML
@@ -44,7 +50,11 @@ public class PreferencesPaneController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-
+		//Adicionando opções para escolher qual api será utilizada para o envio de mensagens
+		final ObservableList<String> optionsWichApi = FXCollections.observableArrayList();
+		optionsWichApi.addAll("MyZAP 2.0");
+		optionsWichApi.addAll("ApiWppPropria");
+		comboBoxWichApi.getItems().addAll(optionsWichApi);
 	}
 	
 	// Método que coloca as preferências nas caixinhas de texto do painel
@@ -75,6 +85,10 @@ public class PreferencesPaneController implements Initializable {
 		String sessionKey = preferences.get(PreferencesManager.SESSION_KEY, null);
 		// Jogando a variável no TextField
 		textFieldSessionKey.setText(sessionKey);
+		// Colocando a preferência qual Api é usada
+		String wichApi = preferences.get(PreferencesManager.WICH_API, null);
+		// Jogando a variável na comboBox
+		comboBoxWichApi.setValue(wichApi);
 	}
 
 	// Método que salva o conteúdo das TextFields nas preferências
@@ -91,6 +105,8 @@ public class PreferencesPaneController implements Initializable {
 		preferences.put(PreferencesManager.SESSION_NAME, textFieldSessionName.getText());
 		// Colocando a chave da sessão nas preferências conforme a string dentro do TextField
 		preferences.put(PreferencesManager.SESSION_KEY, textFieldSessionKey.getText());
+		// Colocando a Api utilizada nas preferências conforme a string dentro do comboBox
+		preferences.put(PreferencesManager.WICH_API, comboBoxWichApi.getValue().toString());
 		Utils.currentStage(event).close();
 	}
 

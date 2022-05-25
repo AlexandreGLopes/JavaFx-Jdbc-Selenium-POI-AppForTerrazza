@@ -328,14 +328,21 @@ public class EditWaitingFormController implements Initializable {
 							hr.format(entity.getHoraChegada()).toString());
 					// Mandando a mensagem e recebendo o código de status da comunicação. Esse
 					// código é usado para saber se deu certo o envio da mensagem
-					Integer messageStatusCode = MyZapHandler.messageSender(entity.getTelefone(), textMessage);
+					Integer messageStatusCode;
+					try {
+						messageStatusCode = MyZapHandler.messageSender(entity.getTelefone(), textMessage);
+						if (messageStatusCode >= 300) {
+							Alerts.showAlert("Erro ao enviar mensagem!", null,
+									"Houve um erro ao tentar enviar a mensagem.\nContate o desenvolvedor para saber mais.",
+									AlertType.ERROR);
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					// Verificando se o código está dentro da faixa de conclusão bem sucedida
 					// Desta vez vamos mostrar um alert apenas se der algo errado
-					if (messageStatusCode >= 300) {
-						Alerts.showAlert("Erro ao enviar mensagem!", null,
-								"Houve um erro ao tentar enviar a mensagem.\nContate o desenvolvedor para saber mais.",
-								AlertType.ERROR);
-					}
+					
 				}
 			}
 		}

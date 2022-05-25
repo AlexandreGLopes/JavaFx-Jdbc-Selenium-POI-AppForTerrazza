@@ -34,6 +34,9 @@ public class PreferencesManager {
 	// preferência que salvará a key da sessão da API do whatsapp
 	public static final String SESSION_KEY = "SessionKey";
 
+	// preferência que salvará qual api de whatsapp será usada para o envio das mensagens
+	public static final String WICH_API = "Wich_Api";
+
 	// método que retorna as preferências todas. Aqui estamos usando a preferência
 	// do usuário Root específico.
 	public static Preferences getPreferences() {
