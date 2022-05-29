@@ -197,7 +197,8 @@ OBS.: The "res" is a folder in the root of the project. VsCode build it automati
 }
 ```
 
-- ${env:Name_of_Variable} is the way VS Code use environment variables of Operational System. In this case we always make the JavaFX environment variable with the name PATH_TO_FX. So, the call in VS Code launch.json is ${env:PATH_TO_FX}.
+- "${env:Name_of_Variable}"
+is the way VS Code use environment variables of Operational System. In this case we always make the JavaFX environment variable with the name PATH_TO_FX. So, the call in VS Code launch.json is ${env:PATH_TO_FX}.
 
 - IMPORTANT! When vscode creates the "launch.json" automatically the "vmArgs" line won't be created and you'll get an error. Just add it to the file and run it again.
 
