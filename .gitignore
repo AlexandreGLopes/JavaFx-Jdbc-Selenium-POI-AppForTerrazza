@@ -30,7 +30,7 @@
 !controlsfx-*
 !javafx*.jar
 !mysql-connector-java*
-!json-20220320
+!json-20220320*
 workspace.code-*
 launch.json
 .classpath
