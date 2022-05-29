@@ -10,15 +10,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.scene.control.Alert.AlertType;
-
 public class MyZapHandler {
 	
 	private static Logger logger = LogManager.getLogger(MyZapHandler.class);
 	
 	private static Preferences preferences = PreferencesManager.getPreferences();
 	
-	public static Integer messageSender (String telefone, String message) throws Exception {
+	public static HttpResponse messageSender (String telefone, String message) throws Exception {
 
 		// pegando a api configurada das preferências
 		String wichApi = preferences.get(PreferencesManager.WICH_API, null);
@@ -33,7 +31,7 @@ public class MyZapHandler {
 		}
 	}
 
-	public static Integer myZapSender(String telefone, String message) {
+	public static HttpResponse myZapSender(String telefone, String message) {
 		// Iniciando o uso do HttpClient da Apache
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		
@@ -63,21 +61,15 @@ public class MyZapHandler {
 			// Executando a resquisição e pegando as resposta e colocando na variável
 			// response
 			HttpResponse response = httpClient.execute(request);
-			// Passando o código da resposta da conecção http para uma variável ainda mais
-			// restrita que vai ter apenas o integer do código
-			Integer statusCode = response.getStatusLine().getStatusCode();
-			return statusCode;
+
+			return response;
 		} catch (Exception e) {
 			logger.error(e.getMessage() + e);
-			Alerts.showAlert("Erro ao enviar mensagem!", null,
-					"Houve um erro ao tentar enviar a mensagem.\nContate o desenvolvedor para saber mais.\nCódigo do erro: "
-							+ e.getMessage(),
-					AlertType.ERROR);
 		}
 		return null;
 	}
 
-	public static Integer ApiPropriaSender(String telefone, String message) {
+	public static HttpResponse ApiPropriaSender(String telefone, String message) {
 		// Iniciando o uso do HttpClient da Apache
 		HttpClient httpClient = HttpClientBuilder.create().build();
 
@@ -105,17 +97,10 @@ public class MyZapHandler {
 			// Executando a resquisição e pegando as resposta e colocando na variável
 			// response
 			HttpResponse response = httpClient.execute(request);
-			// Passando o código da resposta da conecção http para uma variável ainda mais
-			// restrita que vai ter apenas o integer do código
-			Integer statusCode = response.getStatusLine().getStatusCode();
-			// System.out.println(response);
-			return statusCode;
+
+			return response;
 		} catch (Exception e) {
 			logger.error(e.getMessage() + e);
-			Alerts.showAlert("Erro ao enviar mensagem!", null,
-					"Houve um erro ao tentar enviar a mensagem.\nContate o desenvolvedor para saber mais.\nCódigo do erro: "
-							+ e.getMessage(),
-					AlertType.ERROR);
 		}
 		return null;
 	}

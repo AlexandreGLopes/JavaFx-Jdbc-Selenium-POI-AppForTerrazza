@@ -3,8 +3,11 @@ package gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 import gui.util.Alerts;
 import gui.util.MyZapHandler;
@@ -76,18 +79,28 @@ public class MessageFormController implements Initializable {
 		// String que vai receber o telefone do objeto que foi passado no controller
 		String telefone = entity.getTelefone();
 		
-		int statusCode;
 		try {
 
-			statusCode = MyZapHandler.messageSender(telefone, textMessage.getText());
+			HttpResponse messageStatusCode = MyZapHandler.messageSender(telefone, textMessage.getText());
 
-			if (statusCode >= 200 && statusCode < 300) {
+			if (messageStatusCode.getStatusLine().getStatusCode() >= 200 
+				&& messageStatusCode.getStatusLine().getStatusCode() < 300) {
 				Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi enviada com sucesso!",
 						AlertType.INFORMATION);
 			} else {
-				Alerts.showAlert("Erro ao enviar mensagem!", null,
-						"Houve um erro ao tentar enviar a mensagem.\nContate o desenvolvedor para saber mais.",
-						AlertType.ERROR);
+				if (messageStatusCode.getStatusLine().getStatusCode() >= 300) {
+					JSONObject album = new JSONObject(EntityUtils.toString(messageStatusCode.getEntity(), "UTF-8"));
+					String messageJSON = album.getString("message");
+
+					if (messageJSON.equals("Error: this number is not valid")) {
+						messageJSON = "O número de telefone não é válido para whatsapp.";
+					} else if (messageJSON.equals("Error: the sessionkey is invalid")) {
+						messageJSON = "O 'nome da sessão' cadastrado nas preferências é inválido.";
+					}
+					Alerts.showAlert("Erro ao enviar mensagem!", null,
+							"Houve um erro ao tentar enviar a mensagem.\n\n" + messageJSON,
+							AlertType.ERROR);
+				}
 			}
 		} catch (Exception e) {
 			Alerts.showAlert("Erro ao enviar mensagem!", null,

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.http.HttpResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -136,6 +137,8 @@ public class SendConfirmationScreenController {
 			// variável que vai contar quantas mensagens foram enviadas a partir do
 			// recebimento do código 200 do servidor
 			int quantidadeMensagensEnviadas = 0;
+			int quantidadeMensagensNaoEnviadas = 0;
+			int quantidadeTelefonesForaPadrao = 0;
 			// Instanciando um novo objeto de relação entre o cliente e a mensagem padrão
 			CostumerXStandardMessage costumerXmessage = new CostumerXStandardMessage();
 			// SimpleDateFormat para formatar o campo de horário que vai para mensagem em
@@ -180,12 +183,13 @@ public class SendConfirmationScreenController {
 									String textMessage = String.format(message.getMensagem(), nomeESobrenome,
 											hr.format(costumer.getHora()).toString(), costumer.getPessoas());
 									// Chamando o método que envia mensagem e retorna o código de status
-									Integer messageStatusCode = MyZapHandler.messageSender(costumer.getTelefone(),
+									HttpResponse messageStatusCode = MyZapHandler.messageSender(costumer.getTelefone(),
 											textMessage);
 									// Se o código de status confirmar o envio vamos criar uma linha no banco de
 									// dados para relacionar a mensagem com o cliente. Assim, nas próximas vezes não
 									// vamos mandar a mesma mensagem por conta da primeira decisão desse método
-									if (messageStatusCode >= 200 && messageStatusCode < 300) {
+									if (messageStatusCode.getStatusLine().getStatusCode() >= 200 
+										&& messageStatusCode.getStatusLine().getStatusCode() < 300) {
 										costumerXmessageService
 												.createRelationship(new CostumerXStandardMessage(costumer.getId(), 2));
 										// incrementando a quantidade de mensagens enviadas para mostrar ao usuário no
@@ -193,24 +197,32 @@ public class SendConfirmationScreenController {
 										quantidadeMensagensEnviadas++;
 										// Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi
 										// enviada com sucesso!", AlertType.INFORMATION);
+									} else if (messageStatusCode.getStatusLine().getStatusCode() >= 300) {
+										quantidadeMensagensNaoEnviadas++;
 									}
 									// Colocando um tempo de delay forçado para evitar que o sistema tente mandar
 									// mais mensagens do que o servidor consegue processar
 									Thread.sleep(500);
 								}
+							} else {
+								quantidadeTelefonesForaPadrao++;
 							}
+						} else {
+							quantidadeTelefonesForaPadrao++;
 						}
 					}
 				}
 			}
 			notifyDataChangeListeners();
 			Alerts.showAlert("Processo finalizado!", null, "O processo de envio das mensagens foi finalizado!\n"
-					+ quantidadeMensagensEnviadas + " mensagens enviadas.", AlertType.INFORMATION);
+					+ quantidadeMensagensEnviadas + " mensagens enviadas.\n"
+					+ quantidadeMensagensNaoEnviadas + " mensagens NÃO enviadas.\n"
+					+ quantidadeTelefonesForaPadrao + " telefones com dígitos a mais ou códigos de área errados.", AlertType.INFORMATION);
 		} catch (Exception e) {
 			logger.error(e.getMessage() + e.getStackTrace());
 			// inserindo o id do cliente atual no
 			nonExistentPhoneService.insertNonExistentPhone(idCostumerSeDerErro);
-			e.printStackTrace();
+			e.printStackTrace();  
 			notifyDataChangeListeners();
 		}
 	}
