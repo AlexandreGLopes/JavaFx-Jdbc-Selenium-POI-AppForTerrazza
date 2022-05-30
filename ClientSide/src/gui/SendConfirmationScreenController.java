@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,17 @@ import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.MyZapHandler;
 import gui.util.Utils;
+import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import model.entities.Costumer;
@@ -63,6 +71,9 @@ public class SendConfirmationScreenController {
 	@FXML
 	private Button buttonCancelar;
 
+	@FXML
+	private ImageView loadingGif;
+
 	public void setCostumerXmessageService(CostumerXStandardMessageService costumerXmessageService) {
 		this.costumerXmessageService = costumerXmessageService;
 	}
@@ -89,9 +100,69 @@ public class SendConfirmationScreenController {
 		}
 	}
 
+	// variável que recebe os ids do Costumer para inserir no Banco de dados e pular na próxima vez
+	// que fizer o loop de enviar as mensagens de confirmação
 	private Integer idCostumerSeDerErro;
 
+	// vetor que vai receber as quantidades de mensagens enviadas, de erros no envio de mensagens
+	// pela Api e de telefones que não passarem pela checagem de numeração desta classe, mais abaixo
+	private String[] quantidadesRepostaAlert = new String[3];
+
+	@FXML
 	public void onButtonConfirmarAction(ActionEvent event) {
+
+		// retirando os checkbox da tela e mostrando o gif de loading
+		checkBoxAlmoco.setVisible(false);
+		checkBoxCafeDaTarde.setVisible(false);
+		checkBoxPorDoSol.setVisible(false);
+		checkBoxJantar.setVisible(false);
+		checkBox38Floor.setVisible(false);
+		buttonConfirmar.setVisible(false);
+		buttonCancelar.setVisible(false);
+		buttonConfirmar.setDisable(true);
+		buttonCancelar.setDisable(true);
+		FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), loadingGif);
+		Image gif = new Image(new File("res/loading.gif").toURI().toString());
+		loadingGif.setImage(gif);
+		fadeTransition.setFromValue(0.0);
+		fadeTransition.setToValue(1.0);
+		fadeTransition.play();
+		
+		// Construindo uma Task que vai rodar em outro Thread para deixar a UI livre
+		// para mostrar os FadeTransitions
+		Task<String> task = new Task<>() {
+			@Override
+			protected String call() throws Exception {
+				// chamando o loop que comunica com a Api e manda as confirmações
+                messageValidation();
+				return "close";
+            }
+        };
+        // Ao final taskando se a string tem o valor close para notificar os listener e
+		// fechar o painel e também tratar erros e mostrar alerts
+		task.setOnSucceeded((e) -> {
+			if ("close".equals(task.getValue())) {
+				Alerts.showAlert("Processo finalizado!", null, "O processo de envio das mensagens foi finalizado!\n"
+					+ quantidadesRepostaAlert[0] + " mensagens enviadas.\n"
+					+ quantidadesRepostaAlert[1] + " mensagens NÃO enviadas.\n"
+					+ quantidadesRepostaAlert[2] + " telefones com dígitos a mais ou códigos de área errados.", AlertType.INFORMATION);
+				Utils.currentStage(event).close();
+			}
+		});
+		task.setOnFailed((e) -> {
+			notifyDataChangeListeners();
+			logger.error(task.getException());
+			Utils.currentStage(event).close();
+			Alerts.showAlert("Erro", null, "Para mais informações verificar o arquivo de log da aplicação", AlertType.ERROR);
+		});
+		// Iniciando subthread para fazer a Task
+		Thread thread = new Thread(task);
+		thread.setDaemon(true);
+		thread.start();
+
+	}
+
+	public void messageValidation() {
 		// Preparando a lista que será filtrada para passar para a parte do método que
 		// vai verificar o banco de dados e mandar as mensagens logo abaixo
 		List<Costumer> filteredList = new ArrayList<>();
@@ -137,6 +208,9 @@ public class SendConfirmationScreenController {
 			// variável que vai contar quantas mensagens foram enviadas a partir do
 			// recebimento do código 200 do servidor
 			int quantidadeMensagensEnviadas = 0;
+			// Duas variáveis abaxio vão ser incrementadas se deralgum erro. A primeira vai ser incrementada com
+			// uma resposta de erro do servidor. A segunda será incrementada quando os ifs de verificação dos
+			// números de celular forem falsos
 			int quantidadeMensagensNaoEnviadas = 0;
 			int quantidadeTelefonesForaPadrao = 0;
 			// Instanciando um novo objeto de relação entre o cliente e a mensagem padrão
@@ -214,13 +288,12 @@ public class SendConfirmationScreenController {
 				}
 			}
 			notifyDataChangeListeners();
-			Alerts.showAlert("Processo finalizado!", null, "O processo de envio das mensagens foi finalizado!\n"
-					+ quantidadeMensagensEnviadas + " mensagens enviadas.\n"
-					+ quantidadeMensagensNaoEnviadas + " mensagens NÃO enviadas.\n"
-					+ quantidadeTelefonesForaPadrao + " telefones com dígitos a mais ou códigos de área errados.", AlertType.INFORMATION);
+			quantidadesRepostaAlert[0] = String.valueOf(quantidadeMensagensEnviadas);
+			quantidadesRepostaAlert[1] = String.valueOf(quantidadeMensagensNaoEnviadas);
+			quantidadesRepostaAlert[2] = String.valueOf(quantidadeTelefonesForaPadrao);
 		} catch (Exception e) {
 			logger.error(e.getMessage() + e.getStackTrace());
-			// inserindo o id do cliente atual no
+			// inserindo o id do cliente atual no banco de dados caso o telefone tenha ocasioado uma exception no processo de envio
 			nonExistentPhoneService.insertNonExistentPhone(idCostumerSeDerErro);
 			e.printStackTrace();  
 			notifyDataChangeListeners();

@@ -334,17 +334,18 @@ public class EditWaitingFormController implements Initializable {
 					// HttpResponse messageStatusCode;
 					try {
 						HttpResponse messageStatusCode = MyZapHandler.messageSender(entity.getTelefone(), textMessage);
+						// Aqui só mandaremos mostraremos um Alert se tiver uma resposta de erro da Api
 						if (messageStatusCode.getStatusLine().getStatusCode() >= 300) {
+							// criando um objeto JSON e colocando dentro dele o Entity da mensagem da Api passada para string
 							JSONObject album = new JSONObject(EntityUtils.toString(messageStatusCode.getEntity(), "UTF-8"));
-							// String statusJSON = album.getString("status");
+							// Fazendo uma string com o value que estiver dentro da key "message"
 							String messageJSON = album.getString("message");
-
+							// como as mensagens estão em inglês vamos passá-las para português para mostrá-las no Alert
 							if (messageJSON.equals("Error: this number is not valid")) {
 								messageJSON = "O número de telefone não é válido para whatsapp.";
 							} else if (messageJSON.equals("Error: the sessionkey is invalid")) {
 								messageJSON = "O 'nome da sessão' cadastrado nas preferências é inválido.";
 							}
-							// System.out.println(statusJSON + "\n" + messageJSON);
 							Alerts.showAlert("Erro ao enviar mensagem!", null,
 									"Houve um erro ao tentar enviar a mensagem.\n\n" + messageJSON,
 									AlertType.ERROR);
@@ -352,9 +353,6 @@ public class EditWaitingFormController implements Initializable {
 					} catch (Exception e) {
 						logger.error(e.getMessage() + e);
 					}
-					// Verificando se o código está dentro da faixa de conclusão bem sucedida
-					// Desta vez vamos mostrar um alert apenas se der algo errado
-					
 				}
 			}
 		}

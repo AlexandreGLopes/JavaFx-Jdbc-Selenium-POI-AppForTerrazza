@@ -83,15 +83,18 @@ public class MessageFormController implements Initializable {
 
 			HttpResponse messageStatusCode = MyZapHandler.messageSender(telefone, textMessage.getText());
 
+			// em caso de sucesso vamos mostrar um Alert
 			if (messageStatusCode.getStatusLine().getStatusCode() >= 200 
 				&& messageStatusCode.getStatusLine().getStatusCode() < 300) {
 				Alerts.showAlert("Mensagem enviada com sucesso!", null, "Sua mensagem foi enviada com sucesso!",
 						AlertType.INFORMATION);
 			} else {
 				if (messageStatusCode.getStatusLine().getStatusCode() >= 300) {
+					// criando um objeto JSON e colocando dentro dele o Entity da mensagem da Api passada para string
 					JSONObject album = new JSONObject(EntityUtils.toString(messageStatusCode.getEntity(), "UTF-8"));
+					// Fazendo uma string com o value que estiver dentro da key "message"
 					String messageJSON = album.getString("message");
-
+					// como as mensagens estão em inglês vamos passá-las para português para mostrá-las no Alert
 					if (messageJSON.equals("Error: this number is not valid")) {
 						messageJSON = "O número de telefone não é válido para whatsapp.";
 					} else if (messageJSON.equals("Error: the sessionkey is invalid")) {

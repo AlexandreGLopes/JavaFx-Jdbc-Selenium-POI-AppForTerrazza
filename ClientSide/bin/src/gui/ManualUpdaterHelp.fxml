@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="592.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ManualUpdaterHelpController">
+   <children>
+      <Label layoutX="182.0" layoutY="14.0" text="Ajuda da Atualização Manual">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Button fx:id="closeButton" layoutX="534.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCloseButtonAction" text="X" />
+      <ScrollPane layoutX="4.0" layoutY="46.0" prefHeight="700.0" prefWidth="588.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1438.0" prefWidth="568.0">
+               <children>
+                  <Label layoutX="184.0" layoutY="124.0" text="Atualização Manual do Waitlist" />
+                  <Label layoutX="142.0" layoutY="142.0" text="para reservas do Terrazza 40 Convencional" />
+                  <Label layoutX="20.0" layoutY="19.0" prefHeight="65.0" prefWidth="528.0" text="Caso o sistema automático de atualização de reservas não esteja funcionando por qualquer motivo é possivel fazer essa atualização de forma manual. Podemos fazer isso entrando no site de cada sistema de reservas e baixando o arquivo com as reservas para ser carregado neste programa depois." textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="20.0" layoutY="517.0" prefHeight="144.0" prefWidth="528.0" text="Entre no site https://waitlist.tagme.com.br e faça o login. Na barra superior encontre a opção &quot;Relatórios&quot; e clique nela. Em seguida uma nova opção &quot;Relatórios&quot; vai aparecer na &quot;bandeja&quot;, clique nela. Uma página com várias opções vai aparecer. Na primeira caixa de Relatorio escolha a opção &quot;Lista Geral de Reservas&quot;. Em seguida verifique se a Data de Inicio corresponde a data de hoje. Se sim, aperte o botão &quot;Filtrar&quot;. As reservas serão carregadas no site. Depois, clique no botão ao lado do de Filtrar (é um botão com uma flecha apontando para baixo) e escolha a opção &quot;Exportar para CSV&quot; e faça o download do arquivo." textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="20.0" layoutY="181.0" prefHeight="16.0" prefWidth="528.0" text="Abaixo é exibido um gif mostrando como baixar o arquivo:" textAlignment="JUSTIFY" wrapText="true" />
+                  <ImageView fx:id="imageViewWaitlistGif" fitHeight="324.0" fitWidth="528.0" layoutX="19.0" layoutY="209.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../res/waitlisthelp.gif" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="19.0" layoutY="661.0" prefHeight="123.0" prefWidth="528.0" text="Em seguida, neste programa, voce vai selecionar a opção &quot;Arquivo&quot; e depois &quot;Atualizar manualmente&quot;. No Seletor manual de arquivo de reservas clique no botão &quot;Selecionar arquivo:&quot; e navegue pelas pastas do computador até achar o arquivo que você fez o download e o selecione. Em seguida, clique no botão &quot;Iniciar&quot;. O processo de carregamento vai iniciar e as reservas serão carregadas no banco de dados. Se tudo ocorrer corretamente a tela será fechada e a lista das reservas atualizada vai aparecer no programa." textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="195.0" layoutY="821.0" text="Atualização Manual do Wix" />
+                  <Label layoutX="178.0" layoutY="837.0" prefHeight="16.0" prefWidth="212.0" text="para reservas do 38 Floor Bistrô" />
+                  <Label layoutX="19.0" layoutY="874.0" prefHeight="16.0" prefWidth="528.0" text="Abaixo é exibido um gif mostrando como baixar o arquivo:" textAlignment="JUSTIFY" wrapText="true" />
+                  <ImageView fx:id="imageViewWixGif" fitHeight="324.0" fitWidth="528.0" layoutX="17.0" layoutY="902.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../res/wixhelp.gif" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="20.0" layoutY="1211.0" prefHeight="96.0" prefWidth="528.0" text="Entre no site https://wix.com e faça o login. No menu esquerdo do painel central escolha a opção &quot;Hotéis&quot;. Em seguida no novo menu lateral escolha a opção &quot;Reservas&quot;. Assim que carregar o calendário de reservas encontre a opção &quot;Exportar Calendário&quot; à direita e clique nela. A opção &quot;Exportar para Excel&quot; vai aparecer. Clique nela e fça o download do arquivo." textAlignment="JUSTIFY" wrapText="true" />
+                  <Label layoutX="19.0" layoutY="1302.0" prefHeight="123.0" prefWidth="528.0" text="Em seguida, neste programa, voce vai selecionar a opção &quot;Arquivo&quot; e depois &quot;Atualizar manualmente&quot;. No Seletor manual de arquivo de reservas clique no botão &quot;Selecionar arquivo:&quot; e navegue pelas pastas do computador até achar o arquivo que você fez o download e o selecione. Em seguida, clique no botão &quot;Iniciar&quot;. O processo de carregamento vai iniciar e as reservas serão carregadas no banco de dados. Se tudo ocorrer corretamente a tela será fechada e a lista das reservas atualizada vai aparecer no programa." textAlignment="JUSTIFY" wrapText="true" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

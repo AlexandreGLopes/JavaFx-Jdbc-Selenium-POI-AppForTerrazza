@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="269.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DuplicatedListPaneController">
+   <children>
+      <TableView fx:id="tableViewCostumer" prefHeight="224.0" prefWidth="708.0">
+         <columns>
+            <TableColumn fx:id="tableColumnWhats" maxWidth="42.0" minWidth="42.0" prefWidth="42.0" sortable="false"/>
+            <TableColumn fx:id="tableColumnId" prefWidth="55.0" style="-fx-alignment: CENTER-LEFT;" text="Id" sortable="false"/>
+            <TableColumn fx:id="tableColumnNome" prefWidth="88.0" style="-fx-alignment: CENTER-LEFT;" text="Nome" sortable="false"/>
+            <TableColumn fx:id="tableColumnSobrenome" prefWidth="115.0" style="-fx-alignment: CENTER-LEFT;" text="Sobrenome" sortable="false"/>
+            <TableColumn fx:id="tableColumnTelefone" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Telefone" sortable="false"/>
+            <TableColumn fx:id="tableColumnEmail" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="E-mail" sortable="false"/>
+            <TableColumn fx:id="tableColumnSalao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Salao" sortable="false"/>
+            <TableColumn fx:id="tableColumnPessoas" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Pessoas" sortable="false"/>
+            <TableColumn fx:id="tableColumnHora" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Hora" sortable="false"/>
+            <TableColumn fx:id="tableColumnMesa" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Mesa" sortable="false"/>
+            <TableColumn fx:id="tableColumnSituacao" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Situaçao" sortable="false"/>
+            <TableColumn fx:id="tableColumnIdExterno" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT;" text="Id Externo" sortable="false"/>
+         </columns>
+      </TableView>
+   </children>
+</VBox>
