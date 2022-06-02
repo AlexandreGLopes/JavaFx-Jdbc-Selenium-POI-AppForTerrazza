@@ -27,6 +27,7 @@
                   <Menu mnemonicParsing="false" text="Ferramentas">
                     <items>
                         <MenuItem fx:id="menuItemMensagensPadrao" mnemonicParsing="false" onAction="#onMenuItemMensagensPadraoAction" text="Mensagens padrão" />
+                        <MenuItem fx:id="menuItemConectarWhatsapp" mnemonicParsing="false" onAction="#onMenuItemConectarWhatsapp" text="Conectar Whatsapp" />
                       <MenuItem fx:id="menuItemPreferences" mnemonicParsing="false" onAction="#onMenuItemPreferencesAction" text="Preferências" />
                     </items>
                   </Menu>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="489.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ConectarWhatsappQrCodePaneController">
+   <children>
+      <ToolBar prefHeight="40.0" prefWidth="200.0">
+        <items>
+          <Button fx:id="conectarButton" mnemonicParsing="false" onAction="#onConectarButtonAction" text="Conectar" />
+        </items>
+      </ToolBar>
+      <AnchorPane prefHeight="380.0" prefWidth="489.0">
+         <children>
+            <ImageView fx:id="qrCode" fitHeight="348.0" fitWidth="371.0" layoutX="59.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

@@ -58,6 +58,9 @@ public class MainViewController implements Initializable, DataChangeListener {
 	private MenuItem menuItemMensagensPadrao;
 
 	@FXML
+	private MenuItem menuItemConectarWhatsapp;
+
+	@FXML
 	private MenuItem menuItemPreferences;
 
 	@FXML
@@ -127,7 +130,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/LoadingScreen.fxml", currentStage, true, (LoadingScreenController controller) -> {
+		loadPane("/gui/LoadingScreen.fxml", currentStage, true, null, (LoadingScreenController controller) -> {
 			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
@@ -148,7 +151,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/LoadingScreen.fxml", currentStage, true, (LoadingScreenController controller) -> {
+		loadPane("/gui/LoadingScreen.fxml", currentStage, true, null, (LoadingScreenController controller) -> {
 			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
@@ -168,7 +171,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/ManualUpdaterScreen.fxml", currentStage, true, (ManualUpdaterScreenController controller) -> {
+		loadPane("/gui/ManualUpdaterScreen.fxml", currentStage, true, null, (ManualUpdaterScreenController controller) -> {
 			// Setando qual foi a opção escolhida pelo usuário direto no próximo controlador
 			// para que ele envie a opção para o servidor. Lá o servidor vai entrar em
 			// switch/case para escolher os métodos de download usados
@@ -180,9 +183,18 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/MensagensPadraoListPane.fxml", currentStage, false, (MensagensPadraoListPaneController controller) -> {
+		loadPane("/gui/MensagensPadraoListPane.fxml", currentStage, false, null, (MensagensPadraoListPaneController controller) -> {
 			controller.setStandardMessageService(new StandardMessageService());
 			controller.updateTableView();
+		});
+	}
+
+	@FXML
+	public void onMenuItemConectarWhatsapp() {
+		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
+		// Utils
+		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
+		loadPane("/gui/ConectarWhatsappQrCodePane.fxml", currentStage, false, "Conectar via QR Code", (ConectarWhatsappQrCodePaneController controller) -> {
 		});
 	}
 
@@ -190,7 +202,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/PreferencesPane.fxml", currentStage, false, (PreferencesPaneController controller) -> {
+		loadPane("/gui/PreferencesPane.fxml", currentStage, false, null, (PreferencesPaneController controller) -> {
 			controller.getIPInPreferences();
 		});
 	}
@@ -200,7 +212,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/About.fxml", currentStage, false, (x) -> {
+		loadPane("/gui/About.fxml", currentStage, false, null, (x) -> {
 		});
 	}
 
@@ -209,7 +221,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 		// parâmetro dentro de um objeto Stage que receberá o método currentStage do
 		// Utils
 		Stage currentStage = (Stage) rootVBox.getScene().getWindow();
-		loadPane("/gui/ManualUpdaterHelp.fxml", currentStage, true, (ManualUpdaterHelpController controller) -> {
+		loadPane("/gui/ManualUpdaterHelp.fxml", currentStage, true, null, (ManualUpdaterHelpController controller) -> {
 			controller.setGifs();
 		});
 	}
@@ -219,7 +231,7 @@ public class MainViewController implements Initializable, DataChangeListener {
 	}
 
 	// Método que carrega novos painéis
-	private <T> void loadPane(String absoluteName, Stage parentStage, boolean staticScreen,
+	private <T> void loadPane(String absoluteName, Stage parentStage, boolean staticScreen, String title,
 			Consumer<T> initializingAction) {
 		try {
 			// Carregar o fxml
@@ -248,6 +260,10 @@ public class MainViewController implements Initializable, DataChangeListener {
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			// Não poderá ser redimensionada
 			dialogStage.setResizable(false);
+			//setando o título do painel
+			if (title != null) {
+				dialogStage.setTitle(title);
+			}
 			// verificando se a tela terá que terá a regra de não tem a barra de título
 			if (staticScreen) {
 				// Retirando a barra de título do painel de loading

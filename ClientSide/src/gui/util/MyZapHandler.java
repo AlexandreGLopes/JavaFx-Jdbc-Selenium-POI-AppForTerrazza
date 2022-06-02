@@ -4,6 +4,7 @@ import java.util.prefs.Preferences;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -15,6 +16,36 @@ public class MyZapHandler {
 	private static Logger logger = LogManager.getLogger(MyZapHandler.class);
 	
 	private static Preferences preferences = PreferencesManager.getPreferences();
+
+	public static HttpResponse connect () {
+		// Iniciando o uso do HttpClient da Apache
+		HttpClient httpClient = HttpClientBuilder.create().build();
+
+		// Buscado a preferência que guarda o IP e a Porta da API, o nome da sessão e a Key da sessão
+		// e colocando elas em variaveis string
+		String ipOfAPI = preferences.get(PreferencesManager.IP_TO_WHATSAPP_API, null);
+		// pegando a api configurada das preferências
+		String wichApi = preferences.get(PreferencesManager.WICH_API, null);
+
+		try {
+			if(wichApi.equals("ApiWppPropria")) {
+				// Montando um resquest do tipo POST e passando o servidor, a porta e ométodo
+			// usado para mandar mensagem
+			HttpGet request = new HttpGet("http://" + ipOfAPI + "/status");
+			// Headers do JSON segundo a API do MyZAP 2.0
+			request.setHeader("Accept", "application/json");
+			request.setHeader("Content-Type", "application/json");
+			// Executando a resquisição e pegando as resposta e colocando na variável
+			// response
+			HttpResponse response = httpClient.execute(request);
+
+			return response;
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage() + e);
+		}
+		return null;
+	}
 	
 	public static HttpResponse messageSender (String telefone, String message) throws Exception {
 
